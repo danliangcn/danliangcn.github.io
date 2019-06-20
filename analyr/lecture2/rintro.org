@@ -226,7 +226,7 @@ for(i in 1:10){
 #+BEGIN_SRC R
 setwd("你的数据文件所在目录")
 #+END_SRC
-- 读入[[./house.txt][数据]]  
+- 读入[[./houses.txt][数据]] 
 #+BEGIN_SRC R
 houses_data <- read.table(file = "houses.txt", header = T, sep = "\t")
 #+END_SRC
