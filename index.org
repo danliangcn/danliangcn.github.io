@@ -7,6 +7,6 @@
 * 课程
 ** 数据分析与R语言应用
 *** [[./analyr/lecture1/1intro.html][1.课程介绍]]
-*** [[./analyr/lecture2/rintro.html][2.R语言基本设置与操作]]
+*** [[./analyr/lecture2/Rintro.html][2.R语言基本设置与操作]]
 *** [[./analyr/assignment/assignment1.html][作业1]]
 *** [[./analyr/assignment/assignment2.html][作业2]]
