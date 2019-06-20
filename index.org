@@ -1,10 +1,12 @@
-This is a test to try to set up a website step by step.
+#+TITLE: 课程网站
+#+AUTHOR: 厦门大学公共事务学院
+#+EMAIL: 
+#+OPTIONS: H:2 toc:nil num:t tex:t
 
-* lecture
-** data analysis
-** social statistics
-** environmental policy analysis
-* research
-** PES
-** ecological civilization pilot in China
-** narrative policy framework
+
+* 课程
+** 数据分析与R语言应用
+*** [[./analyr/lecture1/1intro.html][1.课程介绍]]
+*** [[./analyr/lecture2/rintro.html][2.R语言基本设置与操作]]
+*** [[./analyr/assignment/assignment1.html][作业1]]
+*** [[./analyr/assignment/assignment2.html][作业2]]
