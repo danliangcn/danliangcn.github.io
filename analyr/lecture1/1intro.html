@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-06-20 四 15:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>数据分析与R语言应用</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="厦门大学公共事务学院" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">数据分析与R语言应用</h1>
+
+<div id="outline-container-org0345337" class="outline-2">
+<h2 id="org0345337"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org3c79233" class="outline-3">
+<h3 id="org3c79233"><span class="section-number-3">1.1</span> 课程介绍：</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="org7fb4c89"></a>课程内容<br />
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+本课程是在概率统计、社会统计与定量研究方法等课程的基础上，介绍高级数据分析技术的原理，同时以R语言为分析工具，介绍相关技术的操作。通过本课程的学习帮助学生掌握R语言软件的基本操作，初步了解广义线性模型、多层线性模型、结构方程、因果推断等相关分析技术。
+</p>
+</div>
+</li>
+<li><a id="org326a80a"></a>课程目标<br />
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li>熟悉R语言的软件平台，了解基本操作，包括获取导入数据、绘制统计图形。</li>
+<li>了解R语言中数据的基本管理与数据清洗操作。</li>
+<li>介绍一般统计方法的操作，包括多元线性回归、logistic回归、因子分析等。</li>
+<li>介绍高级统计方法的基本原理和操作，包括广义线性模型、多层线性模型、结构方程、因果推断等。</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-org5a49b6e" class="outline-3">
+<h3 id="org5a49b6e"><span class="section-number-3">1.2</span> 课程考核</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>考核登记方式：百分制</li>
+<li>成绩组成：平时考勤占30%；期末论文汇报：20%；期末论文：50%</li>
+<li>考核标准：平时考勤基础分30分，无故旷课一次扣6分，五次及以上无故旷课记0分，课前请假不扣分。期末论文汇报20分，同学间互评为主。期末论文占50分。</li>
+<li>时间要求：第四次课之前，选好文章，找好1名同学作为合作者，并将文章标题和姓名发到群里（先报先得，不能重复）；第五次课之前准备好数据；最后一次课进行课程论文报告并同时提交课程论文。</li>
+<li>课外学习内容：预习复习课程内容，阅读学习材料，学习相关软件的操作，完成练习，准备数据，进行数据分析，写作课程论文。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7ae67e3" class="outline-3">
+<h3 id="org7ae67e3"><span class="section-number-3">1.3</span> 课程论文要求</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>论文应具有实质性的研究问题，有明确的观点，观点之间有关联。</li>
+<li>如果认为原文章结论错误，应指明错误的原因。</li>
+<li>应解释复制精确度，和原始文章的差距有多大？</li>
+<li>尽量不要在正文中包括过多的中间过程，简述过程，展示结果。不要把R代码和初始结果直接贴在文章中！！！</li>
+<li>复制之后，探索改进原始文章的结果呈现。在不改变原文理论假设和模型的前提下，寻找有用信息。（改善odds ratio的解释等）</li>
+<li>建模前，进行充分的探索性分析，用简单、直观的方式展示有意义的探索性分析结果（图或者表）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge40e020" class="outline-3">
+<h3 id="orge40e020"><span class="section-number-3">1.4</span> 课程论文要求</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>尝试不同的定量方法，改进原文的模型，试试看能否得到相似结果或不一样的结论。（缺失数据的处理、选择性偏误、遗漏变量偏差、模型设定、添加控制变量、改换效度更高的变量、扩展时间序列、进行样本外检验、采用更合适的统计模型等）</li>
+<li>如果得到了不一样的结论，用单独一节来叙述，如果结论相似，简略介绍即可。</li>
+<li>如果你的模型比原文模型更好，那么提供验证的证据，即用原文相同的样本数据或其他的样本外数据检验。（模型的概率假定更合理；95%的因变量数据落在95%的置信区间内；模型对样本外数据的预测效果更好）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org05f7466" class="outline-3">
+<h3 id="org05f7466"><span class="section-number-3">1.5</span> 论文结构</h3>
+<div class="outline-text-3" id="text-1-5">
+<ul class="org-ul">
+<li>引言：研究目标和重要性、综述已有的研究和改进</li>
+<li>概念框架：描述研究问题的解决办法，用哪些变量进行经验分析</li>
+<li>模型和估计方法：展示用到的一个或多个模型，说明估计方法</li>
+<li>数据：介绍数据来源、预处理方式、描述性统计</li>
+<li>结果：展示已建立模型的估计结果，讨论经验结果的解释和力度</li>
+<li>结论：总结讨论结果，提出进一步研究的方向</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org12aafda" class="outline-3">
+<h3 id="org12aafda"><span class="section-number-3">1.6</span> 论文格式</h3>
+<div class="outline-text-3" id="text-1-6">
+<ul class="org-ul">
+<li>中文宋体小四或英文 Times New Roman 12pt、双倍行距，无封面，左上角装订</li>
+<li>包括论文题目、姓名、学号</li>
+<li>参考文献建议按照《公共管理学报》要求</li>
+<li>中间过程或不重要的细节可以放在附录中</li>
+<li>明确写出所建立的模型</li>
+<li>用公式编辑器编辑用到的数学公式，如果会用LaTex排版更好</li>
+<li>数字保留两位小数或者保留到你认为足够简单清晰的位数</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcd74c9f" class="outline-3">
+<h3 id="orgcd74c9f"><span class="section-number-3">1.7</span> 论文图表格式</h3>
+<div class="outline-text-3" id="text-1-7">
+<ul class="org-ul">
+<li>图表应简明扼要，展示论点，不是展示过程，不应过度使用</li>
+<li>图表应独立设定标题，图表分开标号，下方段落应有文字介绍</li>
+<li>建议挑出图表中的具体某个数字或信息进行举例，帮助理解</li>
+<li>表格采用三线表，不要每行每列都添加分隔线</li>
+<li>表格中有百分数，应在首行标注‘%’，不要每个单元都用。</li>
+<li>表格中每列数字的小数点应对齐。</li>
+<li>图表大小应合适，信息量小的图尽量小。</li>
+<li>可以用图或者表的地方，尽量用图。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga7730a8" class="outline-3">
+<h3 id="orga7730a8"><span class="section-number-3">1.8</span> 最终提交文件</h3>
+<div class="outline-text-3" id="text-1-8">
+</div>
+<ol class="org-ol">
+<li><a id="org7a24007"></a>电子版：<br />
+<div class="outline-text-4" id="text-1-8-1">
+<p>
+下列4个文件打包成一个zip或rar文件，文件名是学号+姓名，提交时间：最后一次课后第二天中午12点，成绩以电子版为准！
+</p>
+<ol class="org-ol">
+<li>说明文件（如果包括多个数据文件，多个R程序文件等，列明所有的文件内容）</li>
+<li>数据文件（*.csv, *.dta, *.xlsx等）</li>
+<li>R语言程序文件（*.R）</li>
+<li>论文（*.doc，*.pdf）</li>
+</ol>
+</div>
+</li>
+<li><a id="orgf516c60"></a>纸版论文：<br />
+<div class="outline-text-4" id="text-1-8-2">
+<p>
+最后一次课提交。
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-org1829480" class="outline-3">
+<h3 id="org1829480"><span class="section-number-3">1.9</span> 参考书目与文献</h3>
+<div class="outline-text-3" id="text-1-9">
+<ul class="org-ul">
+<li>Kabacoff. R语言实战，人民邮电出版社</li>
+<li>Alan Agresti. Categorical Data Analysis. Wiley Interscience</li>
+<li>Gelman and Hill. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press.</li>
+<li>Kline. Principles and practice of structural equation modeling. The Guilford Press.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org99e86a5" class="outline-2">
+<h2 id="org99e86a5"><span class="section-number-2">2</span> 模型结果解释的重要性</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org29969de" class="outline-3">
+<h3 id="org29969de"><span class="section-number-3">2.1</span> 如何解释模型结果？</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+对于一般的线性回归模型，我们采用回归系数及其标准误来推断自变量\(x\)和因变量\(y\)之间的关系。但是如果我们对线性回归方程进行了调整，那么如何解释回归系数\(\beta\)呢？
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org1010621"></a>变换后的变量<br />
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+\[log(income)=\alpha+\beta_1 age+\epsilon\]
+\[income=\alpha+\beta_2 age+\beta_3 age^2+\epsilon\]
+</p>
+</div>
+</li>
+<li><a id="orgf2df6ff"></a>交互项<br />
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+\[income=\alpha+\beta_4 sex+\beta_5 educ+\beta_6(sex\times educ)+\epsilon\]
+</p>
+</div>
+</li>
+<li><a id="org326d017"></a>时间序列<br />
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+\[environment_t = \alpha+\beta_7 environment_{t-1}+\beta_8 investment_t \epsilon_t\]
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-orgc07f34b" class="outline-3">
+<h3 id="orgc07f34b"><span class="section-number-3">2.2</span> 如何解释模型结果？</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<ol class="org-ol">
+<li><a id="org43a5dfa"></a>多个方程<br />
+<div class="outline-text-4" id="text-2-2-1">
+\begin{equation*}
+\begin{cases}
+environmental\ awareness = \alpha +\beta_9 environmental\ knowledge +\epsilon \\ \\
+environmental\ knowledge = \eta +\beta_{10} environmental\ awareness +\omega
+\end{cases}
+\end{equation*}
+</div>
+</li>
+<li><a id="org687d8a6"></a>非线性模型<br />
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+\[Pr(nuclear\ test)=(1-exp(-\alpha-\beta_{11} embargo))^{-1}\]
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-orgc0d9c07" class="outline-3">
+<h3 id="orgc0d9c07"><span class="section-number-3">2.3</span> 如何解释模型结果？</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+模型变得越复杂，如何有效解释和呈现结果就变得越重要。如果只关注回归系数的符号和显著性（数星星），可能会导致：
+</p>
+<ul class="org-ul">
+<li>无法或难以向非技术类读者传递正确的信息；</li>
+<li>错误解释模型的结果；</li>
+<li>无法看到模型结果暗含的信息。</li>
+</ul>
+<p>
+建议采用绘图的方式来传递和解释模型的结果（灵活的绘制图形是R的强项）。
+</p>
+</div>
+</div>
+<div id="outline-container-orge09e047" class="outline-3">
+<h3 id="orge09e047"><span class="section-number-3">2.4</span> 挑战者号航天飞机灾难</h3>
+<div class="outline-text-3" id="text-2-4">
+<ul class="org-ul">
+<li>挑战者号航天飞机灾难发生于美国东部时间1986年1月28日上午11时39分：在美国佛罗里达州上空刚起飞73秒的挑战者号航天飞机发生解体，机上7名机组人员丧命。解体后的残骸掉落在美国佛罗里达州中部的大西洋沿海处。</li>
+<li>挑战者号航天飞机升空后，因右侧固体火箭助推器的 <b>O型环密封圈</b> 失效，使得原本应该是密封的固体火箭助推器内的高压高热气体泄漏。这批气体影响了毗邻的外儲箱，在高温的烧灼下结构失效，同时也让右侧固体火箭助推器尾部脱落分离。最后，高速飞行中的航天飞机在空气阻力的作用下于发射后的第73秒解体。(wikipedia)</li>
+<li>那么能否避免这场灾难呢？</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcb40a4a" class="outline-3">
+<h3 id="orgcb40a4a"><span class="section-number-3">2.5</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+<b>发生O型环密封圈损坏的飞行</b>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">飞行代码</th>
+<th scope="col" class="org-right">温度（F）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">2</td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left">41b</td>
+<td class="org-right">57</td>
+</tr>
+
+<tr>
+<td class="org-left">41c</td>
+<td class="org-right">63</td>
+</tr>
+
+<tr>
+<td class="org-left">41d</td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left">51c</td>
+<td class="org-right">53</td>
+</tr>
+
+<tr>
+<td class="org-left">61a</td>
+<td class="org-right">79</td>
+</tr>
+
+<tr>
+<td class="org-left">61c</td>
+<td class="org-right">58</td>
+</tr>
+</tbody>
+</table>
+<p>
+莫顿·塞奥科公司的工程师制作了上表，并且对气温53度以下的发射表示担忧， <b>为什么</b> ？
+他们了解到O型环密封圈在低温环境下可能会损坏，但是却没法说服管理当局（NASA）认识到危险。还有一种解释，即在高温或低温时会发生损坏。
+他们对数据的结果呈现有哪些问题？
+</p>
+</div>
+</div>
+<div id="outline-container-orgb1ecc1d" class="outline-3">
+<h3 id="orgb1ecc1d"><span class="section-number-3">2.6</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+工程师只展现了发生密封圈损坏的飞行记录，忽略了未发生损坏的飞行记录，即有选择性的呈现因变量。
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">是否损坏</th>
+<th scope="col" class="org-right">温度</th>
+<th scope="col" class="org-left">是否损坏</th>
+<th scope="col" class="org-right">温度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">66</td>
+<td class="org-left">否</td>
+<td class="org-right">78</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">70</td>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">69</td>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">53</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">68</td>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+<td class="org-left">否</td>
+<td class="org-right">75</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">72</td>
+<td class="org-left">否</td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">73</td>
+<td class="org-left">否</td>
+<td class="org-right">81</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">70</td>
+<td class="org-left">否</td>
+<td class="org-right">76</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">57</td>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">79</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">63</td>
+<td class="org-left">否</td>
+<td class="org-right">76</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">70</td>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">58</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+为啥要按照飞行记录号来排序？
+</p>
+</div>
+</div>
+<div id="outline-container-org88d0508" class="outline-3">
+<h3 id="org88d0508"><span class="section-number-3">2.7</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+如果按照发射时的气温来排序。有什么规律？
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">是否损坏</th>
+<th scope="col" class="org-right">温度</th>
+<th scope="col" class="org-left">是否损坏</th>
+<th scope="col" class="org-right">温度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">53</td>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">57</td>
+<td class="org-left">否</td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">58</td>
+<td class="org-left">否</td>
+<td class="org-right">70</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">63</td>
+<td class="org-left">否</td>
+<td class="org-right">72</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">66</td>
+<td class="org-left">否</td>
+<td class="org-right">73</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+<td class="org-left">否</td>
+<td class="org-right">75</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+<td class="org-left">否</td>
+<td class="org-right">76</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">67</td>
+<td class="org-left">否</td>
+<td class="org-right">76</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">68</td>
+<td class="org-left">否</td>
+<td class="org-right">78</td>
+</tr>
+
+<tr>
+<td class="org-left">否</td>
+<td class="org-right">69</td>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">79</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>是</b></td>
+<td class="org-right">70</td>
+<td class="org-left">否</td>
+<td class="org-right">81</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+如果莫顿·塞奥科公司的工程师在发射前制作了上表又会怎样？
+</p>
+</div>
+</div>
+<div id="outline-container-orgfe32c01" class="outline-3">
+<h3 id="orgfe32c01"><span class="section-number-3">2.8</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+为什么NASA做了错误的决定？
+文献中的回答：官僚政治、团体迷思、有限理性等
+统计学家Edward Tufte认为是数据结果呈现与建模的问题：
+</p>
+<ul class="org-ul">
+<li>图表运用不当</li>
+<li>挑选损坏情况下的数据</li>
+<li>未考虑简单的统计模型</li>
+</ul>
+<p>
+你认为应该怎么更好地展现这些数据？
+</p>
+</div>
+</div>
+<div id="outline-container-org8c83c84" class="outline-3">
+<h3 id="org8c83c84"><span class="section-number-3">2.9</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+散点图能够比表格更好展现变量间的关系
+纵坐标是O型密封环损坏指数（由Tufte制作）
+</p>
+
+<div class="figure">
+<p><img src="./img/1.png" alt="1.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org97e0012" class="outline-3">
+<h3 id="org97e0012"><span class="section-number-3">2.10</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+发射时的预报温度是多少？26-29华氏度！
+</p>
+
+<div class="figure">
+<p><img src="./img/2.png" alt="2.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0f464fa" class="outline-3">
+<h3 id="org0f464fa"><span class="section-number-3">2.11</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-11">
+<ul class="org-ul">
+<li>如果由你在发射前进行分析和决策建议，你已经制作了上面的散点图，还需添加什么？或者你觉得你的上司会问你什么样的问题？</li>
+<li>”26华氏度的气温条件下，发射失败的概率有多大？“</li>
+<li>散点图只能展示概率很高，但是没有具体的数值，无法提供进一步决策的信息。</li>
+<li>此外，如果发射气温是58度或67度呢？</li>
+<li>因此我们需要一个模型来传递更精确的概率信息。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5fd3fbc" class="outline-3">
+<h3 id="org5fd3fbc"><span class="section-number-3">2.12</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-12">
+<p>
+可以简单地用温度的函数来构建损害概率的模型。统计上一般采用logit回归模型。
+\[Pr(damage)=(1-exp(-\beta_0-\beta_1 temperature))^{-1}\]
+通过R可以获得如下输出
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">变量</th>
+<th scope="col" class="org-right">系数</th>
+<th scope="col" class="org-right">标准误</th>
+<th scope="col" class="org-right">p值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">温度</td>
+<td class="org-right">-0.18</td>
+<td class="org-right">0.09</td>
+<td class="org-right">0.047</td>
+</tr>
+
+<tr>
+<td class="org-left">截距</td>
+<td class="org-right">11.9</td>
+<td class="org-right">6.34</td>
+<td class="org-right">0.062</td>
+</tr>
+
+<tr>
+<td class="org-left">样本量</td>
+<td class="org-right">22</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">似然对数</td>
+<td class="org-right">-10.9</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+<p>
+大多数人会解释成温度与损坏之间具有统计上显著的负相关关系，但是这种解释还是不够清晰，是否有 <b>更具说服力，更清晰，更有价值的</b> 结果呈现方式？
+</p>
+</div>
+</div>
+<div id="outline-container-orga2ad16d" class="outline-3">
+<h3 id="orga2ad16d"><span class="section-number-3">2.13</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-13">
+<p>
+呈现非线性模型的预测与不确定性
+</p>
+
+<div class="figure">
+<p><img src="./img/3.png" alt="3.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8a43b39" class="outline-3">
+<h3 id="org8a43b39"><span class="section-number-3">2.14</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-14">
+<p>
+更清晰的呈现在29华氏度时进行发射的决策错误
+</p>
+
+<div class="figure">
+<p><img src="./img/4.png" alt="4.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1c277d2" class="outline-3">
+<h3 id="org1c277d2"><span class="section-number-3">2.15</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-15">
+<p>
+比较失败与成功
+</p>
+
+<div class="figure">
+<p><img src="./img/5.png" alt="5.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgad0f5bb" class="outline-3">
+<h3 id="orgad0f5bb"><span class="section-number-3">2.16</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-16">
+<p>
+从数据上看，66华氏度似乎是最低的安全发射温度，低于该温度，几乎一定会失败。
+</p>
+
+<div class="figure">
+<p><img src="./img/6.png" alt="6.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org27ff71c" class="outline-3">
+<h3 id="org27ff71c"><span class="section-number-3">2.17</span> 挑战者号航天飞机的发射决定</h3>
+<div class="outline-text-3" id="text-2-17">
+<p>
+那么可接受的失败风险有多高？
+</p>
+
+<div class="figure">
+<p><img src="./img/7.png" alt="7.png" width="800" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 厦门大学公共事务学院</p>
+<p class="date">Created: 2019-06-20 四 15:46</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
