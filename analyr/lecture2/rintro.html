@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-06-20 四 18:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>R语言基本设置与操作</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="厦门大学公共事务学院" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">R语言基本设置与操作</h1>
+
+<div id="outline-container-orgb34985f" class="outline-2">
+<h2 id="orgb34985f"><span class="section-number-2">1</span> 基本设置</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org5b68b73" class="outline-3">
+<h3 id="org5b68b73"><span class="section-number-3">1.1</span> 安装和使用包</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-R">install.packages(<span style="color: #2d9574;">"foreign"</span>)
+<span style="color: #4f97d7;">library</span>(foreign)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org409d45b" class="outline-3">
+<h3 id="org409d45b"><span class="section-number-3">1.2</span> 设置工作目录</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">setwd</span>(<span style="color: #2d9574;">"~/Downloads/rproject/presention"</span>)
+getwd()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe5f5a3" class="outline-3">
+<h3 id="orgbe5f5a3"><span class="section-number-3">1.3</span> 基本运算</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-R">2 + 2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#21152;</span>
+9 - 4 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#20943;</span>
+6 * 12 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#20056;</span>
+86 / 4 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#38500;</span>
+
+2 ^ 8 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#27425;&#26041;</span>
+log(12) <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#33258;&#28982;&#23545;&#25968;  </span>
+exp(2) <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">e&#30340;&#25351;&#25968;</span>
+2 / 9 ^ 2 == 2 / 81 
+2 / 9 ^ 2 == (2/9) ^ 2
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org208b215" class="outline-2">
+<h2 id="org208b215"><span class="section-number-2">2</span> 获取帮助</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1cce0b5" class="outline-3">
+<h3 id="org1cce0b5"><span class="section-number-3">2.1</span> R 语言自带帮助系统</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-R">??mean
+?mean
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf240f92" class="outline-3">
+<h3 id="orgf240f92"><span class="section-number-3">2.2</span> 网上搜索</h3>
+<div class="outline-text-3" id="text-2-2">
+<ol class="org-ol">
+<li>Stack Overflow <a href="http://stackoverflow.com/questions/tagged/r">http://stackoverflow.com/questions/tagged/r</a></li>
+
+<li>Quick R <a href="http://www.statmethods.net/">http://www.statmethods.net/</a></li>
+
+<li><b><b>拷贝报错信息，Google，一般都能查到解决问题的办法！</b></b></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org66a1bd4" class="outline-2">
+<h2 id="org66a1bd4"><span class="section-number-2">3</span> 创建数据对象</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org7ebeb80" class="outline-3">
+<h3 id="org7ebeb80"><span class="section-number-3">3.1</span> 单个元素的对象（整数、小数、字符串、逻辑符号）</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-R">integer_obj <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 4 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#25972;&#25968;</span>
+numeric_obj <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 4.39053 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#23454;&#25968;</span>
+string_obj <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">"This is a string"</span> <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#23383;&#31526;&#20018; </span>
+logical_obj <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #a45bad;">TRUE</span> <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#36923;&#36753;&#31526;&#21495; </span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgefee669" class="outline-3">
+<h3 id="orgefee669"><span class="section-number-3">3.2</span> 多个元素组成的对象</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<ol class="org-ol">
+<li><a id="org055e952"></a>向量<br />
+<div class="outline-text-4" id="text-3-2-1">
+<div class="org-src-container">
+<pre class="src src-R">vector_of_integers <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(3, 9, 10, 4) 
+vector_of_integers
+vector_of_numerics <span style="color: #ce537a; font-weight: bold;">&lt;-</span> rep(4.39024, 10) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">rep&#20989;&#25968;&#36171;&#20540;</span>
+vector_of_numerics
+
+sequentialvec <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1:10 <span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#20882;&#21495;&#36171;&#20540;</span>
+backwardssequence <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 10:1
+seqvec2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> seq(0, 50, 10) <span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">seq&#20989;&#25968;&#36171;&#20540;</span>
+sequentialvec  
+backwardssequence
+seqvec2
+</pre>
+</div>
+</div>
+</li>
+
+
+<li><a id="org98ab880"></a>向量的运算<br />
+<div class="outline-text-4" id="text-3-2-2">
+<div class="org-src-container">
+<pre class="src src-R">vector_of_integers - 2 * vector_of_integers 
+vector_of_integers
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="org75cbfd2"></a>向量中元素的选择<br />
+<div class="outline-text-4" id="text-3-2-3">
+<div class="org-src-container">
+<pre class="src src-R">vector_of_integers
+vector_of_integers[1] 
+vector_of_integers[2:4] 
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27714;&#24179;&#22343;&#20540;</span>
+mean_of_vector_of_integers <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mean(vector_of_integers)
+mean_of_vector_of_integers
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orged1f72b"></a>练习：创建一个包含100到200之间所有整数的向量seq12，求其平均值，并赋值给mean12<br />
+<div class="outline-text-4" id="text-3-2-4">
+<div class="org-src-container">
+<pre class="src src-R">seq12 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> seq(100,200,1)
+mean12 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mean(seq12)
+mean12
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="org1882647"></a>矩阵<br />
+<div class="outline-text-4" id="text-3-2-5">
+<ul class="org-ul">
+<li>采用向量创建矩阵</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">vector_of_integers
+two_by_two_matrix <span style="color: #ce537a; font-weight: bold;">&lt;-</span> matrix(vector_of_integers, nrow=2, ncol=2) 
+two_by_two_matrix
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>选择特定的矩阵元素</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">two_by_two_matrix[1,2] 
+two_by_two_matrix[,2] 
+two_by_two_matrix[,1]
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>矩阵加法、矩阵按元素相乘、矩阵乘法</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">two_by_two_matrix + two_by_two_matrix 
+two_by_two_matrix * two_by_two_matrix
+two_by_two_matrix <span style="color: #7590db;">%*%</span> two_by_two_matrix 
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4858fd6" class="outline-2">
+<h2 id="org4858fd6"><span class="section-number-2">4</span> 布尔运算</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-R">2 == 2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#30456;&#31561;&#65292;&#27880;&#24847; == &#20195;&#34920;&#24067;&#23572;&#36816;&#31639;&#65292;= &#20195;&#34920;&#36171;&#20540;</span>
+2 != 2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#19981;&#30456;&#31561;</span>
+4 &gt; 2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#22823;&#20110;</span>
+4 &gt;= 2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#22823;&#20110;&#25110;&#31561;&#20110;</span>
+2 &lt; 4 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#23567;&#20110;</span>
+2 &lt;= 4 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#23567;&#20110;&#25110;&#31561;&#20110;</span>
+!(4 &gt; 2) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36820;&#22238; FALSE</span>
+2==2 &amp; 4==2 <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#37319;&#29992;&amp;&#21644;|&#26469;&#36830;&#25509;&#24067;&#23572;&#36816;&#31639; </span>
+2==2 | 4==2 
+c(3,5,2,0,-4,-5) &gt; 0
+
+full <span style="color: #ce537a; font-weight: bold;">&lt;-</span> state.name <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">R has built in state names!</span>
+full[1:10]
+pacstates <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(<span style="color: #2d9574;">"Washington"</span>, <span style="color: #2d9574;">"Oregon"</span>, <span style="color: #2d9574;">"California"</span>, <span style="color: #2d9574;">"Alaska"</span>, <span style="color: #2d9574;">"Hawaii"</span>)
+!(full <span style="color: #7590db;">%in%</span> pacstates)[1:10]
+full[!(full <span style="color: #7590db;">%in%</span> pacstates)]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org455824c" class="outline-2">
+<h2 id="org455824c"><span class="section-number-2">5</span> 函数</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-R">mean(c(2,3,10,3,<span style="color: #a45bad;">NA</span>), na.rm = <span style="color: #a45bad;">TRUE</span>) 
+mean(x = c(2,3,10,3)) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">mean takes one argument, x</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf6aa1c9" class="outline-3">
+<h3 id="orgf6aa1c9"><span class="section-number-3">5.1</span> 自定义函数</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">add_2</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(x){ 
+k <span style="color: #ce537a; font-weight: bold;">&lt;-</span> x + 2 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21152; 2</span>
+<span style="color: #4f97d7; font-weight: bold;">return</span>(k) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36820;&#22238; k </span>
+}
+adding_2_to_6 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> add_2(6)
+adding_2_to_6
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge1725eb" class="outline-3">
+<h3 id="orge1725eb"><span class="section-number-3">5.2</span> 练习：编写函数对向量元素进行开3次幂并除以自然对数的计算，并返回值</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">example</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(x){
+  <span style="color: #4f97d7; font-weight: bold;">return</span>(x^(1/3) / log(x)) 
+  }
+example(5:10)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf5dfa1e" class="outline-2">
+<h2 id="orgf5dfa1e"><span class="section-number-2">6</span> 条件执行</h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-R">x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1000000
+<span style="color: #4f97d7; font-weight: bold;">if</span>(x &gt; 10000){
+<span style="color: #2d9574;">"x is a really big number"</span>
+}
+<span style="color: #4f97d7; font-weight: bold;">if</span>(x &lt; 10000){
+<span style="color: #2d9574;">"x isn't that big"</span>
+}
+
+x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1
+<span style="color: #4f97d7; font-weight: bold;">if</span>(x &gt; 10000){
+<span style="color: #2d9574;">"x is a really big number"</span>
+}  <span style="color: #4f97d7; font-weight: bold;">else</span>{
+<span style="color: #2d9574;">"x isn't that big"</span>
+}
+ifelse(x &gt; 10000,
+<span style="color: #2d9574;">"x is a really big number"</span>,
+<span style="color: #2d9574;">"x isn't that big"</span>)
+
+y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">"Math!"</span>
+<span style="color: #4f97d7; font-weight: bold;">if</span>(!is.numeric(y)) {
+<span style="color: #2d9574;">"y isn't even a number"</span>
+} <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #4f97d7; font-weight: bold;">if</span>(y == 10000){
+<span style="color: #2d9574;">"y equals 10000"</span>
+} <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #4f97d7; font-weight: bold;">if</span>(y &gt; 10000){
+<span style="color: #2d9574;">"y is really big"</span>
+}  <span style="color: #4f97d7; font-weight: bold;">else</span>{
+<span style="color: #2d9574;">"y isn't that big"</span>
+}
+
+ifelse(!is.numeric(y),
+<span style="color: #2d9574;">"y isn't even a number"</span>,
+ifelse(y == 10000,
+<span style="color: #2d9574;">"y equals 10000"</span>,
+ifelse(y &gt; 10000,
+<span style="color: #2d9574;">"y is a really big number"</span>,
+<span style="color: #2d9574;">"y isn't that big"</span>)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7288ea4" class="outline-2">
+<h2 id="org7288ea4"><span class="section-number-2">7</span> 重复与循环</h2>
+<div class="outline-text-2" id="text-7">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7; font-weight: bold;">for</span>(i <span style="color: #4f97d7; font-weight: bold;">in</span> 1:5){
+  print(i)
+  }
+
+<span style="color: #4f97d7; font-weight: bold;">for</span>(i <span style="color: #4f97d7; font-weight: bold;">in</span> seq(1,5)){
+  print(i)
+  }
+
+index <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(<span style="color: #2d9574;">"look"</span>, <span style="color: #2d9574;">"how"</span>, <span style="color: #2d9574;">"fancy"</span>, <span style="color: #2d9574;">"we"</span>, <span style="color: #2d9574;">"can"</span>,
+<span style="color: #2d9574;">"be"</span>, <span style="color: #2d9574;">"with"</span>, <span style="color: #2d9574;">"loop"</span>, <span style="color: #2d9574;">"indexes"</span>)
+<span style="color: #4f97d7; font-weight: bold;">for</span>(i <span style="color: #4f97d7; font-weight: bold;">in</span> index){
+  print(i)
+  }
+<span style="color: #4f97d7; font-weight: bold;">for</span>(i <span style="color: #4f97d7; font-weight: bold;">in</span> 1:10){
+  <span style="color: #4f97d7; font-weight: bold;">for</span>(j <span style="color: #4f97d7; font-weight: bold;">in</span> 50:60){
+    <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">some sort of code...</span>
+    }
+  }
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc67aade" class="outline-2">
+<h2 id="orgc67aade"><span class="section-number-2">8</span> 数据框与数据导入</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li>设定工作目录</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">setwd</span>(<span style="color: #2d9574;">"&#20320;&#30340;&#25968;&#25454;&#25991;&#20214;&#25152;&#22312;&#30446;&#24405;"</span>)
+</pre>
+</div>
+<ul class="org-ul">
+<li>读入<a href="./house.txt">数据</a></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">houses_data <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.table(file = <span style="color: #2d9574;">"houses.txt"</span>, header = T, sep = <span style="color: #2d9574;">"\t"</span>)
+</pre>
+</div>
+<ul class="org-ul">
+<li>数据框的操作</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">head(houses_data)
+houses_data$PRICE[1:20]
+houses_data[houses_data$SQFT &gt; 2500,][1:5,]
+
+names(houses_data)
+houses_data[1:10,1]
+sq.ft.price <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #a45bad;">NULL</span> <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21019;&#24314;&#19968;&#20010;&#23545;&#35937;</span>
+<span style="color: #4f97d7; font-weight: bold;">for</span>(i <span style="color: #4f97d7; font-weight: bold;">in</span> 1:10000){
+    sample.data <span style="color: #ce537a; font-weight: bold;">&lt;-</span> houses_data[sample(1:nrow(houses_data), 100),]
+    price.persqft <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sample.data$PRICE / sample.data$SQFT <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#24314;&#31435;&#20195;&#34920;&#21333;&#20301;&#38754;&#31215;&#20215;&#26684;&#30340;&#21464;&#37327;</span>
+    sq.ft.price[i] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mean(price.persqft) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23558;&#27599;&#20010;&#26679;&#26412;&#22343;&#20540;&#23384;&#20837;&#21521;&#37327;</span>
+}
+
+hist(sq.ft.price)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgeb734ce" class="outline-2">
+<h2 id="orgeb734ce"><span class="section-number-2">9</span> 绘图</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li>直方图</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">hist(c(1,1,2,2,3,3,3,3), main = <span style="color: #2d9574;">"My Plot"</span>, xlab = <span style="color: #2d9574;">"My variable"</span>) 
+</pre>
+</div>
+<ul class="org-ul">
+<li>散点图</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">plot(x = c(1,2,3,4,5), y = c(4,2,0,1,4),  col = <span style="color: #2d9574;">"Red"</span>, xlab =<span style="color: #2d9574;">"x"</span>,ylab = <span style="color: #2d9574;">"y"</span>,
+     pch = 18) <span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#28857;&#30340;&#24418;&#29366; </span>
+</pre>
+</div>
+<ul class="org-ul">
+<li>导出图像</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">pdf(<span style="color: #2d9574;">"plot_output.pdf"</span>) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25171;&#24320;</span>
+hist(c(1,1,2,2,3,3,3,3), main = <span style="color: #2d9574;">"My Plot"</span>, xlab = <span style="color: #2d9574;">"My variable"</span>) 
+dev.off() <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20851;&#38381;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 厦门大学公共事务学院</p>
+<p class="date">Created: 2019-06-20 四 18:14</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
