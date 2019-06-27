@@ -2,6 +2,7 @@
 #+AUTHOR: 厦门大学公共事务学院
 #+EMAIL: 
 #+OPTIONS: H:2 toc:nil num:t tex:t
+#+BABEL: :exports both
 
 * 基本设置
 ** 安装和使用包
@@ -200,11 +201,17 @@ ifelse(y > 10000,
 #+END_SRC
 
 * 重复与循环
-#+BEGIN_SRC R
+#+name: abc
+#+begin_src R
 for(i in 1:5){
   print(i)
   }
+#+end_src
 
+#+RESULTS: abc
+
+
+#+BEGIN_SRC R
 for(i in seq(1,5)){
   print(i)
   }
@@ -248,20 +255,24 @@ for(i in 1:10000){
 hist(sq.ft.price)
 #+END_SRC
 
-
 * 绘图
 - 直方图
-#+BEGIN_SRC R
+
+#+BEGIN_SRC R :results output graphics :file 1.png :session :exports both
 hist(c(1,1,2,2,3,3,3,3), main = "My Plot", xlab = "My variable") 
 #+END_SRC
+
 - 散点图
-#+BEGIN_SRC R
+#+BEGIN_SRC R :results output graphics :file 2.png :session :exports both
 plot(x = c(1,2,3,4,5), y = c(4,2,0,1,4),  col = "Red", xlab ="x",ylab = "y",
      pch = 18) ## 点的形状 
 #+END_SRC
+
+
 - 导出图像
 #+BEGIN_SRC R
 pdf("plot_output.pdf") # 打开
 hist(c(1,1,2,2,3,3,3,3), main = "My Plot", xlab = "My variable") 
 dev.off() # 关闭
 #+END_SRC
+
