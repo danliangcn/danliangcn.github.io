@@ -1,0 +1,897 @@
+#+TITLE: 线性回归
+#+AUTHOR: 厦门大学公共事务学院
+#+EMAIL: 
+#+OPTIONS: H:2 toc:nil num:t tex:t ^:nil
+#+LATEX_CLASS: beamer
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+#+BEAMER_THEME: default
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_HEADER:
+#+LATEX_HEADER: \usepackage{ctex}
+#+LATEX_COMPILER: xelatex
+
+
+* 线性回归基础  
+:PROPERTIES:
+:header-args: :results output :exports both :session lregress
+:END:
+
+** R语言的list对象
+list对象可以用来“包裹”完全不同类型的变量对象，甚至可以是list对象，可以方便地将不同类型的参数传递给函数，或者获取一些不同类型对象组成的结果。
+#+BEGIN_SRC R
+mylist <- list(a=1, b=c(1,2), c="hello")
+mylist$a
+mylist$b
+mylist$c
+mylist[3]
+mylist[["c"]]
+#+END_SRC
+
+** lm()函数的用法
+先来一个假想的例子
+#+BEGIN_SRC R
+x <- 1:100
+y <- 3*x + rnorm(100)
+res <- lm(y~x)
+# 回归结果汇总
+summary(res)
+#+END_SRC
+提取回归相关结果
+#+BEGIN_SRC R :exports code
+# 提取回归系数
+coef(res)
+
+# 回归方程的残差
+res$residuals
+resid(res)
+
+# 提取协方差矩阵x <- 1:100
+y <- 3*x + rnorm(100)
+res <- lm(y~x)
+# 回归结果汇总
+summary(res)
+
+# 提取回归系数
+coef(res)
+
+# 回归方程的残差
+res$residuals
+resid(res)
+
+# 提取协方差矩阵
+vcov(res)
+
+# 计算标准误
+sqrt(diag(vcov(res)))
+
+# 提取拟合值
+predict(res)
+
+# 获取自变量新数据的预测值，预测区间，置信区间
+xnew <- data.frame(x=seq(-1,1,1))
+predict(res, newdata=xnew, interval = "prediction")
+predict(res, newdata=xnew, interval = "confidence")
+#+END_SRC
+
+** 回归示例：母亲教育与子女认知能力
+数据集：[[./kidiq.dta][母亲教育与子女认知能力]]
+| 变量      | 描述                    |
+|-----------+-------------------------|
+| kidscore   | 3-4岁小孩的认知测试分数 |
+| mom_hs   | 母亲是否上过高中        |
+| mom_iq   | 母亲的智商              |
+
+** 回归示例：单个预测变量
+
++ 采用母亲的智商预测3到4岁小孩的认知测试分数
+#+BEGIN_SRC R
+library("foreign")
+# 清除内存
+rm(list=ls())
+
+# 载入数据
+kidiq <- read.dta("kidiq.dta")
+
+attach(kidiq)
+
+fit0 <- lm(kid_score~mom_iq)
+
+summary(fit0)
+#+END_SRC
+
+** 回归示例：多个预测变量
++ 自变量：母亲是否上过高中、母亲的智商
++ 解释系数和截距
+#+BEGIN_SRC R
+fit1 <- lm (kid_score ~ mom_hs + mom_iq)
+
+summary(fit1)
+#+END_SRC
+
++ 系数的解释：保持其他变量不变，预测变量单位变动相应的响应变量变动大小。
+
++ 注意：有时候在保持其他变量不变的情况下是不可能变动某个变量的，例如回归中同时包括IQ和 \(IQ^{2}\)，或者有交互项 mom_hs*mom_i
+q.
+** 回归示例：去除截距和添加交互项
++ 没有截距（常数项）
+#+BEGIN_SRC R
+fit2 <- lm (kid_score ~ mom_hs + mom_iq - 1)
+
+summary(fit2)
+#+END_SRC
+
++ 添加交互项
+增加一个交互项以允许IQ的回归系数随高中完成情况不同而变动
+#+BEGIN_SRC R
+fit3 <- lm (kid_score ~ mom_hs + mom_iq + mom_hs:mom_iq)
+
+summary(fit3)
+#+END_SRC
++ 解释系数和截距  
+  - 截距： $IQ=0 \quad hs=0$（无意义）  
+  - mom_hs的系数： IQ=0时，是否完成高中相应的孩子得分差异  
+  - mom_iq的系数： 未完成高中母亲中，IQ增加所相应的孩子得分差异，红线斜率  
+  - 交互项的系数：母亲是否完成高中两组之间在IQ斜率上的差别  
++ 快速添加交互项
+#+BEGIN_SRC R
+fit4 <- lm (kid_score ~ mom_hs * mom_iq)
+
+summary(fit4)
+#+END_SRC
+** 回归绘图：par()设置
++ 设置文本大小：
+- cex 文本大小（2代表2倍大小） 
+- cex.axis 坐标轴刻度值大小 
+- cex.lab 坐标轴标识大小
+- cex.main 图标题大小
+- cex.sub 图副标题大小
+- font 字体
+- font.axis 坐标轴字体
+- srt 图中文本旋转
+- las 边缘文本旋转
+- text()函数用来在plot制图中添加文字
+- bg 背景色
+- col 线条、符号颜色
+- col.axis 坐标轴刻度值颜色
+- colors()可了解颜色选择
+- lty 线条类型
+- lwd 线条宽度
+- pch 数据符号
+- lab 刻度数量
+- xaxp x轴的刻度数量
+- tck，tcl 刻度相对于图的长度
+- mgp 坐标轴元素的间隔 eg. c(3,1,0)代表坐标轴的标识、刻度值、坐标轴线的位置
+- usr 坐标轴范围（xmin,xmax,ymin,ymax）
+- xlog,ylog x,y轴采用对数尺度
+#+BEGIN_SRC R :results output graphics :file 1.png :width 800 :height 600
+# 数据的散点图
+plot(x=mom_iq, y=kid_score)
+# 添加回归线
+abline(fit0$coefficients[1], fit0$coefficients[2], col="black")
+#+END_SRC
+
+** 绘制更美观的散点图
+#+BEGIN_SRC R :results output graphics :file 2.png :width 800 :height 600
+# 生成自变量新数据
+iqhyp <- seq(70,140,1)
+xnew <- data.frame(mom_iq=iqhyp)
+# 提取预测值和置信区间
+kidpred <- predict(fit0, newdata=xnew, interval="confidence", level=0.95)
+# 确定制图参数和绘图区范围，暂不绘制点与坐标
+par(cex.lab=1.5,mgp=c(2.5,0.8,0),family="STKaiti")
+plot(x=mom_iq, y=kid_score, xaxt="n", yaxt="n", type="n", xlab="母亲智商", ylab="小孩认知测试分数")
+# 绘制预测值置信区间
+xpoly <- c(iqhyp, rev(iqhyp), iqhyp[1])
+ypoly <- c(kidpred[,2], rev(kidpred[,3]), kidpred[1,2])
+polygon(x=xpoly, y=ypoly, col="grey60", border=FALSE)
+# 绘制回归线
+lines(x=iqhyp, y=kidpred[,1], col="black")
+# 按照母亲的教育程度标识数据点
+points(x=mom_iq[mom_hs==0], y=kid_score[mom_hs==0],col="red",pch=20)
+points(x=mom_iq[mom_hs==1], y=kid_score[mom_hs==1],col="blue",pch=20)
+# 绘制简化的坐标
+axis (1, c(80,100,120,140))
+axis (2, c(20,60,100,140))
+# 绘制图例
+legend(118,38,legend = c("高中以下","高中以上"), col = c("red","blue"), pch=20, bty="n",cex=1.5)
+#+END_SRC
+
+#+BEGIN_SRC R
+detach(kidiq)
+#+END_SRC
+* 线性回归假定和统计推断
+:PROPERTIES:
+:header-args: :results output :exports both 
+:END:
+** 线性回归模型的表达式
+线性回归的两种表达式：
+
+$$\begin{aligned}
+  y_i & =  X_i \beta+\epsilon_i \\
+      & =  \beta_1 X_{i1}+\cdots + \beta_k X_{ik} + \epsilon_i 
+\end{aligned},\qquad for \quad i=1,\cdots , n$$
+
+其中， $\epsilon_i$ 相互独立，服从均值为0，标准差为 $\sigma$ 正态分布  
+或者
+
+$$y_i \sim N(X_i \beta, \sigma^2),\qquad for \quad i=1,\cdots , n$$
+
+其中， $X$ 是 $n\times k$ 的预测变量矩阵，第 $i$ 行为 \(X_{i}\)， $\beta$ 是长度为 $k$ 的列向量   
+
+** 线性回归的矩阵形式
+方程表达：
+\[y_i=\beta_0+\beta_1 x_{1i}+\beta_2 x_{2i}+\epsilon_i\]
+矩阵表达：
+\[\begin{aligned}
+&\mathbf{y}=&\ &\mathbf{X}\ & \ &\boldsymbol{\beta} &+ \ &\boldsymbol{\epsilon} \\
+n&\times 1  &n &\times k    &k  &\times 1           &n   &\times 1
+\end{aligned}\]
+矩阵展开：
+\begin{equation*}
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1      & x_{11} & x_{12} & \ldots & x_{1k} \\
+    1      &x_{12}  & x_{22} & \ldots & x_{2k} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1      &x_{1n}  & x_{2n} & \ldots & x_{nk}
+  \end{bmatrix}
+\begin{bmatrix}
+\beta_0 \\
+\beta_1 \\
+\vdots \\
+\beta_k
+\end{bmatrix}
++
+\begin{bmatrix}
+\epsilon_1 \\
+\epsilon_2 \\
+\vdots \\
+\epsilon_n
+\end{bmatrix}
+\end{equation*}
+
+干扰项的均值
+\begin{equation*}
+E(\epsilon)=
+\begin{bmatrix}
+E(\epsilon_1 )\\ E(\epsilon_2 )\\ \vdots \\ E(\epsilon_n)
+\end{bmatrix}
+=
+\begin{bmatrix}
+0\\ 0\\ \vdots \\ 0
+\end{bmatrix}
+\end{equation*}
+
+干扰项的协方差矩阵
+\begin{equation*}
+\Sigma = 
+\begin{bmatrix}
+var(\epsilon_1 ) &cov(\epsilon_1 , \epsilon_2 ) &\dots &cov(\epsilon_1 ,\epsilon_n ) \\
+cov(\epsilon_2 ,\epsilon_1 ) &var(\epsilon_2 ) &\dots &cov(\epsilon_2 ,\epsilon_n ) \\
+\vdots & \vdots & \ddots & \vdots \\
+cov(\epsilon_n ,\epsilon_1 ) &cov(\epsilon_n , \epsilon_2 ) &\dots &var(\epsilon_n ) \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+E(\epsilon_{1}^2 ) &E(\epsilon_1 \epsilon_2 ) &\dots &E(\epsilon_1 \epsilon_n ) \\
+E(\epsilon_2 \epsilon_1 ) &E(\epsilon_{2}^2 ) &\dots &E(\epsilon_2 \epsilon_n ) \\
+\vdots & \vdots & \ddots & \vdots \\
+E(\epsilon_n \epsilon_1 ) &E(\epsilon_n \epsilon_2 ) &\dots &E(\epsilon_{n}^2 ) \\
+\end{bmatrix}
+\end{equation*}
+
+可以简化成外积形式
+\[\Sigma=E(\boldsymbol{\epsilon} \boldsymbol{\epsilon^{'}})\]
+
+如果线性回归假定成立（随机抽样假定和同方差假定），那么协方差矩阵有更简单的形式。
+\begin{equation*}
+\Sigma = 
+\begin{bmatrix}
+\epsilon^2 &0 &\dots &0 \\
+0          &\epsilon^2 &\dots &0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 &0 &\dots &\epsilon^2 
+\end{bmatrix}
+=\sigma^2 \boldsymbol{I}
+\end{equation*}
+
+** 最小二乘法拟合模型 
+
++ 采用最小二乘法拟合模型后得到估计量 $\hat \beta$ 和 $\hat \sigma$
+
+  - 找到让误差平方和最小的 \(\boldsymbol{\hat \beta}\)： $\sum_{i=1}^{n}(y_i-X_i \hat \beta)^2$ 
+  
+  - 对于给定的 $X,y$ , 当 $\hat\beta=(X^{'}X)^{-1}X^{'}y$ 时，误差平方和最小
+  
+  - 同时，估计协方差矩阵 $V_{\beta}\hat \sigma^2$ ，其中 $V_{\beta}=(X^tX)^{-1}$ 相应的对角线元素就是回归系数 $\beta$ 的方差，即 $\sqrt{V_{\beta 11}}\hat \sigma$
+
++ 估计量的标准：
+  - 无偏性：\(E(\hat\beta-\beta) \) 
+  - 有效性：平均而言与真实值最近。\(MSE=E[(\beta-\hat\beta)^2]=Var(\hat\beta)+Bias(\hat\beta|\beta)^2\)
+  - 一致性：随着样本量增加，渐进于真实值（计量经济领域更为重视）。 \(E(\hat\beta-\beta)\rightarrow 0 \quad N \rightarrow \infty \)
+** 线性回归模型估计的问题
++ 遗漏变量偏误： \[income_i=\beta_0+\beta_1 edu_i + \epsilon_i \]
++ 模型设定偏误：\[income_i=\beta_0+\beta_1 edu_i + \beta_2 age_i + \epsilon_i \]
++ 选择性偏误：高收入无应答
+#+BEGIN_SRC R :results output graphics :file 3.png :width 800 :height 600
+x <- runif(100,0,24)
+y <- rep(0,100)
+inceg <- data.frame(edu=x,income=y)
+error <- rnorm(100)
+inceg[inceg$edu<=12,"income"] <- 100+20*inceg[inceg$edu<=12,"edu"]
+inceg[inceg$edu>12,"income"] <- 100+30*inceg[inceg$edu>12,"edu"]
+inceg$income <- inceg$income + 50*error
+fit0 <- lm(income~edu, data = inceg)
+fit1 <- lm(income~edu, data = inceg[inceg$edu<=12,])
+summary(fit0)
+summary(fit1)
+plot(x=inceg$edu,y=inceg$income, xlab = "education", ylab = "income", pch=20, type = "n")
+abline(a=coef(fit0)[1],b=coef(fit0)[2])
+abline(a=coef(fit1)[1],b=coef(fit1)[2],col="red")
+points(x=inceg[inceg$edu<=12,"edu"],y=inceg[inceg$edu<=12,"income"],col="red",pch=20)
+points(x=inceg[inceg$edu>12,"edu"],y=inceg[inceg$edu>12,"income"],col="blue",pch=20)
+#+END_SRC
++ 完全共线性：\[entrance_i=\beta_0+\beta_1 language_i + \beta_2 math_i + \beta_3 totalscore +\epsilon_i \]
+部分共线性或多重共线性条件下，回归依然是无偏和有效的，只是难以区分这些相关性较强的变量，说明缺乏数据来精准回答研究问题。
++ 协变量内生：
+  - 制度与行为
+  - 内生性会导致回归系数是有偏的，并且是不一致的，即增加样本量也无济于事。
+  - 通过研究设计来解决内生性问题：实验法、工具变量回归、回归断点设计、自然实验等。
++ 异方差：
+  - 可以采用残差图来识别异方差
+#+BEGIN_SRC R :results output graphics :file 4.png :width 800 :height 600
+x <- runif(1000,1,100)
+error <- rnorm(1000,mean=0,sd=1*x)
+y <- 10+ 3*x +error
+plot(x,y)
+fit0 <- lm(y~x)
+abline(a=coef(fit0)[1],b=coef(fit0)[2])
+#+END_SRC
+
++ 序列相关：时间或空间上相关. 
+
++ 非正态：误差不服从正态分布，即随机过程非正态。 \(credit cards =\beta_0+\beta_1 income + \epsilon \) 
+** 误差方差与多元正态分布
++ 每个观测都包含系统项（\(x_i \beta\)）和随机项 \(\epsilon_i \)
++ n维向量 \(\boldsymbol{\epsilon}\)服从多元正态分布： \(\boldsymbol{\epsilon}\sim \boldsymbol{MVN(0,\Sigma)}\)
+\begin{equation*}
+\begin{bmatrix}
+X_1 \\
+X_2
+\end{bmatrix}
+= MVN(
+\begin{bmatrix}
+\mu_1 \\
+\mu_2
+\end{bmatrix}
+,
+\begin{bmatrix}
+\sigma_1^2 &\sigma_{1,2} \\
+\sigma_{1,2} &\sigma_2^2 
+\end{bmatrix}
+)
+\end{equation*}
+#+BEGIN_SRC R :results output graphics :file 5.png :width 600 :height 600
+library (intoo)
+library (bivariate)
+library (MASS)
+par(mfrow=c(2,2))
+f = nbvpdf (0, 0, 1, 1, 0)
+plot(f,T)
+plot(f)
+f = nbvpdf (0, 0, 1, 1, 0.8)
+plot(f,T)
+plot(f)
+par(mfrow=c(1,1))
+#+END_SRC 
+
+** 回归的假定与高斯-马尔科夫定理
+| 假定                 | 表达式                                                 | 假设不成立                    |
+|----------------------+--------------------------------------------------------+-------------------------------|
+| 1 无完全共线性       | rank(X)=k,k<n                                          | 无法识别回归系数              |
+| 2 X外生              | E(X\epsilon )=0                                        | 有偏，且不随N增加而改善       |
+| 3 误差项零均值       | E(\epsilon)=0                                          | 有偏，且不随N增加而改善       |
+| 4 无序列相关         | \(E(\epsilon_{i} \epsilon_{j})=0, i\neq j \)        | 无偏但无效，标准误不正确      |
+| 5 同方差             | \(E(\epsilon^{'} \epsilon)=\sigma^{2}\boldsymbol{I} \) | 无偏但无效，标准误不正确      |
+| 6 误差项服从正态分布 | \(\epsilon\sim N(0,\sigma^{2})\)                       | 标准误不正确，但随N增加而改善 |
++ 如果假定1-5都成立，则最小二乘法的估计量是最优线性无偏估计量（best linear unbiased estimator, BLUE）
++ 如果假定6也成立，则为最小方差无偏的，即在所有线性和非线性估计量中方差最小。
+** 回归系数方差的估计
++ 回归系数的协方差矩阵
+\[Var(\boldsymbol{\hat \beta})=\boldsymbol{\hat \Sigma_{\beta}}=E[(\boldsymbol{\hat \beta - \beta})(\boldsymbol{\hat \beta - \beta})^{'}]=\sigma_{\epsilon}^2 (\boldsymbol{X^{'}X})^{-1}\]
++ 回归系数的分布
+\[\boldsymbol{\hat \beta}\sim MVN(\boldsymbol{\beta},\sigma_{\epsilon}^2 (\boldsymbol{X^{'}X})^{-1})\]
++ 回归系数的标准误
+\[se(\boldsymbol{\hat \beta})=\sqrt{diag(\sigma_{\epsilon}^2 (\boldsymbol{X^{'}X})^{-1})}\]
++ 可以通过t检验对回归系数进行显著性检验，如果系数的估计值与0的距离大于2个标准差，那么它在统计上就是显著的
+* 线性回归推断示例
+:PROPERTIES:
+:header-args: :results output :exports both :session inference
+:END:
+** 例子：职业声望和收入
++ 变量：职业声望、收入（男性平均）、职业类型（蓝领、白领、专家）
+#+BEGIN_SRC R :results output graphics :file 6.png :width 800 :height 600
+library(car)
+data(Duncan)
+par(cex.lab=1.5,mgp=c(2.5,0.8,0),mfrow=c(1,1),family="STFangsong")
+
+plot(x=Duncan$prestige,y=Duncan$income, xlab = "职业声望", ylab = "收入", pch=20, type = "n")
+points(x=Duncan[Duncan$type=="bc","prestige"],y=Duncan[Duncan$type=="bc","income"],col="blue",pch=20)
+text(x=Duncan[Duncan$type=="bc","prestige"],y=Duncan[Duncan$type=="bc","income"]-2,labels=rownames(Duncan[Duncan$type=="bc",]),col="blue")
+points(x=Duncan[Duncan$type=="wc","prestige"],y=Duncan[Duncan$type=="wc","income"],col="darkgreen",pch=20)
+text(x=Duncan[Duncan$type=="wc","prestige"],y=Duncan[Duncan$type=="wc","income"]-2,labels=rownames(Duncan[Duncan$type=="wc",]),col="darkgreen")
+points(x=Duncan[Duncan$type=="prof","prestige"],y=Duncan[Duncan$type=="prof","income"],col="red",pch=20)
+text(x=Duncan[Duncan$type=="prof","prestige"],y=Duncan[Duncan$type=="prof","income"]-2,labels=rownames(Duncan[Duncan$type=="prof",]),col="red")
+legend(5,80,legend = c("蓝领","白领","专家"), col = c("blue","green","red"), pch=20, bty="n",cex=1.2)
+#+END_SRC
++ 线性回归函数的使用
+#+BEGIN_SRC R
+fit <- lm(prestige~income+education,data=Duncan)
+summary(fit)
+#+END_SRC
++ 计算和绘制预测值的置信区间
+#+BEGIN_SRC R :results output graphics :file 7.png :width 800 :height 600
+xhyp <- seq(min(Duncan$income), max(Duncan$income),1)
+zhyp <- rep(mean(Duncan$education), length(xhyp))
+hypo <- data.frame(income=xhyp, education=zhyp)
+pred <- predict(fit, newdata=hypo, interval="confidence",level=0.95)
+
+plot(y=Duncan$prestige, x=Duncan$income, xlab = "Income", ylab = "Prestige", type="n")
+lines(x=xhyp, y=pred[,1])
+lines(x=xhyp, y=pred[,2], lty="dashed")
+lines(x=xhyp, y=pred[,3], lty="dashed")
+#+END_SRC
+
+* 线性回归模型设定与拟合
+:PROPERTIES:
+:header-args: :results output :exports both :session specification
+:END:
+** 模型设定
++ 观察性研究需要面对大量关于模型设定的批评，审稿和评议人会经常要求“应该控制某某变量”。
++ 遗漏变量偏误
++ 协变量变换
++ 响应变量变换
++ 诊断异方差和模型误设
++ 拟合优度检验
+** 遗留变量偏误
++ 当遗漏变量效应为0，或者遗漏变量与协变量的相关系数为0时，遗漏变量不会造成回归系数估计偏误。在其他情况下，都应该尽可能纳入。
++ 如果纳入变量确实无关，会导致损失自由度和在控制无关变量后，相关协变量的变异降低，即标准误会上升。
++ 那么实证中如何决定是否纳入变量？由于我们并不知道真实的模型是什么样子，我们要通过选择不同的模型设定展现模型的稳健性，试试看多大程度的模型改变才能使得推断结果发生变化。需要的改变越大，则说明模型越稳健.值得注意的是，如果模型中存在相互抵消的偏误，增加部分遗漏变量，可能效果适得其反。
++ 我们应该剔除“处理后”变量，否则它可能会遮掩解释变量的效应。
++ 检验多个假设需要多个模型设定。
+** 协变量多项式变换
++ 可以增加二次项、三次项、四次项等，但是要防止过度拟合，即样本数据与模型完全拟合，但是对于样本外数据拟合程度反而很低。
++ 多项式设定一般不超过二次项，小样本得出的多项式拟合不可靠，需要样本外数据验证。
+#+BEGIN_SRC R :results output graphics :file 8.png :width 600 :height 800
+# 模拟多项式
+rm(list=ls())
+set.seed(258)
+x <- runif(10,1,10)
+y <- x + rnorm(10,0,3)
+xout <- runif(10,1,10)
+yout <- xout + rnorm(10,0,3)
+
+models <- c("y~x","y~x+I(x^2)","y~x+I(x^2)+I(x^3)+I(x^4)","y~x+I(x^2)+I(x^3)+I(x^4)+I(x^5)+I(x^6)+I(x^7)+I(x^8)+I(x^9)+I(x^10)")
+obs <- 10
+xhy <- seq(0,12,0.1)
+polymord <- c(1,2,4,10)
+par(mfrow=c(4,2))
+for(i in 1:4) {
+  polym <- polymord[i]
+  fit <- lm(formula = models[i])
+  modelsum <- summary(fit)
+  modelinfo <- paste("Obs:", obs, "Order:", polym, "SE:", round(modelsum$sigma, digits=2), "R−Squared:", round(modelsum$r.squared, digits=2))
+  plot(x=x, y=y, pch=20, main = modelinfo,xlim = c(0,12),ylim=c(-1,15))
+  lines(x=xhy, y=predict(fit,newdata=data.frame(x=xhy)),col="red")
+  
+  pred <- predict(fit, newdata=data.frame(x=xout),se.fit = T)
+  sigmaout <- sqrt(sum((yout-pred$fit)^2)/pred$df)
+  rsqdout <- (cor(yout, pred$fit))^2
+  modelinfo <-  paste("Obs:", obs, "Order:", polym, "SE:", round(sigmaout, digits=2), "R−Squared:", round(rsqdout, digits=2))
+  plot(x=xout, y=yout, pch=20, col="blue", main = modelinfo,xlim = c(0,12),ylim=c(-1,15))
+  lines(x=xhy, y=predict(fit,newdata=data.frame(x=xhy)),col="red")
+}
+#+END_SRC
+** 变量对数变换
++ 协变量的对数变换：
+\[Y=\beta_0+\beta_1 log(x_1 ) + \beta_2 X_2 + \dots + \epsilon \]
++ 响应变量的对数变换：
+\[log(y)=\beta_0+\beta_1 X_1 + \beta_2 X_2 + \dots + \epsilon \]
++ 如果Y是有界的连续变量，比如落在0到1之间，那么我们需要转化后让它能够在 -\infty 和 +\infty 之间变动。
+\[log(\frac{y}{1-y})=\beta_0+\beta_1 log(x_1 ) + \beta_2 X_2 + \dots + \epsilon \]
+  - 注意Y不能包含0或者1，不是logit模型，是logit转换的响应变量，只是从变量变换角度得到较好的拟合效果。
+  - 对于任意的\(y\in (a,b)\)，都可以转换 \(y^*=\frac{y-a}{b-a}\)，同样不能有恰好a或b的取值。
++ 这些变量变换后的模型，本质依旧是线性模型，依然可以用最小二乘估计得到无偏有效的结果。
+** 变量变化后的模型解释
++ 响应变量对数化后，回归系数表示1单位X的变化相应的Y的百分比变化。
++ 协变量对数化，回归系数表示1%的X的变化相应的Y的水平变化。
++ 响应变量与协变量都对数化后，回归系数表示1%的X的变化相应的Y的百分比变化。
++ 对于多项式系数，制作\(X\)与\(\hat Y\)的变化图来展示，不应分开解释各个多项式的系数。
++ 对于交互项\(X \times Z\)，对X与Z不同组合制作\(X\)与\(\hat Y\)的变化图来展示，不应分开解释各个项的系数。
+
+* 以后整理                                                         :noexport:
+
+### 统计推断
+ 残差 $r_i=y_i-X_i\hat \beta$是实际值与拟合值之差
+
+ 残差标准差 $\hat \sigma=\sqrt{\sum_{i=1}^{n}r_i^2/(n-k)}$衡量残差的大小，也衡量实际观察值与模型预测值之间的平均距离
+
+ R方用来总结模型的拟合优度， $R^2=1-\hat \sigma^2/s_y^2$表示模型中因变量的变异中由自变量所解释的比例，其中 $s_y$为因变量的标准差
+
+ 统计显著性：
+
+ 残差标准差中的不确定性：模型中，估计的残差方差 $\hat \sigma^2$的抽样分布均值为 $\sigma^2$，与自由度为 $n-k$的 $\chi^2$分布成比例
+---
+### 图形展示
+ 展示一条回归线
+```{r echo=T,tidy=F, eval=F}
+fit.2 <- lm (kid_score ~ mom_iq)
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score")
+curve (coef(fit.2)[1] + coef(fit.2)[2]*x, add=TRUE)
+```
+ 展示两条回归线
+```{r echo=T,tidy=F, eval=F}
+fit.3 <- lm (kid_score ~ mom_hs + mom_iq)
+colors <- ifelse (mom_hs==1, "black", "gray")
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score", col=colors, pch=20)
+curve (cbind (1, 1, x) %*% coef(fit.3), add=TRUE, col="black")
+curve (cbind (1, 0, x) %*% coef(fit.3), add=TRUE, col="gray")
+```
+---
+### 图形展示
+ 带交互项的模型
+```{r echo=T,tidy=F, eval=F}
+fit.4 <- lm (kid_score ~ mom_hs + mom_iq + mom_hs:mom_iq)
+colors <- ifelse (mom_hs==1, "black", "gray")
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score", col=colors, pch=20)
+curve (cbind (1, 1, x, 1*x) %*% coef(fit.4), add=TRUE, col="black")
+curve (cbind (1, 0, x, 0*x) %*% coef(fit.4), add=TRUE, col="gray")
+```
+ 拟合模型的不确定性
+```{r echo=T,eval=F}
+fit.2 <- lm (kid_score ~ mom_iq)
+fit.2.sim <- sim (fit.2)
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score", pch=20)
+for (i in 1:10){
+  curve (fit.2.sim@coef[i,1] + fit.2.sim@coef[i,2]*x, add=TRUE,col="gray")
+}
+curve (coef(fit.2)[1] + coef(fit.2)[2]*x, add=TRUE, col="red")
+```
+---
+### 图形展示
+ 分图展示每个输入变量
+```{r echo=T,eval=F}
+fit.3 <- lm (kid_score ~ mom_hs + mom_iq)
+beta.hat <- coef (fit.3)
+beta.sim <- sim (fit.3)@coef
+par (mfrow=c(1,2))
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score")
+for (i in 1:10){
+  curve (cbind (1, mean(mom_hs), x) %*% beta.sim[i,], lwd=.5, col="gray",
+         add=TRUE)
+}
+curve (cbind (1, mean(mom_hs), x) %*% beta.hat, col="black", add=TRUE)
+
+plot (mom_hs, kidscore, xlab="Mother completed high school", ylab="Child test score")
+for (i in 1:10){
+  curve (cbind (1, x, mean(mom_iq)) %*% beta.sim[i,], lwd=.5, col="gray",
+         add=TRUE)
+}
+curve (cbind (1, x, mean(mom_iq)) %*% beta.hat, col="black", add=TRUE)
+```
+---
+### 图形展示
+```{r out.width='50%'}
+fit.3 <- lm (kid_score ~ mom_hs + mom_iq)
+beta.hat <- coef (fit.3)
+beta.sim <- sim (fit.3)@coef
+
+kidscore.jitter <- jitter(kid_score)
+
+jitter.binary <- function(a, jitt=.05){
+  ifelse (a==0, runif (length(a), 0, jitt), runif (length(a), 1-jitt, 1))
+}
+
+jitter.mom_hs <- jitter.binary(mom_hs)
+
+par (mar=c(4,4,.1,.1))
+plot (mom_iq, kid_score, xlab="Mother IQ score", ylab="Child test score", 
+      pch=20, xaxt="n", yaxt="n")
+axis (1, c(80,100,120,140))
+axis (2, c(20,60,100,140))
+for (i in 1:10){
+  curve (cbind (1, mean(mom_hs), x) %*% beta.sim[i,], lwd=.5, col="gray",
+         add=TRUE)
+}
+curve (cbind (1, mean(mom_hs), x) %*% beta.hat, col="black", add=TRUE)
+
+plot (jitter.mom_hs, kidscore.jitter, xlab="Mother completed high school",
+      ylab="Child test score", pch=20, xaxt="n", yaxt="n")
+axis (1, seq(0,1))
+axis (2, c(0,50,100,150))
+for (i in 1:10){
+  curve (cbind (1, x, mean(mom_iq)) %*% beta.sim[i,], lwd=.5, col="gray",
+         add=TRUE)
+}
+curve (cbind (1, x, mean(mom_iq)) %*% beta.hat, col="black", add=TRUE)
+```
+---
+
+### 假定与诊断
+ 回归模型的假定
+  + 效度：你所用的数据应能准确反映你的研究问题，包括准确测量因变量、纳入所有相关的预测变量、样本数据应能推广到所有的研究对象。但是实践中往往很难满足。例如，收入变量不能用于反映总资产的情况，测验分数也不能完全反映小孩的认知能力，采用心脏病高患病风险人群样本推断健康人群中锻炼与饮食对心脏病发病率影响。明确目标，不忘初心！
+  
+  + 线性假定：回归模型的确定性部分是预测变量的线性函数 $y=\beta_1x_1+\beta_2x_2+\cdots$，但要注意是线性于参数，输入变量可以进行变换
+  
+  + 误差独立：随机抽样和零条件均值 $E(\mu|x)=0$
+  
+  + 同方差性：误差具有相等的方差 $Var(\mu|x)=\sigma^2$，否则要采用加权最小二乘法，但即使违背，问题不严重
+  
+  + 正态性：误差独立于预测变量，服从于均值为零和方差为 $\sigma^2$的正态分布，不太重要
+---
+### 回归模型的诊断
+.pull-left35[
+ 线性假定：残差与拟合值没有系统关联
+
+ 正态性：正态Q-Q图是与理论正态分布相比，标准化残差的概率图，应落在呈45度角的直线上
+
+ 同方差性：位置尺度图水平线周围的点应该随机分布
+
+ 离群点、高杠杆点和强影响点：残差杠杆图采用cook距离来识别对模型参数的估计产生过大影响（高杠杆值）的观测点
+]
+.pull-right65[
+```{r}
+par(mar=c(4,4,2,.1),mfrow=c(2,2))
+plot(fit.3)
+```
+]
+---
+### 回归模型的诊断
+```{r echo=T,eval=F}
+fit <- lm(weight ~ height, data=women)
+par(mfrow=c(2,2))
+plot(fit)
+
+fit1 <- lm(weight ~ height+I(height^2),data=women)
+plot(fit1)
+
+fit2 <- lm(weight ~ height + I(height^2), data = women[-c(15),])
+plot(fit2)
+```
+
+---
+### 回归模型诊断的常用方法
+```{r include=F}
+library(car)
+states <- as.data.frame(state.x77[,c("Murder", "Population", "Illiteracy", "Income", "Frost")])
+fit <- lm(Murder ~ Population + Illiteracy + Income + Frost, data=states)
+```
+```{r eval=F,echo=T}
+library(car)
+states <- as.data.frame(state.x77[,c("Murder", "Population", "Illiteracy", "Income", "Frost")])
+fit <- lm(Murder ~ Population + Illiteracy + Income + Frost, data=states)
+```
+
+ 线性：成分残差图 $\epsilon_i+(\hat \beta_0+\hat \beta_1X_{1i}+\cdots+\hat \beta_k X_{ki}) \ vs.\ X_i$  
+
+.pull-left35[
+```{r echo=T,eval=F}
+crPlots(fit)
+```
+ 如果成分残差图存在非线性，需要添加二次项，对变量进行变换，或者采用其他非线性回归模型
+]
+.pull-right65[
+```{r fig.height=5}
+par(mar=c(4,4,1,.1))
+crPlots(fit)
+```
+]
+---
+### 回归模型诊断的常用方法
+.pull-left[
+ 正态性：学生化残差的Q-Q图
+```{r echo=T}
+qqPlot(fit)
+```
+]
+.pull-right[
+ 同方差性：计分检验与分布水平图
+ 计分检验原假设为误差方差不变，若检验显著则存在异方差
+```{r echo=T,fig.height=4.5}
+ncvTest(fit)
+spreadLevelPlot(fit)
+```
+]
+---
+### 回归模型诊断的常用方法
+ 误差的独立性：Durbin-Watson检验
+```{r echo=T}
+durbinWatsonTest(fit)
+```
+ 多重共线性：如果多个自变量之间相关性较强，系数方差会过大；联合检验显著，而单个自变量系数不显著。可以用统计量VIF（variance inflation factor）方差膨胀因子进行检测。一般 $\sqrt{vif} >2$就表示存在多重共线性问题
+```{r echo=T}
+vif(fit)
+sqrt(vif(fit)) > 2
+```
+---
+### 回归模型诊断的常用方法
+.pull-left[
+ 异常观测值  
+1. 离群点:残差较大的观测点，一般标准化残差大于2或小于-2就可能是离群点
+  
+2. 高杠杆点：观测点具有极端的预测变量值或预测变量组合值，由帽子统计量（hat statistics）判断，如果观测点的帽子值大于帽子均值 $(k+1)/n$的2到3倍，则为高杠杆点
+  
+3. 强影响点：对模型参数估计值影响异常大的点，可以采用Cook距离检验，一般Cook距离大于 $4/(n-k-1)$，则表明是强影响点
+
+ R code: .remark-code[influecePlot(fit)]
+]
+.pull-right[
+```{r}
+influencePlot(fit)
+```
+]
+---
+### 回归模型诊断的常用方法
+ 杠杆值（leverages）  
+
+$$X \hat \beta=X(X^TX)^{-1}X^Ty=Hy$$
+其中， $H=X(X^TX)^{-1}X^T, \ h_i=H_{ii}$即为杠杆值
+
+ Cook 统计量
+
+$$D_i=\frac{(\hat y-\hat y_{(i)})^T(\hat y-\hat y_{(i)})}{p\hat \sigma^2}=\frac{1}{p}r_i^2\frac{h_i}{1-h_i}$$
+其中， $r_i$是标准化残差，统计量用来衡量如果移除单个数据点，拟合结果的变化程度。
+---
+### 预测
+ 预测一名具有高中学历、智商为100的母亲的孩子的认知测试分数
+```{r echo=T}
+fit.3 <- lm (kid_score ~ mom_hs + mom_iq)
+x.new <- data.frame (mom_hs=1, mom_iq=100)
+predict (fit.3, x.new, interval="prediction", level=0.95)
+```
+---
+### 改进模型
+ 删除观测点（慎重！）
+
+ 变量变换
+
+ 添加或删除变量
+
+ 使用其他回归方法
+---
+### 变量变换
+ 线性变换：适用于更好的解释回归系数
+```{r}
+fit.5 <- lm (kid_score ~ mom_hs + I(mom_iq/10))
+simpleprint(fit.3)
+simpleprint(fit.5)
+```
+ 中心化与标准化：特别适用于交互项的解释
+```{r echo=c(1,2)}
+c_mom_hs <- mom_hs - mean(mom_hs)
+c_mom_iq <- mom_iq - mean(mom_iq)
+
+fit.5 <- lm (kid_score ~ c_mom_hs + c_mom_iq + c_mom_hs:c_mom_iq)
+simpleprint(fit.5)
+```
+---
+### 变量变换
+ 对数变换：如果线性假定不成立，可以考虑用非线性变换来改进。如果因变量总为正值，可以考虑进行对数化，以放松对线性模型的限制。
+$$log y_i=b_0+b_1 X_{i1}+b_2 X_{i2}+\cdots+\epsilon_i$$
+指数化后得到：  
+$$\begin{aligned}
+y_i & =e^{b_0+b_1X_{i1}+b_2X_{i2}+\cdots+\epsilon_i} \\
+    & =B_0\cdot B_1^{X_{i1}}\cdot B_2^{X_{i2}}\cdots E_i
+\end{aligned}$$
+其中， $B_0=e^{b_0},\ B_1=e^{b_1},\ B_2=e^{b_2},\cdots ,\ E_i=e^{\epsilon_i}$
+
+.pull-left[
+```{r}
+heights <- read.dta("heights.dta")
+attach(heights)
+log.earn <- log(earn)
+earn.model.1 <- lm(earn ~ height)
+earn.logmodel.1 <- lm(log.earn ~ height)
+simpleprint(earn.model.1,0)
+```
+]
+.pull-right[
+```{r}
+simpleprint(earn.logmodel.1,3)
+```
+]
+
+回归系数0.023表示1cm的身高差异对应着收入的对数 $log(earn)$增加0.023，相当于收入乘以 $exp(0.023)\approx 1.023$，因此，1cm的身高差异对应着收入增加2.3%.  
+
+ 当回归系数较小时，可以近似解释为因变量相对增加的百分数。
+---
+### 变量变换
+ 增加一个预测变量：性别差异相应的收入变化是42%吗？
+```{r}
+earn.logmodel.2 <- lm(log.earn ~ height + male)
+middleprint(earn.logmodel.2,3)
+```
+ 增加交互项：如何解释截距和系数？
+```{r}
+earn.logmodel.3 <- lm(log.earn ~ height + male + height:male)
+middleprint(earn.logmodel.3,3)
+```
+ 线性变换：又如何解释截距和系数？
+```{r}
+z.height <- (height - mean(height))/sd(height)
+earn.logmodel.4 <- lm(log.earn ~ z.height + male + z.height:male)
+middleprint(earn.logmodel.4,3)
+```
+---
+### 变量变换
+ 对数到对数模型（log-log model）：1%的身高变化相应的收入变化为1.45%
+```{r}
+log.height <- log(height)
+earn.logmodel.5 <- lm(log.earn ~ log.height + male)
+middleprint(earn.logmodel.5)
+```
+ 平方根变换：与对数变换比较，对较大值的压缩程度比较小，缺点是系数不容易解释  
+  + 收入对数变换：5,000与10,000的差异等同于40,000到80,000的差异  
+  + 平方根变换：0与10,000的差异等同于10,000到40,000，也等同于40,000到90,000  
+  
+---
+### 预测性回归模型的构建原理
+1. 纳入所有重要的预测变量
+  
+1. 必要时可对变量进行变换或者对多个变量进行综合生成单个预测变量
+  
+1. 如果变量的主效应较大，考虑添加交互项
+  
+1. 根据回归系数的显著性和预期符号对预测变量进行取舍
+  + 统计不显著，与预期符号相同，一般保留在模型中  
+  
+  + 统计不显著，与预期符号相反，考虑删除
+  
+  + 统计显著，与预期符号相反，琢磨是否有这种可能性，收集潜在变量的数据，并纳入模型
+  
+  + 统计显著，与预期符号相同，保留
+
+ 解释性回归模型在构建中要更重视研究问题的本质和变量在理论上的重要性，采用手动选择变量构建模型，较少自动选择变量（逐步回归等）。
+---
+### 模型比较
+ 嵌套模型的比较: .remark-code[anova(fit1, fit2)]
+```{r }
+fit1 <- lm(Murder ~ Population + Illiteracy + Income + Frost, data=states)
+fit2 <- lm(Murder ~ Population + Illiteracy, data=states)
+anova(fit1, fit2)
+```
+ 更一般的模型比较：.remark-code[AIC(fit1, fit2)]
+  + AIC（Akaike Information Criterion, 赤池信息准则）：来自信息论， $AIC = -2 ( ln ( likelihood )) + 2 K$，其中likelihood为给定模型的条件下数据的概率，k为参数个数。
+  + 一般优先选择AIC值较小的模型，即用较少的参数获得足够拟合度。
+```{r}
+AIC(fit1,fit2)
+```
+---
+### 变量选择
+ 逐步回归（stepwise）：分为向前或向后逐步回归，模型每次添加或删除一个变量，直至达到某个判停标准为止。判停标准可以是AIC、调整后R方、BIC（贝叶斯信息准则）、Mallows's CP等。
+```{r echo=T}
+fit <- lm(Murder ~ Population + Illiteracy + Income + Frost, data=states)
+library(MASS)
+step <- stepAIC(fit, direction="backward",trace=FALSE)
+step$anova
+```
+---
+### 变量选择
+ 最佳子集回归（Best subset regression）：逐步回归并没有遍历所有的变量组合，最佳子集回归则根据拟合度标准（R方、调整后R方、Mallows's CP）从所有可能的变量子集中选择最佳的模型。  
+```{r echo=-c(1),fig.align='center',out.width='40%'}
+par(mar=c(0,2,0,.1))
+library(leaps)
+leaps <-regsubsets(Murder ~ Population + Illiteracy + Income + Frost, data=states)
+plot(leaps, scale="adjr2")
+```
+#+END_COMMENT
+

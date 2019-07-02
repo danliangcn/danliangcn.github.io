@@ -14,3 +14,7 @@
 * 数据
 [[./cgssincome.RData][cgssincome数据]]
 * R代码
++ [[./homework-getdata.R][数据导入与变量选取]]
++ [[./homework-analysis.R][数据探索分析]]
+
+
