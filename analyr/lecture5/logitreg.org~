@@ -1,0 +1,509 @@
+#+TITLE: Logistic回归
+#+AUTHOR: 厦门大学公共事务学院
+#+EMAIL: 
+#+OPTIONS: H:2 toc:nil num:t tex:t ^:nil
+#+LATEX_CLASS: beamer
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+#+BEAMER_THEME: default
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_HEADER:
+#+LATEX_HEADER: \usepackage{ctex}
+#+LATEX_COMPILER: xelatex
+
+* 最大似然估计
+** 似然推断基本概念 
+
+** Interpreting profile likelihoods
+** Deriving maximum likelihood estimates (MLEs)
+** An MLE for heteroskedastic data 
+** Numerical methods of finding MLEs 
+** Statistical properties of MLEs 
+** Summarizing the uncertainty of MLEs
+* 
+## 单个预测变量的logistic回归
+### 通过收入解释政治偏好
+1992年美国大选民调，对于选民i，如果 $y_i=1$，那么他会选布什，如果 $y_i=0$，那么他会选克林顿，通过收入（5个收入等级）来预测选民的政治偏好。  
+logistic回归模型如下：
+```{r include=F}
+knitr::opts_chunk$set(echo=F, collapse = F, comment = "",strip.white = T)
+```
+```{r include=F}
+library(arm)
+nes <- load("nescleaned.RData")
+yr <- 1992
+ok <- data$year==yr & data$presvote<3
+vote <- data$presvote[ok] - 1
+income <- data$income[ok]
+```
+```{r echo=F}
+# Estimation
+fit.1 <- glm (vote ~ income, family=binomial(link="logit"))
+display(fit.1)
+```
+---
+```{r echo=F,out.width='50%'}
+par(mar = c(4, 4, .1, .1))
+curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), 1, 5, ylim=c(-.01,1.01),
+       xlim=c(-2,8), xaxt="n", xaxs="i", mgp=c(2,.5,0),
+       ylab="Pr (Republican vote)", xlab="Income", lwd=4)
+curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), -2, 8, lwd=.5, add=T)
+axis (1, 1:5, mgp=c(2,.5,0))
+mtext ("(poor)", 1, 1.5, at=1, adj=.5)
+mtext ("(rich)", 1, 1.5, at=5, adj=.5)
+points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+
+sim.1 <- sim(fit.1)
+curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), .5, 5.5, ylim=c(-.01,1.01),
+       xlim=c(.5,5.5), xaxt="n", xaxs="i", mgp=c(2,.5,0),
+       ylab="Pr (Republican vote)", xlab="Income", lwd=1)
+for (j in 1:20){
+  curve (invlogit(sim.1@coef[j,1] + sim.1@coef[j,2]*x), col="gray", lwd=.5, add=T)
+}
+curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), add=T)
+axis (1, 1:5, mgp=c(2,.5,0))
+mtext ("(poor)", 1, 1.5, at=1, adj=.5)
+mtext ("(rich)", 1, 1.5, at=5, adj=.5)
+points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+```
+---
+### logistic回归模型
+$$Pr(y_i=1)=logit^{-1}(X_i\beta)$$
+函数 $logit^{-1}(x)=\frac{e^x}{1+e^x}$ 将连续数值转化为0到1之间的数。  
+
+模型等同于 $Pr(y_i=1)=p_i$和 $logit(p_i)=X_i\beta$，其中 $logit(x)=log(x/(1-x))$  
+
+ logit反函数是曲线形式的，因此对于x的变化，y的变化不会是常量。  
+
+  + $logit(0.5)=0$, $logit(0.6)=0.4$，意味着logit值增加0.4，相应的概率从50%增加到60%  
+
+  + $logit(0.9)=2.2$, $logit(0.93)=2.6$，则意味着logit值增加0.4，相应的概率从90%增加到93%  
+---
+### logistic回归系数的解释
+由于非线性模型，系数解释比较复杂 
+$$Pr(支持布什)=logit^{-1}(-1.4+0.33\cdot income)$$
+**针对数据均值进行评价:**
+ 具有平均收入水平选民支持布什的概率: 40.5%
+```{r eval=F,echo=T}
+invlogit(-1.40 + 0.33*mean(income, na.rm=T))
+```
+ 收入水平变化1个等级所产生的概率变化  
+$$logit^{-1}(-1.4+0.33\cdot 3)-logit^{-1}(-1.4+0.33\cdot 2)=0.08$$
+也可以计算logit反函数曲线在中心值处的斜率
+$$logit^{-1}(\alpha +\beta x)的导数: \frac{\beta e^{\alpha +\beta x}}{(1+e^{\alpha +\beta x})^2}，带入\bar{x}=3.1，得到\frac{0.33e^{-0.39}}{(1+e^{-0.39})^2}=0.13$$
+---
+### logistic回归系数的解释
+ 除4法则  
+logit反函数曲线在中心位置斜率最大，此时 $\alpha +\beta x=0$，因此 $logit^{-1}(\alpha +\beta x)=0.5$，并且函数的导数也在此点最大，且为 $\beta e^0 /(1+e^0)^2=\beta /4$，它是收入改变1个单位引起概率变化的最大值。  
+
+ 推断  
+  + 系数的估计量与标准差：采用最大似然法估计，统计显著性与线性回归相似
+  + 预测：logit回归预测概率，对于还未观测的 $\tilde y_i$，其概率为 $\tilde p_i=Pr(\tilde y_i=1)=logit^{-1}(\tilde X_i\beta)$
+
+ 模型拟合与展示
+```{r eval=F,echo=T}
+plot (income, vote)
+curve(invlogit(coef(fit.1)[1] + coef(fit.1)[2]*x),add = TRUE)
+```
+---
+### logistic回归系数的解释
+ 展示多个logistic回归的结果  
+  + 采用1952-2000年的13届选前民调回归，收入系数的估计值 $\pm 1$标准差，显示高收入选民更支持共和党，但是这种关系随着时间的推移越来越强。
+```{r echo=F,fig.height=6,fig.width=8}
+income.year <- NULL
+income.coef <- NULL
+income.se <- NULL
+for (yr in seq(1952,2000,4)){
+  ok <- data$year==yr & data$presvote<3
+  vote <- data$presvote[ok] - 1
+  income <- data$income[ok]
+  fit.1 <- glm (vote ~ income, family=binomial(link="logit"))
+  income.year <- c (income.year, yr)
+  income.coef <- c (income.coef, fit.1$coef[2])
+  income.se <- c (income.se, se.coef(fit.1)[2])
+}
+
+plot (income.year, income.coef, xlim=c(1950,2000), ylim=range(income.coef+income.se, 
+                                                              income.coef-income.se), mgp=c(2,.5,0), pch=20, ylab="Coefficient of income", xlab="Year")
+for (i in 1:length(income.year)){
+  lines (rep(income.year[i],2), income.coef[i]+income.se[i]*c(-1,1), lwd=.5)
+}
+abline (0,0,lwd=.5, lty=2)
+```
+---
+### 利用潜在变量构建回归模型  
+$$\begin{equation}
+    y_i=
+\begin{cases} 1 & \text{if } z_i >0 \\ 0 & \text{if } z_i <0
+\end{cases}\\
+z_i=X_i\beta+\epsilon_i
+\end{equation}$$
+其中独立误差项 $\epsilon_i$具有logistic概率分布， $Pr(\epsilon_i<x)=logit^{-1}(x)$  
+$$Pr(y_i=1)=Pr(z_i>0)=Pr(\epsilon_i>-X_i\beta)=logit^{-1}(X_i\beta)$$
+ 潜在变量也可以解释为选民的对布什的“效用”和偏好  
+ 潜在变量可以用正态回归模型近似 $z_i=X_i\beta+\epsilon_i , ~\epsilon_i \sim N(0,\sigma^2) ~with~\sigma=1.6$，由于潜在变量符号与大小无关，因此无法估计 $\epsilon$
+```{r echo=F,fig.height=3.8}
+curve(dlogis(x,location = -1.07),-9,7,yaxs='i')
+polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),col = "gray")
+```
+---
+### 构建logistic回归模型：孟加拉居民水井砷污染
+![孟加拉居民水井](image1.jpg)
+---
+### 分析居民改换饮用水井的行为
+$y_i=1$ 居民改换新的饮用水井;  $y_i=0$ 居民继续用自家的井.
+ 输入变量
+  + 常数项
+  + 离最近安全水井的距离（米）
+  + 自家井水中的砷浓度水平
+  + 家庭成员是否积极参与社区组织
+  + 户主的教育水平  
+  
+ 单预测变量logistic回归
+```{r echo=F}
+wells <- read.table ("wells.dat")
+attach(wells)
+fit.1 <- glm (switch ~ dist, family=binomial(link="logit"))
+display (fit.1)
+```
+---
+### 孟加拉水井
+ 改变预测变量的单位（以100米为单位）
+```{r echo=F}
+dist100 <- dist/100
+fit.2 <- glm (switch ~ dist100, family=binomial(link="logit"))
+display (fit.2)
+```
+ 绘制拟合模型
+```{r echo=F,fig.height=3.8}
+par(mar = c(4, 4, 1, .1))
+jitter.binary <- function(a, jitt=.05){
+  ifelse (a==0, runif (length(a), 0, jitt), runif (length(a), 1-jitt, 1))
+}
+
+switch.jitter <- jitter.binary(switch)
+
+plot(dist, switch.jitter, xlab="Distance (in meters) to nearest safe well", ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(coef(fit.1)[1]+coef(fit.1)[2]*x), lwd=1, add=TRUE)
+points (dist, jitter.binary(switch), pch=20, cex=.1)
+```
+---
+### 孟加拉水井
+ 解释logistic回归的系数
+
+$$Pr(switch)=logit^{-1}(0.61-0.62\cdot dist100)$$
+  1. 常数项：当 $dist100=0$时，换水井的概率为 $logit^{-1}(0.61)=0.65$
+  
+  1. 在距离的平均值处预测距离增加引起的概率变化，以100米为单位的距离平均值为0.48，此处线性预测部分为 $0.61-0.62\cdot 0.48=0.31$，此处的曲线斜率为 $-0.62e^{0.31}/(1+e^{0.31})^2=-0.15$，即距安全饮用水井距离增加100米，换水井的概率下降15%  
+  
+  1. 更快的方法：除4法则 $-0.62/4=-0.15$
+  
+  1. 标准差为0.10，95%的置信区间[-0.82, -0.42]
+---
+### 增加第二个变量（砷的浓度水平）
+```{r fig.height=5,fig.width=12}
+fit.3 <- glm (switch ~ dist100 + arsenic, family=binomial(link="logit"))
+display (fit.3)
+par(mar=c(4,4,1,.1),mfrow=c(1,2))
+plot(dist, switch.jitter, xlim=c(0,max(dist)), xlab="Distance (in meters) to nearest safe well", ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(cbind (1, x/100, .5) %*% coef(fit.3)), lwd=.5, add=TRUE)
+curve (invlogit(cbind (1, x/100, 1.0) %*% coef(fit.3)), lwd=.5, add=TRUE)
+points (dist, jitter.binary(switch), pch=20, cex=.1)
+text (50, .27, "if As = 0.5", adj=0, cex=.8)
+text (75, .50, "if As = 1.0", adj=0, cex=.8)
+
+plot(arsenic, switch.jitter, xlim=c(0,max(arsenic)), xlab="Arsenic concentration in well water", ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(cbind (1, 0, x) %*% coef(fit.3)), lwd=.5, add=TRUE)
+curve (invlogit(cbind (1, 0.5, x) %*% coef(fit.3)), lwd=.5, add=TRUE)
+points (arsenic, jitter.binary(switch), pch=20, cex=.1)
+text (1.5, .78, "if dist = 0", adj=0, cex=.8)
+text (2.2, .6, "if dist = 50", adj=0, cex=.8)
+```
+---
+### 如何解释和比较两个自变量的系数
+ 除4法则
+
+ 距离和浓度哪个变量影响更大？
+
+  + 距离的标准差为0.38，增加1个标准差单位的距离产生的概率变化 $-0.90\cdot 0.38/4=-8\%$  
+
+  + 浓度的标准差为1.10，增加1个标准差单位的浓度产生的概率变化 $0.46\cdot 1.10/4=13\%$
+
+ 加入浓度变量后，距离的系数由-0.62变为-0.90，因为离安全饮用水井较远的井的砷浓度也更高。（考虑增加交互项）
+---
+### 含交互项的logistic回归
+```{r tidy=T}
+fit.4 <- glm (switch ~ dist100 + 
+                arsenic + dist100:arsenic, family=binomial(link="logit"))
+display(fit.4)
+```
+ 解释系数
+  + 常数项：impossible! 采用距离均值0.48和浓度均值1.66可得 $logit^{-1}(-0.15-0.58\cdot 0.48+0.56\cdot 1.66-0.18\cdot 0.48\cdot 1.66)=0.59$  
+  + 距离的系数：采用浓度取均值1.66时计算为 $-0.58-0.18\cdot 1.66=-0.88$，然后 $-0.88/4=-0.22$    
+  + 浓度的系数：可以用距离为0时解释，但是更常用平均距离  
+--
+浓度的系数为 $(0.56-0.18\cdot 0.48)/4=0.12$  
+
+--
+  + 交互项的系数：浓度每增加1个单位，距离的系数增加-0.18  
+---
+### 变量中心化后再拟合
+```{r echo=T}
+c.dist100 <- dist100 - mean (dist100)
+c.arsenic <- arsenic - mean (arsenic)
+```
+```{r}
+fit.5 <- glm (switch ~ c.dist100 + c.arsenic + c.dist100:c.arsenic,
+              family=binomial(link="logit"))
+display(fit.5)
+```
+**试解释各项系数**  
+
+ 变量中心化便于直观地解释系数  
+
+ 交互项的显著性不强，但方向符合预期，保留。
+---
+### 含有交互项模型示意图
+```{r fig.width=12}
+par(mar=c(4,4,1,.1),mfrow=c(1,2))
+plot(dist, switch.jitter, xlim=c(0,max(dist)), xlab="Distance (in meters) to nearest safe well", 
+     ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(cbind (1, x/100, .5, .5*x/100) %*% coef(fit.4)), lwd=.5, add=TRUE)
+curve (invlogit(cbind (1, x/100, 1.0, 1.0*x/100) %*% coef(fit.4)), lwd=.5, add=TRUE)
+points (dist, jitter.binary(switch), pch=20, cex=.1)
+text (50, .37, "if As = 0.5", adj=0, cex=.8)
+text (75, .50, "if As = 1.0", adj=0, cex=.8)
+
+plot(arsenic, switch.jitter, xlim=c(0,max(arsenic)), xlab="Arsenic concentration in well water",
+     ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(cbind (1, 0, x, 0*x) %*% coef(fit.4)), lwd=.5, add=TRUE)
+curve (invlogit(cbind (1, 0.5, x, 0.5*x) %*% coef(fit.4)), lwd=.5, add=TRUE)
+points (arsenic, jitter.binary(switch), pch=20, cex=.1)
+text (1.5, .8, "if dist = 0", adj=0, cex=.8)
+text (2.2, .6, "if dist = 50", adj=0, cex=.8)
+```
+---
+### 增加社会性变量
+ 社会联系更紧密或者教育程度更高的居民是否会更倾向于改换饮用水井？  
+
+ 如果家庭成员加入了任何社区组织，那么assoc=1；educ是户主的教育年限，为了便于解释系数，实际采用educ4=edu/4  
+```{r}
+educ4 <- educ/4
+fit.6 <- glm (switch ~ c.dist100 + c.arsenic + c.dist100:c.arsenic +
+                assoc + educ4, family=binomial(link="logit"))
+display (fit.6)
+```
+ 解释系数，决定在模型中的变量取舍？
+---
+### 拟合新的模型
+```{r}
+fit.7 <- glm (switch ~ c.dist100 + c.arsenic + c.dist100:c.arsenic +
+                educ4, family=binomial(link="logit"))
+display (fit.7)
+```
+ 如果主效应较大，还要考虑增加交互项
+---
+### 拟合新的模型
+```{r}
+c.educ4 <- educ4 - mean(educ4)
+
+fit.8 <- glm (switch ~ c.dist100 + c.arsenic + c.educ4 + 
+                c.dist100:c.arsenic + c.dist100:c.educ4 + 
+                c.arsenic:c.educ4, family=binomial(link="logit"))
+display (fit.8)
+```
+ 解释交互项？
+---
+### 评价、检查与比较拟合的logistic回归
+ 残差与分箱残差  
+$$residual_i=y_i-E(y_i|X_i)=y_i-logit^{-1}(X_i\beta)$$
+残差图提供不了有用的信息，因此采用拟合值将数据分到不同的类别（箱），然后绘制每个分箱的拟合值均值和残差均值  
+
+```{r fig.height=4,fig.width=12}
+par(mar=c(4,4,1,1),mfrow=c(1,2))
+
+pred.8 <- fit.8$fitted.values
+
+plot(c(0,1), c(-1,1), xlab="Estimated  Pr (switching)", ylab="Observed - estimated", type="n", main="Residual plot", mgp=c(2,.5,0))
+abline (0,0, col="gray", lwd=.5)
+points (pred.8, switch-pred.8, pch=20, cex=.2)
+
+### Binned residual Plot 
+
+## Defining binned residuals
+
+binned.resids <- function (x, y, nclass=sqrt(length(x))){
+  breaks.index <- floor(length(x)*(1:(nclass-1))/nclass)
+  breaks <- c (-Inf, sort(x)[breaks.index], Inf)
+  output <- NULL
+  xbreaks <- NULL
+  x.binned <- as.numeric (cut (x, breaks))
+  for (i in 1:nclass){
+    items <- (1:length(x))[x.binned==i]
+    x.range <- range(x[items])
+    xbar <- mean(x[items])
+    ybar <- mean(y[items])
+    n <- length(items)
+    sdev <- sd(y[items])
+    output <- rbind (output, c(xbar, ybar, n, x.range, 2*sdev/sqrt(n)))
+  }
+  colnames (output) <- c ("xbar", "ybar", "n", "x.lo", "x.hi", "2se")
+  return (list (binned=output, xbreaks=xbreaks))
+}
+
+## Binned residuals vs. estimated probability of switching
+
+br.8 <- binned.resids (pred.8, switch-pred.8, nclass=40)$binned
+plot(range(br.8[,1]), range(br.8[,2],br.8[,6],-br.8[,6]), xlab="Estimated  Pr (switching)", ylab="Average residual", type="n", main="Binned residual plot", mgp=c(2,.5,0))
+abline (0,0, col="gray", lwd=.5)
+lines (br.8[,1], br.8[,6], col="gray", lwd=.5)
+lines (br.8[,1], -br.8[,6], col="gray", lwd=.5)
+points (br.8[,1], br.8[,2], pch=19, cex=.5)
+
+```
+---
+### 评价、检查与比较拟合的logistic回归
+ 分箱残差与输入变量
+
+```{r fig.height=4,fig.width=12}
+par(mar=c(4,4,1,1),mfrow=c(1,2))
+## Plot of binned residuals vs. inputs of interest
+
+# distance
+
+br.dist <- binned.resids (dist, switch-pred.8, nclass=40)$binned
+plot(range(br.dist[,1]), range(br.dist[,2],br.dist[,6],-br.dist[,6]), xlab="Distance to nearest safe well", ylab="Average residual", type="n", main="Binned residual plot", mgp=c(2,.5,0))
+abline (0,0, col="gray", lwd=.5)
+lines (br.dist[,1], br.dist[,6], col="gray", lwd=.5)
+lines (br.dist[,1], -br.dist[,6], col="gray", lwd=.5)
+points (br.dist[,1], br.dist[,2], pch=19, cex=.5)
+
+# arsenic
+
+br.arsenic <- binned.resids (arsenic, switch-pred.8, nclass=40)$binned
+plot(range(0,br.arsenic[,1]), range(br.arsenic[,2],br.arsenic[,6],-br.arsenic[,6]), xlab="Arsenic level", ylab="Average residual", type="n", main="Binned residual plot", mgp=c(2,.5,0))
+abline (0,0, col="gray", lwd=.5)
+lines (br.arsenic[,1], br.arsenic[,6], col="gray", lwd=.5)
+lines (br.arsenic[,1], -br.arsenic[,6], col="gray", lwd=.5)
+points (br.arsenic[,1], br.arsenic[,2], pch=19, cex=.5)
+```
+
+ 浓度与分箱残差图显示前3个分箱的残差均为较大的负值，说明预测值偏大，低浓度水井的居民不愿转换水井。
+
+ 浓度与分箱残差图还显示中部的残差正值比较多，尾部的残差负值比较多，可考虑对数化。
+---
+### 评价、检查与比较拟合的logistic回归
+ 对数变换
+
+```{r echo=T}
+log.arsenic <- log (arsenic)
+c.log.arsenic <- log.arsenic - mean (log.arsenic)
+```
+```{r}
+fit.9 <- glm (switch ~ c.dist100 + c.log.arsenic + c.educ4 +
+                c.dist100:c.log.arsenic + c.dist100:c.educ4 + c.log.arsenic:c.educ4,
+              family=binomial(link="logit"))
+display (fit.9)
+```
+---
+### 评价、检查与比较拟合的logistic回归
+```{r fig.height=4,fig.width=12}
+par(mfrow=c(1,2))
+
+fit.9a <- glm (switch ~ dist100 + log.arsenic + educ4 +
+                 dist100:log.arsenic + dist100:educ4 + log.arsenic:educ4,
+               family=binomial(link="logit"))
+## Graph for log model fit.9a 
+
+plot(arsenic, switch.jitter, xlim=c(0,max(arsenic)), xlab="Arsenic concentration in well water", ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
+curve (invlogit(coef(fit.9a)[1]+coef(fit.9a)[2]*0+coef(fit.9a)[3]*log(x)+coef(fit.9a)[4]*mean(educ4)+coef(fit.9a)[5]*0*log(x)+coef(fit.9a)[6]*0*mean(educ4)+coef(fit.9a)[7]*log(x)*mean(educ4)), from=.50, lwd=.5, add=TRUE)
+curve (invlogit(coef(fit.9a)[1]+coef(fit.9a)[2]*.5+coef(fit.9a)[3]*log(x)+coef(fit.9a)[4]*mean(educ4)+coef(fit.9a)[5]*.5*log(x)+coef(fit.9a)[6]*.5*mean(educ4)+coef(fit.9a)[7]*log(x)*mean(educ4)), from=.50, lwd=.5, add=TRUE)
+points (arsenic, jitter.binary(switch), pch=20, cex=.1)
+text (1.2, .8, "if dist = 0", adj=0, cex=.8)
+text (1.8, .6, "if dist = 50", adj=0, cex=.8)
+
+## Graph of binned residuals for log model fit.9
+
+pred.9 <- fit.9$fitted.values
+
+br.fit.9 <- binned.resids (arsenic, switch-pred.9, nclass=40)$binned
+plot(range(0,br.fit.9[,1]), range(br.fit.9[,2],br.fit.9[,6],-br.fit.9[,6]), xlab="Arsenic level", ylab="Average residual", type="n", main="Binned residual plot\nfor model with log (arsenic)", mgp=c(2,.5,0))
+abline (0,0, col="gray", lwd=.5)
+lines (br.fit.9[,1], br.fit.9[,6], col="gray", lwd=.5)
+lines (br.fit.9[,1], -br.fit.9[,6], col="gray", lwd=.5)
+points (br.fit.9[,1], br.fit.9[,2], pch=19, cex=.5)
+```
+ 拟合曲线图相似，在低浓度区域更陡，高浓度区域更平缓。
+
+ 分箱残差图比较正常，但仍然第1个分箱的残差明显偏低，可能存在0.5的心理阈值或测量误差。
+---
+### 评价、检查与比较拟合的logistic回归
+ 错误率（error rate）
+  + 无模型错误率为42%（58%的居民改换水井，42%的居民没有改换），当前模型错误率为36%  
+  + 错误率无法区分拟合值0.6和0.9之间的区别  
+```{r eval=F, echo=T}
+error.rate <- mean((predicted>0.5 & y==0) | (predicted<0.5 & y==1))
+```
+```{r}
+error.rate <- mean((pred.9>0.5 & switch==0) | (pred.9<0.5 & switch==1))
+error.rate
+```
+ 偏差（deviance）  
+  + 偏差值来度量错误，值越低说明拟合度越好  
+  + 如果在模型中加入一个随机噪声的预测变量，平均而言偏差值只会减少1  
+  + 如果加入一个具有信息量的预测变量，偏差值的减少会大于1；加入k个变量，则偏差值减少大于k  
+  + 偏差值可以类比于线性回归中的 $R^2$，其值来自于-2乘以似然函数的对数，应用时比较相对值即可
+  
+**比较之前拟合模型的偏差?**
+---
+### 比较多个自变量的平均效应
+采用一个简单的模型来演示
+```{r fig.height=4,fig.width=12}
+fit.10 <- glm (switch ~ dist100 + arsenic + educ4,
+               family=binomial(link="logit"))
+display(fit.10)
+```
+
+ 比较距离安全饮用水井为0和100米的居民转换概率的平均预测差异    
+$$\delta(arsenic,educ4)=logit^{-1}(-0.21-0.90\cdot 1+0.47\cdot arsenic+0.17\cdot educ4)\\ -logit^{-1}(-0.21-0.90\cdot 0+0.47\cdot arsenic+0.17\cdot educ4)$$
+$$平均预测差异=\frac{1}{n}\sum_{i=1}^n \delta (arsenic_i,educ4_i)$$
+结果为-0.20，现有数据而言，在砷浓度与教育水平相等的情况下，距安全饮用水井100米的居民比紧邻安全饮用水井的居民改换水井的概率平均要低20%.
+---
+### 比较多个自变量的平均效应
+ 含有交互项的模型的平均预测差异
+```{r}
+fit.11 <- glm (switch ~ dist100 + arsenic + educ4 + dist100:arsenic,
+               family=binomial(link="logit"))
+display (fit.11)
+```
+```{r echo=T}
+b <- coef (fit.11); hi <- 1; lo <- 0
+delta <- invlogit (b[1] + b[2]*hi + b[3]*arsenic +b[4]*educ4 +b[5]*hi*arsenic) -
+invlogit (b[1] + b[2]*lo + b[3]*arsenic + b[4]*educ4 +b[5]*lo*arsenic)
+print (mean(delta))
+```
+---
+### 识别与分离
+1. 共线性引起的识别问题，可以采取与线性回归相同的方法解决  
+
+2. 分离引起的识别问题：
+  + 某个预测变量 $x_j$与结果的取值完全对应，当 $x_j$大于某个阈值 $T$，所有的 $y=1$；而当 $x_j$小于阈值 $T$的时候，所有的 $y=1$，此时系数 $\beta_j$的最佳估计为 $\infty$  
+  + 反之，如果对于 $x_j<T$，所有的 $y=1$，而对于 $x_j>T$，所有的 $y=0$，那么 $\hat \beta_j=-\infty$  
+  + 一般会是自变量的某个线性组合与结果完全对应，会导致至少线性组合中某个自变量的系数估计值为 $\infty 或者 -\infty$
+```{r warning=F, fig.height=4}
+par(mar=c(4,2,1,1))
+x <- rnorm(60, mean =1, sd = 2)
+y <- ifelse(x<2,0,1)
+
+## Fit the model
+
+fit.0 <- glm (y ~ x, family=binomial(link="logit"))
+
+## Plot
+
+plot (x, y, xlab="x", ylab="y", xlim=c(-6,6), pch=20)
+curve (invlogit (coef(fit.0)[1] + coef(fit.0)[2]*x), add=TRUE)
+```
+

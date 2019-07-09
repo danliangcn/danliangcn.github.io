@@ -9,7 +9,8 @@
 *** [[./analyr/lecture1/1intro.html][课程介绍]]
 *** [[./analyr/lecture2/rintro.html][R语言基本设置与操作]]
 *** [[./analyr/lecture3/basicstats.html][一般统计方法的操作]]
-*** [[./analyr/lecture4/lregress.html][线性回归分析1]]
+*** [[./analyr/lecture4/lregress.html][线性回归分析]]
+*** [[./analyr/lecture5/logitreg.html][logstic回归]]
 + [[./analyr/assignment/assignment1.html][作业1]]
 + [[./analyr/assignment/assignment2.html][作业2]]
 
