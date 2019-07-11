@@ -15,7 +15,16 @@
 
 * 最大似然估计                                                         :noexport:
 ** 似然推断基本概念 
+\[P(\theta|y)=\frac{P(\theta)}{P(y)}P(y|\theta)\]
+\[L(\theta|y)=k(y)P(y|\theta)\]
+\[L(\theta|y)\propto P(y|\theta)\]
++ 在数据已知条件下参数的似然（条件概率）和给定参数条件下数据的条件概率成正比。
++ 尽管在 \(P(\theta)\)未知的情况下，我们无法计算给定数据条件下参数特定值的概率，但是我们能够比较不同参数值之间的似然概率的相对大小。
++ 似然函数是在参数空间的曲面，表征在数据给定条件下，不同参数值的可能性大小。
++ 我们可以通过每个参数的似然函数轮廓来观察哪个参数取值的可能性最大。
+#+BEGIN_SRC R
 
+#+END_SRC
 ** Interpreting profile likelihoods
 ** Deriving maximum likelihood estimates (MLEs)
 ** An MLE for heteroskedastic data 
@@ -164,7 +173,7 @@ z_i=X_i\beta+\epsilon_i
 \end{equation}$$
 其中独立误差项 $\epsilon_i$ 具有logistic概率分布， \(Pr(\epsilon_i < x)=logit^{-1}(x)\)  
 \[Pr(y_i=1)=Pr(z_i>0)=Pr(\epsilon_i>-X_i\beta)=logit^{-1}(X_i\beta)\]
- 潜在变量也可以解释为选民的对布什的“效用”和偏好  
+ 潜在变量也可以解释为选民的对布什的“效用”和偏好。  
  潜在变量可以用正态回归模型近似 \(z_i=X_i\beta+\epsilon_i , ~ \epsilon_i \sim N(0,\sigma^2) ~ with~ \sigma=1.6\)，由于潜在变量符号与大小无关，因此无法估计 $\epsilon$
 #+BEGIN_SRC R :results output graphics :file demologis.png :width 800 :height 600
 curve(dlogis(x,location = -1.07),-9,7,yaxs='i')
@@ -214,9 +223,9 @@ points (dist, jitter.binary(switch), pch=20, cex=.1)
 + 解释logistic回归的系数
 
 $$Pr(switch)=logit^{-1}(0.61-0.62\cdot dist100)$$
-  1. 常数项：当 $dist100=0$时，换水井的概率为 $logit^{-1}(0.61)=0.65$
+  1. 常数项：当 $dist100=0$ 时，换水井的概率为 $logit^{-1}(0.61)=0.65$
   
-  1. 在距离的平均值处预测距离增加引起的概率变化，以100米为单位的距离平均值为0.48，此处线性预测部分为 $0.61-0.62\cdot 0.48=0.31$，此处的曲线斜率为 $-0.62e^{0.31}/(1+e^{0.31})^2=-0.15$，即距安全饮用水井距离增加100米，换水井的概率下降15%  
+  1. 在距离的平均值处预测距离增加引起的概率变化，以100米为单位的距离平均值为0.48，此处线性预测部分为 $0.61-0.62\cdot 0.48=0.31$ ，此处的曲线斜率为 $-0.62e^{0.31}/(1+e^{0.31})^2=-0.15$ ，即距安全饮用水井距离增加100米，换水井的概率下降15%  
   
   1. 更快的方法：除4法则 $-0.62/4=-0.15$
   
@@ -226,7 +235,7 @@ $$Pr(switch)=logit^{-1}(0.61-0.62\cdot dist100)$$
 #+BEGIN_SRC R :results output graphics :file well2.png :width 800 :height 600
 fit.3 <- glm (switch ~ dist100 + arsenic, family=binomial(link="logit"))
 summary(fit.3)
-par(mar=c(4,4,1,.1),mfrow=c(1,2))
+par(mfrow=c(1,2))
 plot(dist, switch.jitter, xlim=c(0,max(dist)), xlab="Distance (in meters) to nearest safe well", ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
 curve (invlogit(cbind (1, x/100, .5) %*% coef(fit.3)), lwd=.5, add=TRUE)
 curve (invlogit(cbind (1, x/100, 1.0) %*% coef(fit.3)), lwd=.5, add=TRUE)
@@ -257,7 +266,7 @@ summary(fit.4)
 #+END_SRC
 + 解释系数
   + 常数项：impossible! 采用距离均值0.48和浓度均值1.66可得 $logit^{-1}(-0.15-0.58\cdot 0.48+0.56\cdot 1.66-0.18\cdot 0.48\cdot 1.66)=0.59$  
-  + 距离的系数：采用浓度取均值1.66时计算为 $-0.58-0.18\cdot 1.66=-0.88$，然后 $-0.88/4=-0.22$    
+  + 距离的系数：采用浓度取均值1.66时计算为 $-0.58-0.18\cdot 1.66=-0.88$ ，然后 $-0.88/4=-0.22$    
   + 浓度的系数：可以用距离为0时解释，但是更常用平均距离  
 浓度的系数为 $(0.56-0.18\cdot 0.48)/4=0.12$  
   + 交互项的系数：浓度每增加1个单位，距离的系数增加-0.18  
@@ -329,16 +338,15 @@ summary(fit.8)
 $$residual_i=y_i-E(y_i|X_i)=y_i-logit^{-1}(X_i\beta)$$
 残差图提供不了有用的信息，因此采用拟合值将数据分到不同的类别（箱），然后绘制每个分箱的拟合值均值和残差均值  
 #+BEGIN_SRC R :results output graphics :file well4.png :width 800 :height 600
-par(mar=c(4,4,1,1),mfrow=c(1,2))
-
 pred.8 <- fit.8$fitted.values
 
 plot(c(0,1), c(-1,1), xlab="Estimated  Pr (switching)", ylab="Observed - estimated", type="n", main="Residual plot", mgp=c(2,.5,0))
 abline (0,0, col="gray", lwd=.5)
 points (pred.8, switch-pred.8, pch=20, cex=.2)
 
-### Binned residual Plot 
-
+#+END_SRC
++ 分箱残差图（Binned residual Plot） 
+#+BEGIN_SRC R :results output graphics :file well4-1.png :width 800 :height 600
 ## Defining binned residuals
 
 binned.resids <- function (x, y, nclass=sqrt(length(x))){
@@ -372,21 +380,18 @@ points (br.8[,1], br.8[,2], pch=19, cex=.5)
 #+END_SRC
 
 + 分箱残差与输入变量
+  - 距离-分箱残差图
 #+BEGIN_SRC R :results output graphics :file well5.png :width 800 :height 600
-par(mar=c(4,4,1,1),mfrow=c(1,2))
-## Plot of binned residuals vs. inputs of interest
-
-# distance
-
 br.dist <- binned.resids (dist, switch-pred.8, nclass=40)$binned
 plot(range(br.dist[,1]), range(br.dist[,2],br.dist[,6],-br.dist[,6]), xlab="Distance to nearest safe well", ylab="Average residual", type="n", main="Binned residual plot", mgp=c(2,.5,0))
 abline (0,0, col="gray", lwd=.5)
 lines (br.dist[,1], br.dist[,6], col="gray", lwd=.5)
 lines (br.dist[,1], -br.dist[,6], col="gray", lwd=.5)
 points (br.dist[,1], br.dist[,2], pch=19, cex=.5)
+#+END_SRC
 
-# arsenic
-
+  - 浓度-分箱残差图
+#+BEGIN_SRC R :results output graphics :file well5-1.png :width 800 :height 600
 br.arsenic <- binned.resids (arsenic, switch-pred.8, nclass=40)$binned
 plot(range(0,br.arsenic[,1]), range(br.arsenic[,2],br.arsenic[,6],-br.arsenic[,6]), xlab="Arsenic level", ylab="Average residual", type="n", main="Binned residual plot", mgp=c(2,.5,0))
 abline (0,0, col="gray", lwd=.5)
@@ -442,7 +447,6 @@ points (br.fit.9[,1], br.fit.9[,2], pch=19, cex=.5)
   + 无模型错误率为42%（58%的居民改换水井，42%的居民没有改换），当前模型错误率为36%  
   + 错误率无法区分拟合值0.6和0.9之间的区别  
 #+BEGIN_SRC R
-error.rate <- mean((predicted>0.5 & y==0) | (predicted<0.5 & y==1))
 error.rate <- mean((pred.9>0.5 & switch==0) | (pred.9<0.5 & switch==1))
 error.rate
 #+END_SRC
@@ -450,7 +454,7 @@ error.rate
   + 偏差值来度量错误，值越低说明拟合度越好  
   + 如果在模型中加入一个随机噪声的预测变量，平均而言偏差值只会减少1  
   + 如果加入一个具有信息量的预测变量，偏差值的减少会大于1；加入k个变量，则偏差值减少大于k  
-  + 偏差值可以类比于线性回归中的 $R^2$，其值来自于-2乘以似然函数的对数，应用时比较相对值即可
+  + 偏差值可以类比于线性回归中的 $R^2$ ，其值来自于-2乘以似然函数的对数，应用时比较相对值即可
   
 **比较之前拟合模型的偏差?**
 
@@ -485,8 +489,8 @@ detach(wells)
 1. 共线性引起的识别问题，可以采取与线性回归相同的方法解决  
 
 2. 分离引起的识别问题：
-  + 某个预测变量 $x_j$与结果的取值完全对应，当 $x_j$大于某个阈值 $T$，所有的 $y=1$；而当 $x_j$小于阈值 $T$的时候，所有的 $y=1$，此时系数 $\beta_j$的最佳估计为 $\infty$  
-  + 反之，如果对于 $x_j<T$，所有的 $y=1$，而对于 $x_j>T$，所有的 $y=0$，那么 $\hat \beta_j=-\infty$  
+  + 某个预测变量 $x_j$ 与结果的取值完全对应，当 $x_j$ 大于某个阈值 $T$ ，所有的 $y=1$ ；而当 $x_j$ 小于阈值 $T$ 的时候，所有的 $y=1$ ，此时系数 $\beta_j$ 的最佳估计为 $\infty$  
+  + 反之，如果对于 \(x_j < T\)，所有的 $y=1$ ，而对于 $x_j>T$ ，所有的 $y=0$ ，那么 $\hat \beta_j=-\infty$  
   + 一般会是自变量的某个线性组合与结果完全对应，会导致至少线性组合中某个自变量的系数估计值为 $\infty 或者 -\infty$
 #+BEGIN_SRC R :results output graphics :file separation.png :width 800 :height 600
 x <- rnorm(60, mean =1, sd = 2)

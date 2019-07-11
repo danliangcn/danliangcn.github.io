@@ -11,6 +11,7 @@
 *** [[./analyr/lecture3/basicstats.html][一般统计方法的操作]]
 *** [[./analyr/lecture4/lregress.html][线性回归分析]]
 *** [[./analyr/lecture5/logitreg.html][logstic回归]]
+*** [[./analyr/lecture6/glm.html][广义线性模型]]
 + [[./analyr/assignment/assignment1.html][作业1]]
 + [[./analyr/assignment/assignment2.html][作业2]]
 

@@ -13,3 +13,4 @@
 * 数据
 [[./cgssincome.RData][cgssincome数据]]
 * R代码
+[[./homework-regress.R][回归分析代码]]

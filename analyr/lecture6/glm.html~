@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-07-11 四 17:33 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>广义线性模型</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="厦门大学公共事务学院" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">广义线性模型</h1>
+
+<div id="outline-container-org9b6c522" class="outline-2">
+<h2 id="org9b6c522"><span class="section-number-2">1</span> 广义线性模型介绍</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgb9a9cce" class="outline-3">
+<h3 id="orgb9a9cce"><span class="section-number-3">1.1</span> 广义线性的组成</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>广义线性建模是统计分析框架，线性回归和logistic回归是广义线性模型的特例。</li>
+
+<li>广义线性模型的组成包括：
+
+<ul class="org-ul">
+<li>响应向量 \(y=(y_1,...,y_n)\)</li>
+
+<li>预测变量 $X$和系数 \(\beta\) ，形成线性组合 \(X\beta\)</li>
+
+<li>连接函数（link function） \(g\) ，生成一个向量 \(\hat y=g^{-1}(X\beta)\)</li>
+
+<li>响应变量的条件分布 \(p(y|\hat y)\)</li>
+
+<li>其他可能的参数，例如预测变量的方差、连接函数和响应变量的方差、过度离散（overdispersions）和划分点（cutpoints）等</li>
+</ul></li>
+
+<li>广义线性模型拟合的形式： \(g(\mu_y)=\beta_0+\sum_{j=1}^p\beta_jX_j\)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4f31664" class="outline-3">
+<h3 id="org4f31664"><span class="section-number-3">1.2</span> 广义线性模型的种类</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>不同种类的广义线性模型，连接函数 \(g\) 和响应变量的条件分布 \(p\) 不同：
+
+<ul class="org-ul">
+<li>线性回归：等同变换，即 \(g(u)\equiv u\) ，分布是正态的，由数据估计标准差 \(\sigma\)</li>
+
+<li>logistic回归：反logit函数变换，分布由二值数据的概率定义， \(Pr(y=1)=\hat y\)</li>
+
+<li>泊松回归：用于计数型数据，变换函数为 \(g(u)=exp(u)\) ，分布为泊松分布</li>
+
+<li>logistic二项分布模型：数据点代表 \(n_i\) 次尝试中成功的次数 \(y_i\) ，转换也是反logit函数，分布是二项分布</li>
+
+<li>probit模型：与logistic模型类似，转换是正态累积分布，等同于潜在变量的误差是正态分布</li>
+
+<li>多项logit和probit模型：适用于多分类因变量，转换采用logit或probit，分布是多项分布，能进一步分为有序或无序的多项模型</li>
+
+<li>稳健回归模型：采用t分布等代替常用的正态或logistic模型，使之能够更好处理极端值</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf76d442" class="outline-3">
+<h3 id="orgf76d442"><span class="section-number-3">1.3</span> 泊松回归</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+例子：了解抗癫痫药物对癫痫发病率的影响
+</p>
+
+<ul class="org-ul">
+<li>响应变量：sumY（八周内癫痫发病次数）</li>
+
+<li>预测变量：Trt（是否治疗）、Age（年龄）、Base（之前同时间段发病次数）</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(robust)
+data(breslow.dat, package=<span style="color: #2d9574;">"robust"</span>)
+names(breslow.dat)
+summary(breslow.dat[c(6, 7, 8, 10)])
+</pre>
+</div>
+
+<pre class="example">
+
+ [1] "ID"    "Y1"    "Y2"    "Y3"    "Y4"    "Base"  "Age"   "Trt"   "Ysum" 
+[10] "sumY"  "Age10" "Base4"
+
+      Base             Age               Trt          sumY       
+ Min.   :  6.00   Min.   :18.00   placebo  :28   Min.   :  0.00  
+ 1st Qu.: 12.00   1st Qu.:23.00   progabide:31   1st Qu.: 11.50  
+ Median : 22.00   Median :28.00                  Median : 16.00  
+ Mean   : 31.22   Mean   :28.34                  Mean   : 33.05  
+ 3rd Qu.: 41.00   3rd Qu.:32.00                  3rd Qu.: 36.00  
+ Max.   :151.00   Max.   :42.00                  Max.   :302.00
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8358a99" class="outline-3">
+<h3 id="org8358a99"><span class="section-number-3">1.4</span> 泊松分布</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>探索性分析：因变量严重偏态，并有离群点；药物治疗组的发病次数变少</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">par</span>(mfrow=c(1, 2))
+<span style="color: #4f97d7;">attach</span>(breslow.dat)
+hist(sumY, breaks=20, xlab=<span style="color: #2d9574;">"Seizure Count"</span>, main=<span style="color: #2d9574;">"Distribution of Seizures"</span>)
+boxplot(sumY ~ Trt, xlab=<span style="color: #2d9574;">"Treatment"</span>, main=<span style="color: #2d9574;">"Group Comparisons"</span>, horizontal=<span style="color: #a45bad;">TRUE</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="glm1.png" alt="glm1.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8d1c3e6" class="outline-3">
+<h3 id="org8d1c3e6"><span class="section-number-3">1.5</span> 拟合泊松回归</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-R">fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(sumY ~ Base + Age + Trt, data=breslow.dat, family=poisson())
+summary(fit)
+exp(coef(fit))
+</pre>
+</div>
+
+<pre class="example">
+
+Call:
+glm(formula = sumY ~ Base
+Age
+Trt, family = poisson(), data = breslow.dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-6.0569  -2.0433  -0.9397   0.7929  11.0061  
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   1.9488259  0.1356191  14.370  &lt; 2e-16 ***
+Base          0.0226517  0.0005093  44.476  &lt; 2e-16 ***
+Age           0.0227401  0.0040240   5.651 1.59e-08 ***
+Trtprogabide -0.1527009  0.0478051  -3.194   0.0014 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 2122.73  on 58  degrees of freedom
+Residual deviance:  559.44  on 55  degrees of freedom
+AIC: 850.71
+
+Number of Fisher Scoring iterations: 5
+
+ (Intercept)         Base          Age Trtprogabide 
+   7.0204403    1.0229102    1.0230007    0.8583864
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-orgb54da14" class="outline-3">
+<h3 id="orgb54da14"><span class="section-number-3">1.6</span> 解释截距和系数？</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+\[log(\lambda)=\beta_0+\sum_{j=1}^p\beta_jX_j\]
+</p>
+
+<ul class="org-ul">
+<li>年龄每增加1岁，相当于癫痫发病次数乘以1.023，即发病次数增加2.3%</li>
+<li>过去发病次数增加1次，相当于发病次数乘以1.023，即发病次数增加2.3%</li>
+<li>治疗与安慰剂相比，相当于发病次数乘以0.858，即发病次数减少了14.2%</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org680c772" class="outline-3">
+<h3 id="org680c772"><span class="section-number-3">1.7</span> 检验过度离散（overdispersion）</h3>
+<div class="outline-text-3" id="text-1-7">
+<ul class="org-ul">
+<li>泊松分布的均值和方差相等，当响应变量观测的方差比泊松分布预测的方差大时，可能发生过度离散，低估回归系数的误差，影响估计结果的准确性。</li>
+
+<li>如果没有过度离散，标准化残差服从标准正态分布，可对标准化残差平方和进行卡方检验。经验上也可以比较残差偏差与残差自由度的比例，如果该比例远大于1（标准正态分布标准差），则存在过度离散。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(qcc)
+qcc.overdispersion.test(breslow.dat$sumY, type=<span style="color: #2d9574;">"poisson"</span>)
+deviance(fit)/df.residual(fit)
+</pre>
+</div>
+
+<pre class="example">
+
+                   
+Overdispersion test Obs.Var/Theor.Var Statistic p-value
+       poisson data          62.87013  3646.468       0
+
+[1] 10.1717
+
+</pre>
+
+<ul class="org-ul">
+<li>如果出现过度离散，则需采用类泊松方法(family="quasipoisson")</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">fit.od <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(sumY ~ Base + Age + Trt, data=breslow.dat, family=quasipoisson())
+summary(fit.od)
+</pre>
+</div>
+
+<pre class="example">
+
+Call:
+glm(formula = sumY ~ Base
+Age
+Trt, family = quasipoisson(), 
+    data = breslow.dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-6.0569  -2.0433  -0.9397   0.7929  11.0061  
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   1.948826   0.465091   4.190 0.000102 ***
+Base          0.022652   0.001747  12.969  &lt; 2e-16 ***
+Age           0.022740   0.013800   1.648 0.105085    
+Trtprogabide -0.152701   0.163943  -0.931 0.355702    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasipoisson family taken to be 11.76075)
+
+    Null deviance: 2122.73  on 58  degrees of freedom
+Residual deviance:  559.44  on 55  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgda9a485" class="outline-3">
+<h3 id="orgda9a485"><span class="section-number-3">1.8</span> probit 回归</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+probit 模型与 logit 模型相似，只不过是用正态分布代替了logistic分布。
+</p>
+
+<p>
+\[Pr(y_i=1)=\Phi(X_i\beta)\]
+</p>
+
+<p>
+其中 \(\Phi\) 为正态累积分布函数。  
+</p>
+<ul class="org-ul">
+<li>probit回归系数乘以1.6便等于logit回归系数</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">wells <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.table (<span style="color: #2d9574;">"wells.dat"</span>)
+<span style="color: #4f97d7;">attach</span>(wells)
+glm (switch ~ dist, family = binomial(link = <span style="color: #2d9574;">"logit"</span>))
+glm (switch ~ dist, family = binomial(link = <span style="color: #2d9574;">"probit"</span>))
+<span style="color: #4f97d7;">detach</span>(wells)
+</pre>
+</div>
+
+<pre class="example">
+
+Call:  glm(formula = switch ~ dist, family = binomial(link = "logit"))
+
+Coefficients:
+(Intercept)         dist  
+   0.605959    -0.006219  
+
+Degrees of Freedom: 3019 Total (i.e. Null);  3018 Residual
+Null Deviance:	    4118 
+Residual Deviance: 4076 	AIC: 4080
+
+Call:  glm(formula = switch ~ dist, family = binomial(link = "probit"))
+
+Coefficients:
+(Intercept)         dist  
+   0.377808    -0.003874  
+
+Degrees of Freedom: 3019 Total (i.e. Null);  3018 Residual
+Null Deviance:	    4118 
+Residual Deviance: 4076 	AIC: 4080
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc9fe3fe" class="outline-3">
+<h3 id="orgc9fe3fe"><span class="section-number-3">1.9</span> 多项logistic回归</h3>
+<div class="outline-text-3" id="text-1-9">
+<ul class="org-ul">
+<li>多项分布</li>
+</ul>
+
+<p>
+随机变量 \(Y\) 属于 \(J\) 个类别，令 \(\pi_1,\pi_2,\cdots,\pi_J\) 代表分属各类的概率，那么 \(\pi_1+\pi_2+\cdots+\pi_J=1\) .如果有 \(Y\) 的n个独立观测， \(y_1\) 个属于类别1， \(y_2\) 个属于类别2，以此类推。
+</p>
+
+<p>
+\[\mathbf{y}=\begin{bmatrix}y_1\\y_2\\\vdots\\y_J\end{bmatrix}, with \sum_{j=1}^J y_j=n\]
+</p>
+
+<p>
+多项分布为：
+</p>
+
+
+<p>
+\[f\,(\mathbf{y}|n)=\frac{n!}{y_1!y_2!\cdots,y_J!}\pi_1^{y_1}\pi_2^{y_2}\cdots\pi_J^{y_J}\]
+</p>
+
+<p>
+但是上式不满足指数型分布的要求，可用泊松分布转换。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6c2b93d" class="outline-3">
+<h3 id="org6c2b93d"><span class="section-number-3">1.10</span> 多项logistic回归（nominal logistic regression）</h3>
+<div class="outline-text-3" id="text-1-10">
+<ul class="org-ul">
+<li>多项分布</li>
+</ul>
+
+<p>
+令独立随机变量 $Y_1,&ctdot;,Y_J$服从泊松分布 \(Y_j\sim Possion(\lambda_i)\) ，联合分布为：
+</p>
+
+<p>
+\[f\,(\mathbf{y})=\prod_{j=1}^J\frac{\lambda_j^{y_j}e^{-\lambda_j}}{y_j!}\]
+</p>
+
+<p>
+若 $n=Y_1+Y_2+&ctdot;+Y_J$，那么 $n&sim; Possion(&lambda;_1+&lambda;_2+&ctdot;+&lambda;_J)$，因此 $\mathbf{y}$的条件分布为：
+</p>
+
+<p>
+\[f\,(\mathbf{y}|n)=\left[\prod_{j=1}^J\frac{\lambda_j^{y_j}e^{-\lambda_j}}{y_j!}\right]/\frac{(\lambda_1+\cdots+\lambda_J)^ne^{-(\lambda_1+\cdots+\lambda_J)}}{n!}\]
+</p>
+
+<p>
+可简化为：
+</p>
+
+<p>
+\[f\,(\mathbf{y}|n)=\left(\frac{\lambda_1}{\sum\lambda_k}\right)^{y_1}\cdots\left(\frac{\lambda_J}{\sum\lambda_k}\right)^{y_J}\frac{n!}{y_1!\cdots,y_J!}\]
+</p>
+
+<p>
+如果 \(\pi_j=\lambda_j/(\sum_{k=1}^K\lambda_k),for \,j=1,\dots,J\) ，那么多项分布能够表示为以总数n为条件，服从泊松分布的随机变量的联合分布。
+</p>
+
+<ul class="org-ul">
+<li>如果响应变量的类别之间没有自然次序，可以采用多项logistic回归。</li>
+
+<li>选择某个类别作为参照类别，其他类别的logit值定义为：</li>
+</ul>
+
+<p>
+\[logit(\pi_j)=log(\frac{\pi_j}{\pi_1})=\mathbf{x}_j^T\beta_j,\,for\, j=2,\dots,J.\]
+</p>
+
+<ul class="org-ul">
+<li>同时估计 $(J-1)$个logit方程得到参数估计值 $\mathbf{b}_j$，从而计算线性预测值 \(\mathbf{x}_j^T\mathbf{b}_j\)</li>
+
+<li>从而，由 $\hat &pi;_j=\hat &pi;_1 exp(\mathbf{x}_j^T\mathbf{b}_j),\,\hat &pi;_1+\hat &pi;_2+&ctdot;+\hat &pi;_J=1$，可得</li>
+</ul>
+
+<p>
+\[\hat \pi_1=\frac{1}{1+\sum_{j=2}^Jexp(\mathbf{x}_j^T\mathbf{b}_j)},\quad \hat\pi_j=\frac{exp(\mathbf{x}_j^T\mathbf{b}_j)}{1+\sum_{j=2}^Jexp(\mathbf{x}_j^T\mathbf{b}_j)},\quad for\quad j=2,\dots,J.\]
+</p>
+
+<ul class="org-ul">
+<li>皮尔逊卡方残差为： $r_i=\frac{o_i-e_i}{\sqrt e_i}$，其中 $o_i$和 $e_i$分别为观察频数和期望频数， $i=1,&hellip;,N$，其中 N 为 J 乘以不同协变量模式的个数</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1bc94d3" class="outline-3">
+<h3 id="org1bc94d3"><span class="section-number-3">1.11</span> 多项logistic回归拟合优度</h3>
+<div class="outline-text-3" id="text-1-11">
+<ul class="org-ul">
+<li>拟合优度的统计量：
+<ul class="org-ul">
+<li>卡方统计量： $X^2=&sum;_{i=1}^N r_i^2$；伪R方： \(Pseudo R^2=\frac{l(\mathbf{b}_{min})-l(\mathbf{b})}{l(\mathbf{b})}\)</li>
+
+<li>偏差： \(Deviance=2[loglikelihood(\mathbf{b}_{max})-loglikelihood(\mathbf{b})]\)</li>
+
+<li>赤池信息准则： \(AIC=-2loglikelihood(\hat \pi;y)+2p\)</li>
+</ul></li>
+
+<li>用优势比/比值比（odds ratio, OR）解释回归系数：</li>
+</ul>
+<p>
+假定响应变量有 J 个类别，二值解释变量 x 表示是否暴露。响应类别 j 相对于参照类别1的暴露优势比为：
+</p>
+
+<p>
+\[OR_j=\frac{\pi_{jp}}{\pi_{ja}}/\frac{\pi_{1p}}{\pi_{1a}}\]
+</p>
+
+<p>
+对于模型 $log(&pi;_j/&pi;_1)=&beta;_{0j}+&beta;_{1j}x,\quad j=2,&hellip;,J$，有： 
+</p>
+
+<p>
+\[log(\frac{\pi_{ja}}{\pi_{1a}})=\beta_{0j},\quad when\quad x=0;\qquad log(\frac{\pi_{jp}}{\pi_{1p}})=\beta_{0j}+\beta_{1j}x,\quad when\quad x=1.\]
+</p>
+
+<p>
+\[log\,OR_j=log(\frac{\pi_{jp}}{\pi_{1p}})-log(\frac{\pi_{ja}}{\pi_{1a}})=\beta_{1j},\qquad OR_j=exp(\beta_{1j})\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga4473a9" class="outline-3">
+<h3 id="orga4473a9"><span class="section-number-3">1.12</span> 例子：分析不同性别和年龄人群购买汽车时对助力转向系统的重视程度。</h3>
+<div class="outline-text-3" id="text-1-12">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(nnet)
+car <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.csv(<span style="color: #2d9574;">"carpref.csv"</span>)
+<span style="color: #4f97d7;">attach</span>(car)
+car$sex <span style="color: #ce537a; font-weight: bold;">&lt;-</span> relevel(sex,ref = <span style="color: #2d9574;">"women"</span>)
+car$age <span style="color: #ce537a; font-weight: bold;">&lt;-</span> relevel(age,ref = <span style="color: #2d9574;">"18-23"</span>)
+car$response <span style="color: #ce537a; font-weight: bold;">&lt;-</span> relevel(response,ref = <span style="color: #2d9574;">"no/little"</span>)
+
+fitcar <span style="color: #ce537a; font-weight: bold;">&lt;-</span> multinom(response~age+sex,weights = frequency,data = car)
+</pre>
+</div>
+
+<pre class="example">
+
+The following objects are masked from car (pos = 7):
+
+    age, frequency, response, sex
+
+The following objects are masked from car (pos = 10):
+
+    age, frequency, response, sex
+
+# weights:  15 (8 variable)
+initial  value 329.583687 
+iter  10 value 290.490920
+final  value 290.351098 
+converged
+</pre>
+
+<ul class="org-ul">
+<li>最小模型（只有截距项）对数似然函数的最大值为 -329.58，拟合模型对数似然函数的最大值为 -290.35，所以 \(伪R方=(-329.58+290.35)/(-329.58)=11.9\%\), \(AIC=-2\times(-290.35)+16=596.70\)</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-R">summary(fitcar)
+</pre>
+</div>
+
+<pre class="example">
+Call:
+multinom(formula = response ~ age
+sex, data = car, weights = frequency)
+
+Coefficients:
+               (Intercept)
+40 age24-40     sexmen
+important       -0.5907992 1.587709 1.128268 -0.3881301
+very important  -1.0390726 2.916757 1.478104 -0.8130202
+
+Std. Errors:
+               (Intercept)
+40  age24-40    sexmen
+important        0.2839756 0.4028997 0.3416449 0.3005115
+very important   0.3305014 0.4229276 0.4009256 0.3210382
+
+Residual Deviance: 580.7022 
+AIC: 596.7022
+</pre>
+
+<ul class="org-ul">
+<li>年龄越大，对助力转向系统的重视程度越高；男性的重视程度低于女性（显著性不高）。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3eedce8" class="outline-3">
+<h3 id="org3eedce8"><span class="section-number-3">1.13</span> 多项logistic回归系数解释</h3>
+<div class="outline-text-3" id="text-1-13">
+<ul class="org-ul">
+<li>回归系数的解释：自变量增加1个单位，类别J相对于参考类别的概率比（优势：odds） \(\Pr[Y = \text{category }j]/\Pr[Y = \text{base category}]\) 相应乘以系数的指数 \(exp(\beta_i^j)\) 。</li>
+
+<li>age&gt;40的系数为1.59，指数化后为 \(e^{1.59}=4.9\) ，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“重视安全系统的概率与不重视安全系统的概率之比”要相应乘以4.9</li>
+
+<li>优势比的解释非常不直观，建议计算自变量在特定取值组合的概率。</li>
+
+<li>年龄为18-23岁的女性：</li>
+</ul>
+
+<p>
+\[log(\frac{\hat \pi_2}{\hat \pi_1})=-0.591,\quad \frac{\hat \pi_2}{\hat \pi_1}=e^{-0.591}=0.5539,\qquad log(\frac{\hat \pi_3}{\hat \pi_1})=-1.039,\quad \frac{\hat \pi_3}{\hat \pi_1}=e^{-1.039}=0.3538\]
+</p>
+
+<p>
+\[\hat\pi_1+\hat\pi_2+\hat\pi_3=1,\quad \hat\pi_1=0.524,\quad \hat\pi_2=0.290,\quad \hat\pi_3=0.186\]
+</p>
+<div class="org-src-container">
+<pre class="src src-R">predict(fitcar,data.frame(sex=<span style="color: #2d9574;">"women"</span>,age=<span style="color: #2d9574;">"18-23"</span>),type=<span style="color: #2d9574;">"probs"</span>)
+</pre>
+</div>
+
+<pre class="example">
+no/little      important very important 
+0.5242005      0.2903465      0.1854530
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org69c4160" class="outline-3">
+<h3 id="org69c4160"><span class="section-number-3">1.14</span> 多项logistic回归系数列表</h3>
+<div class="outline-text-3" id="text-1-14">
+<div class="org-src-container">
+<pre class="src src-R">datapred <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(sex=c(<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"men"</span>,<span style="color: #2d9574;">"men"</span>,<span style="color: #2d9574;">"men"</span>),
+                       age=c(<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"&gt; 40"</span>,<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"&gt; 40"</span>))
+pred1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> predict(fitcar,datapred,type=<span style="color: #2d9574;">"probs"</span>)
+cbind(datapred,pred1)
+</pre>
+</div>
+
+<pre class="example">
+
+    sex   age  no/little important very important
+1 women 18-23 0.52420049 0.2903465      0.1854530
+2 women 24-40 0.23458355 0.4015294      0.3638870
+3 women
+40 0.09757772 0.2644254      0.6379968
+4   men 18-23 0.65247678 0.2451441      0.1023791
+5   men 24-40 0.35099404 0.4075274      0.2414786
+6   men
+40 0.17427519 0.3203504      0.5053744
+</pre>
+
+<ul class="org-ul">
+<li>用概率直观，容易理解，也容易比较。</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org21a4a93" class="outline-3">
+<h3 id="org21a4a93"><span class="section-number-3">1.15</span> 有序logistic回归（ordinal logistic regression）</h3>
+<div class="outline-text-3" id="text-1-15">
+<ul class="org-ul">
+<li>许多研究包含有序变量作为响应变量，例如，幸福感的5个水平（非常幸福、比较幸福、一般幸福、不幸福、非常不幸福）</li>
+
+<li>有时候为了推断的稳健性，也会采取适用于有序变量的秩检验方法处理连续变量。例如，比例优势模型（proportional odds model）便是Wilcoxon-Mann-Whitney秩和检验的推广。</li>
+
+<li>有序logistic模型不依赖于有序变量水平之间的距离，即无论Y的取值水平是（0, 1, 2）还是（0, 1, 20），回归系数都是一样的。</li>
+
+<li>有序性假定
+<ul class="org-ul">
+<li>对于每个预测变量，响应变量都以有序的方式变化</li>
+
+<li>如果预测变量与响应变量所代表的事件的logit值具有线性关系，可以绘制以响应变量各水平分组的预测变量平均值，这些平均值的顺序也该是一致的。</li>
+
+<li>如果响应变量两个相邻水平对应的预测变量均值不可区分，那么这两个水平就应该合并。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org864df2e" class="outline-3">
+<h3 id="org864df2e"><span class="section-number-3">1.16</span> 有序logistic回归</h3>
+<div class="outline-text-3" id="text-1-16">
+<ul class="org-ul">
+<li>假想存在一个难测的潜在变量 \(z\)（病情严重度），可以采用一系列分割点 $C_j$将潜在变量归入不同的有序类别（无症状、轻微、明显、严重），每个类别相应的概率为 \(\pi_j\).</li>
+
+<li>第 j 个类别的累计优势为，</li>
+</ul>
+
+<p>
+\[\frac{P(z\leq C_j)}{P(z>C_j)}=\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J};\]
+</p>
+
+<ul class="org-ul">
+<li>那么，累计logit模型为：</li>
+</ul>
+
+<p>
+\[log\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J}=\mathbf{x}_j^T\mathbf{\beta}_j\]
+</p>
+
+<ul class="org-ul">
+<li>如果线性预测部分 $\mathbf{x}_j^T\mathbf{&beta;}_j$中截距项 $&beta;_{0j}$依赖于类别 j，但是其他预测变量系数与类别无关，则为比例优势模型（proportional odds model: PO）。</li>
+</ul>
+
+<p>
+\[log\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J}=\beta_{0j}+\beta_1x_1+\dots+\beta_{p-1}x_{p-1}\]
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgbeec29f" class="outline-3">
+<h3 id="orgbeec29f"><span class="section-number-3">1.17</span> 比例优势模型（PO）</h3>
+<div class="outline-text-3" id="text-1-17">
+<ul class="org-ul">
+<li>假定响应变量的水平值为 \(1,2,\cdots ,k\) ，则有如下模型，其中 \(j=1,2,\dots,k-1\) .</li>
+</ul>
+
+<p>
+\[Pr(Y \leq j|X)=\frac{1}{1+exp[-(\beta_{0j}+X\mathbf{\beta})]}\]
+</p>
+
+<ul class="org-ul">
+<li>模型中有k-1个截距。如果 $k=1$，模型退化为二值分类变量的logit模型。如果模型只有一个二值分类预测变量，模型等同于双样本Wilcoxon-Mann-Whitney检验</li>
+
+<li>PO模型隐含假定回归系数 $&beta;$与响应变量的水平划分 $j$相互独立。X与Y之间没有交互效应，无论在Y的哪个水平上，X对应的优势对数（log odds）变化是相同的。（这个假定现实吗？）</li>
+
+<li>如果线性和叠加性假定成立，则在Y的任何水平上，X单位变化相应的 $Y &le; j$的优势变化为 \(exp(\beta)\)</li>
+
+<li>PO模型采用MLE估计参数，估计的截距由大到小降序排列。</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org03af03a" class="outline-3">
+<h3 id="org03af03a"><span class="section-number-3">1.18</span> 比例优势模型示例</h3>
+<div class="outline-text-3" id="text-1-18">
+<ul class="org-ul">
+<li>例子：同前例，将汽车安全系统重视程度视为有序变量。采用比例优势模型：</li>
+</ul>
+
+<p>
+\[log(\frac{\pi_1}{\pi_2+\pi_3})=\beta_{01}+\beta_1x_1+\beta_2x_2+\beta_3x_3\]
+</p>
+
+<p>
+\[log(\frac{\pi_1+\pi_2}{\pi_3})=\beta_{02}+\beta_1x_1+\beta_2x_2+\beta_3x_3\]
+</p>
+
+<ul class="org-ul">
+<li>与多项logistic回归相比，残差偏差和AIC差异很小，估计的参数也都基本相似。</li>
+
+<li>回归系数的解释：自变量 $x_i$增加1个单位，小于等于任意水平的概率与大于该水平的概率的比值 \(\Pr[Y \leq j]/\Pr[Y >j]\) 相应乘以系数的指数 \(exp(\beta_i)\) 。</li>
+
+<li>age&gt;40的系数为2.23，指数化后为 $e^{2.23}=9.3$，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“不重视安全系统的概率与重视或非常重视安全系统的概率之比”要相应乘以9.3，类似“不重视或重视的概率与非常重视的概率之比”也要相应乘以9.3</li>
+
+<li>优势比的解释非常不直观，建议计算自变量在特定取值组合的概率。</li>
+
+<li>年龄为18-23岁的女性，即 $x_1=0,\,x_2=0,\,x_3=0$时， \(\hat\pi_1=0.511,\quad \hat\pi_2=0.329,\quad \hat\pi_3=0.160\)</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(MASS)
+car$response <span style="color: #ce537a; font-weight: bold;">&lt;-</span> factor(response,ordered = T,levels = c(<span style="color: #2d9574;">"no/little"</span>,<span style="color: #2d9574;">"important"</span>,<span style="color: #2d9574;">"very important"</span>))
+fitpo <span style="color: #ce537a; font-weight: bold;">&lt;-</span> polr(response~age+sex,weights = frequency,data = car)
+summary(fitpo)
+pred2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> predict(fitpo,datapred,type=<span style="color: #2d9574;">"probs"</span>)
+cbind(datapred,pred2)
+</pre>
+</div>
+
+<pre class="example">
+
+Re-fitting to get Hessian
+
+Call:
+polr(formula = response ~ age
+sex, data = car, weights = frequency)
+
+Coefficients:
+           Value Std. Error t value
+40   2.2325     0.2915   7.659
+age24-40  1.1471     0.2776   4.132
+sexmen   -0.5762     0.2262  -2.548
+
+Intercepts:
+                         Value   Std. Error t value
+no/little|important       0.0435  0.2323     0.1874
+important|very important  1.6550  0.2556     6.4744
+
+Residual Deviance: 581.2956 
+AIC: 591.2956
+
+    sex   age no/little important very important
+1 women 18-23 0.5108826 0.3286797     0.16043777
+2 women 24-40 0.2490730 0.3752352     0.37569186
+3 women
+40 0.1007497 0.2587618     0.64048855
+4   men 18-23 0.6501647 0.2528518     0.09698344
+5   men 24-40 0.3711383 0.3761309     0.25273073
+6   men
+40 0.1662146 0.3334706     0.50031477
+</pre>
+
+<ul class="org-ul">
+<li>如果假定潜在变量 z 服从正态分布，可以采用probit替代logit，只需指定method参数为“probit”，系数与logit相差约1.6倍。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">fitprobit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> polr(response~age+sex,weights=frequency,method=<span style="color: #2d9574;">"probit"</span>,data = car)
+summary(fitprobit)
+</pre>
+</div>
+
+<pre class="example">
+
+Re-fitting to get Hessian
+
+Call:
+polr(formula = response ~ age
+sex, data = car, weights = frequency, 
+    method = "probit")
+
+Coefficients:
+           Value Std. Error t value
+40   1.3288     0.1684   7.891
+age24-40  0.6817     0.1653   4.124
+sexmen   -0.3467     0.1357  -2.555
+
+Intercepts:
+                         Value   Std. Error t value
+no/little|important       0.0184  0.1408     0.1310
+important|very important  0.9759  0.1485     6.5724
+
+Residual Deviance: 581.8437 
+AIC: 591.8437
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd3a760e" class="outline-3">
+<h3 id="orgd3a760e"><span class="section-number-3">1.19</span> 其他有序logit回归模型</h3>
+<div class="outline-text-3" id="text-1-19">
+<ul class="org-ul">
+<li>相邻类别logit模型（Adjacent categories logit model, ACL）
+— 代替累计优势模型，ACL模型考虑相邻类别的概率比：</li>
+</ul>
+<p>
+\[log(\frac{\pi_j}{\pi_{j+1}})=\mathbf{x}_j^T\mathbf{\beta}_j\]
+</p>
+<ul class="org-ul">
+<li>如果假定预测变量系数在所有两两相邻类别之间不变，模型可以简化为：</li>
+</ul>
+<p>
+\[log(\frac{\pi_j}{\pi_{j+1}})=\beta_{0j}+\beta_1x_1+\dots+\beta_{p-1}x_{p-1}\]
+</p>
+<ul class="org-ul">
+<li>连续比率logit模型（Continuation ratio logit model, CRL）
+<ul class="org-ul">
+<li>不同于累计优势模型，CRL模型考虑响应变量属于类别 j 的条件概率的优势：</li>
+</ul></li>
+</ul>
+<p>
+\[log(\frac{\pi_j}{\pi_{j+1}+\dots+\pi_J})=\mathbf{x}_j^T\mathbf{\beta}_j\]
+</p>
+<ul class="org-ul">
+<li>更灵活的有序（多类别）logit回归函数</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(VGAM)
+car <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.csv(<span style="color: #2d9574;">"carpref.csv"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27604;&#20363;&#20248;&#21183;&#27169;&#22411;</span>
+fitprop <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = propodds,weights = frequency,data = car)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#32047;&#35745;&#36830;&#25509;&#27169;&#22411;&#65288;logit&#65289;</span>
+fitacm <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cumulative(parallel = F,reverse = T),weights = frequency,data = car)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20559;&#27604;&#20363;&#20248;&#21183;&#27169;&#22411;</span>
+fitpprop <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cumulative(parallel = <span style="color: #a45bad;">FALSE</span>~sex,reverse = T),weights = frequency,data = car)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#22810;&#39033;logistic&#22238;&#24402;</span>
+fitmnr <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = multinomial(refLevel = <span style="color: #2d9574;">"no/little"</span>),weights = frequency,data = car)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#30456;&#37051;&#31867;&#21035;&#27169;&#22411;&#65288;logit&#65289;</span>
+fitacl <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = acat,weights = frequency,data = car)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36830;&#32493;&#27604;&#29575;&#27169;&#22411;&#65288;logit&#65289;</span>
+fitcrl <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cratio,weights = frequency,data = car)
+</pre>
+</div>
+
+<pre class="example">
+
+Warning message:
+In eval(slot(family, "initialize")) :
+  response should be ordinal---see ordered()
+
+Warning message:
+In eval(slot(family, "initialize")) :
+  response should be ordinal---see ordered()
+
+Warning message:
+In eval(slot(family, "initialize")) :
+  response should be ordinal---see ordered()
+
+Warning message:
+In eval(slot(family, "initialize")) :
+  response should be ordinal---see ordered()
+
+Warning message:
+In eval(slot(family, "initialize")) :
+  response should be ordinal---see ordered()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgbab6791" class="outline-3">
+<h3 id="orgbab6791"><span class="section-number-3">1.20</span> 有序logit回归检验</h3>
+</div>
+</div>
+<div id="outline-container-org77d19ed" class="outline-2">
+<h2 id="org77d19ed"><span class="section-number-2">2</span> 似然比检验（likelihood ratio test）</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-R">lrtest(fitprop,fitacm)
+</pre>
+</div>
+<p>
+比较比例优势模型和累计logit模型是否有显著差异可以验证等比优势假定是否成立。当然同时还要考虑样本量，样本量越大，差异越显著。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 厦门大学公共事务学院</p>
+<p class="date">Created: 2019-07-11 四 17:33</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
