@@ -136,11 +136,11 @@ $$f\,(\mathbf{y}|n)=\frac{n!}{y_1!y_2!\cdots,y_J!}\pi_1^{y_1}\pi_2^{y_2}\cdots\p
 ** 多项logistic回归（nominal logistic regression）
 + 多项分布  
 
-令独立随机变量 $Y_1,\cdots,Y_J$服从泊松分布 $Y_j\sim Possion(\lambda_i)$ ，联合分布为：
+令独立随机变量 \(Y_1 ,\cdots,Y_J\) 服从泊松分布 $Y_j\sim Possion(\lambda_i)$ ，联合分布为：
 
 $$f\,(\mathbf{y})=\prod_{j=1}^J\frac{\lambda_j^{y_j}e^{-\lambda_j}}{y_j!}$$
 
-若 $n=Y_1+Y_2+\cdots+Y_J$，那么 $n\sim Possion(\lambda_1+\lambda_2+\cdots+\lambda_J)$，因此 $\mathbf{y}$的条件分布为：
+若 $n=Y_1+Y_2+\cdots+Y_J$ ，那么 $n\sim Possion(\lambda_1+\lambda_2+\cdots+\lambda_J)$ ，因此 $\mathbf{y}$ 的条件分布为：
 
 $$f\,(\mathbf{y}|n)=\left[\prod_{j=1}^J\frac{\lambda_j^{y_j}e^{-\lambda_j}}{y_j!}\right]/\frac{(\lambda_1+\cdots+\lambda_J)^ne^{-(\lambda_1+\cdots+\lambda_J)}}{n!}$$
 
@@ -156,17 +156,17 @@ $$f\,(\mathbf{y}|n)=\left(\frac{\lambda_1}{\sum\lambda_k}\right)^{y_1}\cdots\lef
 
 $$logit(\pi_j)=log(\frac{\pi_j}{\pi_1})=\mathbf{x}_j^T\beta_j,\,for\, j=2,\dots,J.$$
 
-+ 同时估计 $(J-1)$个logit方程得到参数估计值 $\mathbf{b}_j$，从而计算线性预测值 $\mathbf{x}_j^T\mathbf{b}_j$
++ 同时估计 $(J-1)$ 个logit方程得到参数估计值 $\mathbf{b}_j$ ，从而计算线性预测值 $\mathbf{x}_j^T\mathbf{b}_j$
 
-+ 从而，由 $\hat \pi_j=\hat \pi_1 exp(\mathbf{x}_j^T\mathbf{b}_j),\,\hat \pi_1+\hat \pi_2+\cdots+\hat \pi_J=1$，可得
++ 从而，由 $\hat \pi_j=\hat \pi_1 exp(\mathbf{x}_j^T\mathbf{b}_j),\,\hat \pi_1+\hat \pi_2+\cdots+\hat \pi_J=1$ ，可得
 
 $$\hat \pi_1=\frac{1}{1+\sum_{j=2}^Jexp(\mathbf{x}_j^T\mathbf{b}_j)},\quad \hat\pi_j=\frac{exp(\mathbf{x}_j^T\mathbf{b}_j)}{1+\sum_{j=2}^Jexp(\mathbf{x}_j^T\mathbf{b}_j)},\quad for\quad j=2,\dots,J.$$
 
-+ 皮尔逊卡方残差为： $r_i=\frac{o_i-e_i}{\sqrt e_i}$，其中 $o_i$和 $e_i$分别为观察频数和期望频数， $i=1,\dots,N$，其中 N 为 J 乘以不同协变量模式的个数
++ 皮尔逊卡方残差为： $r_i=\frac{o_i-e_i}{\sqrt e_i}$ ，其中 $o_i$ 和 $e_i$ 分别为观察频数和期望频数， $i=1,\dots,N$ ，其中 N 为 J 乘以不同协变量模式的个数
 
 ** 多项logistic回归拟合优度
 + 拟合优度的统计量：
-  + 卡方统计量： $X^2=\sum_{i=1}^N r_i^2$；伪R方： $Pseudo R^2=\frac{l(\mathbf{b}_{min})-l(\mathbf{b})}{l(\mathbf{b})}$
+  + 卡方统计量： $X^2=\sum_{i=1}^N r_i^2$ ；伪R方： $Pseudo R^2=\frac{l(\mathbf{b}_{min})-l(\mathbf{b})}{l(\mathbf{b})}$
   
   + 偏差： $Deviance=2[loglikelihood(\mathbf{b}_{max})-loglikelihood(\mathbf{b})]$
   
@@ -177,7 +177,7 @@ $$\hat \pi_1=\frac{1}{1+\sum_{j=2}^Jexp(\mathbf{x}_j^T\mathbf{b}_j)},\quad \hat\
 
 $$OR_j=\frac{\pi_{jp}}{\pi_{ja}}/\frac{\pi_{1p}}{\pi_{1a}}$$
 
-对于模型 $log(\pi_j/\pi_1)=\beta_{0j}+\beta_{1j}x,\quad j=2,\dots,J$，有： 
+对于模型 $log(\pi_j/\pi_1)=\beta_{0j}+\beta_{1j}x,\quad j=2,\dots,J$ ，有： 
 
 $$log(\frac{\pi_{ja}}{\pi_{1a}})=\beta_{0j},\quad when\quad x=0;\qquad log(\frac{\pi_{jp}}{\pi_{1p}})=\beta_{0j}+\beta_{1j}x,\quad when\quad x=1.$$
 
@@ -223,7 +223,9 @@ predict(fitcar,data.frame(sex="women",age="18-23"),type="probs")
 datapred <- data.frame(sex=c("women","women","women","men","men","men"),
                        age=c("18-23","24-40","> 40","18-23","24-40","> 40"))
 pred1 <- predict(fitcar,datapred,type="probs")
-cbind(datapred,pred1)
+
+rownames(pred1) <- paste(datapred$sex,c("18-23","24-40","older 40","18-23","24-40","older 40"))
+round(pred1,digits=3)
 #+END_SRC
 
 + 用概率直观，容易理解，也容易比较。
@@ -245,7 +247,7 @@ cbind(datapred,pred1)
 
 
 ** 有序logistic回归
-+ 假想存在一个难测的潜在变量 $z$（病情严重度），可以采用一系列分割点 $C_j$将潜在变量归入不同的有序类别（无症状、轻微、明显、严重），每个类别相应的概率为 $\pi_j$.
++ 假想存在一个难测的潜在变量 $z$（病情严重度），可以采用一系列分割点 $C_j$ 将潜在变量归入不同的有序类别（无症状、轻微、明显、严重），每个类别相应的概率为 $\pi_j$.
 
 + 第 j 个类别的累计优势为，
 
@@ -255,7 +257,7 @@ $$\frac{P(z\leq C_j)}{P(z>C_j)}=\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\
 
 $$log\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J}=\mathbf{x}_j^T\mathbf{\beta}_j$$
 
-+ 如果线性预测部分 $\mathbf{x}_j^T\mathbf{\beta}_j$中截距项 $\beta_{0j}$依赖于类别 j，但是其他预测变量系数与类别无关，则为比例优势模型（proportional odds model: PO）。
++ 如果线性预测部分 $\mathbf{x}_j^T\mathbf{\beta}_j$ 中截距项 $\beta_{0j}$ 依赖于类别 j，但是其他预测变量系数与类别无关，则为比例优势模型（proportional odds model: PO）。
 
 $$log\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J}=\beta_{0j}+\beta_1x_1+\dots+\beta_{p-1}x_{p-1}$$
 
@@ -265,11 +267,11 @@ $$log\frac{\pi_1+\pi_2+\dots+\pi_j}{\pi_{j+1}+\dots+\pi_J}=\beta_{0j}+\beta_1x_1
 
 $$Pr(Y \leq j|X)=\frac{1}{1+exp[-(\beta_{0j}+X\mathbf{\beta})]}$$
 
-+ 模型中有k-1个截距。如果 $k=1$，模型退化为二值分类变量的logit模型。如果模型只有一个二值分类预测变量，模型等同于双样本Wilcoxon-Mann-Whitney检验
++ 模型中有k-1个截距。如果 $k=1$ ，模型退化为二值分类变量的logit模型。如果模型只有一个二值分类预测变量，模型等同于双样本Wilcoxon-Mann-Whitney检验
 
-+ PO模型隐含假定回归系数 $\beta$与响应变量的水平划分 $j$相互独立。X与Y之间没有交互效应，无论在Y的哪个水平上，X对应的优势对数（log odds）变化是相同的。（这个假定现实吗？）
++ PO模型隐含假定回归系数 $\beta$ 与响应变量的水平划分 $j$ 相互独立。X与Y之间没有交互效应，无论在Y的哪个水平上，X对应的优势对数（log odds）变化是相同的。（这个假定现实吗？）
 
-+ 如果线性和叠加性假定成立，则在Y的任何水平上，X单位变化相应的 $Y \leq j$的优势变化为 $exp(\beta)$
++ 如果线性和叠加性假定成立，则在Y的任何水平上，X单位变化相应的 $Y \leq j$ 的优势变化为 $exp(\beta)$
 
 + PO模型采用MLE估计参数，估计的截距由大到小降序排列。
 
@@ -283,20 +285,21 @@ $$log(\frac{\pi_1+\pi_2}{\pi_3})=\beta_{02}+\beta_1x_1+\beta_2x_2+\beta_3x_3$$
 
 + 与多项logistic回归相比，残差偏差和AIC差异很小，估计的参数也都基本相似。
 
-+ 回归系数的解释：自变量 $x_i$增加1个单位，小于等于任意水平的概率与大于该水平的概率的比值 $\Pr[Y \leq j]/\Pr[Y >j]$ 相应乘以系数的指数 $exp(\beta_i)$ 。
++ 回归系数的解释：自变量 $x_i$ 增加1个单位，小于等于任意水平的概率与大于该水平的概率的比值 $\Pr[Y \leq j]/\Pr[Y >j]$ 相应乘以系数的指数 $exp(\beta_i)$ 。
 
-+ age>40的系数为2.23，指数化后为 $e^{2.23}=9.3$，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“不重视安全系统的概率与重视或非常重视安全系统的概率之比”要相应乘以9.3，类似“不重视或重视的概率与非常重视的概率之比”也要相应乘以9.3
++ age>40的系数为2.23，指数化后为 $e^{2.23}=9.3$ ，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“不重视安全系统的概率与重视或非常重视安全系统的概率之比”要相应乘以9.3，类似“不重视或重视的概率与非常重视的概率之比”也要相应乘以9.3
 
 + 优势比的解释非常不直观，建议计算自变量在特定取值组合的概率。
 
-+ 年龄为18-23岁的女性，即 $x_1=0,\,x_2=0,\,x_3=0$时， $\hat\pi_1=0.511,\quad \hat\pi_2=0.329,\quad \hat\pi_3=0.160$
++ 年龄为18-23岁的女性，即 $x_1=0,\,x_2=0,\,x_3=0$ 时， $\hat\pi_1=0.511,\quad \hat\pi_2=0.329,\quad \hat\pi_3=0.160$
 #+BEGIN_SRC R
 library(MASS)
 car$response <- factor(response,ordered = T,levels = c("no/little","important","very important"))
 fitpo <- polr(response~age+sex,weights = frequency,data = car)
 summary(fitpo)
 pred2 <- predict(fitpo,datapred,type="probs")
-cbind(datapred,pred2)
+rownames(pred2) <- paste(datapred$sex,c("18-23","24-40","older 40","18-23","24-40","older 40"))
+round(pred2,digits=3)
 #+END_SRC
 
 + 如果假定潜在变量 z 服从正态分布，可以采用probit替代logit，只需指定method参数为“probit”，系数与logit相差约1.6倍。
@@ -318,14 +321,15 @@ $$log(\frac{\pi_j}{\pi_{j+1}+\dots+\pi_J})=\mathbf{x}_j^T\mathbf{\beta}_j$$
 #+BEGIN_SRC R
 library(VGAM)
 car <- read.csv("carpref.csv")
+# 多项logistic回归
+fitmnr <- vglm(response~age+sex, family = multinomial(refLevel = "no/little"),weights = frequency,data = car)
+car$response <- ordered(car$response)
 # 比例优势模型
 fitprop <- vglm(response~age+sex, family = propodds,weights = frequency,data = car)
 # 累计连接模型（logit）
 fitacm <- vglm(response~age+sex, family = cumulative(parallel = F,reverse = T),weights = frequency,data = car)
 # 偏比例优势模型
 fitpprop <- vglm(response~age+sex, family = cumulative(parallel = FALSE~sex,reverse = T),weights = frequency,data = car)
-# 多项logistic回归
-fitmnr <- vglm(response~age+sex, family = multinomial(refLevel = "no/little"),weights = frequency,data = car)
 # 相邻类别模型（logit）
 fitacl <- vglm(response~age+sex, family = acat,weights = frequency,data = car)
 # 连续比率模型（logit）
@@ -333,8 +337,9 @@ fitcrl <- vglm(response~age+sex, family = cratio,weights = frequency,data = car)
 #+END_SRC
 
 ** 有序logit回归检验
-* 似然比检验（likelihood ratio test）
+*** 似然比检验（likelihood ratio test）
 #+BEGIN_SRC R
 lrtest(fitprop,fitacm)
+detach(car)
 #+END_SRC
 比较比例优势模型和累计logit模型是否有显著差异可以验证等比优势假定是否成立。当然同时还要考虑样本量，样本量越大，差异越显著。

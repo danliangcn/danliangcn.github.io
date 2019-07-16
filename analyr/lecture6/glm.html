@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-11 四 17:36 -->
+<!-- 2019-07-16 二 18:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>广义线性模型</title>
@@ -253,12 +253,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">广义线性模型</h1>
 
-<div id="outline-container-org16d6e7f" class="outline-2">
-<h2 id="org16d6e7f"><span class="section-number-2">1</span> 广义线性模型介绍</h2>
+<div id="outline-container-orgdd32d62" class="outline-2">
+<h2 id="orgdd32d62"><span class="section-number-2">1</span> 广义线性模型介绍</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org15f84f5" class="outline-3">
-<h3 id="org15f84f5"><span class="section-number-3">1.1</span> 广义线性的组成</h3>
+<div id="outline-container-org761890b" class="outline-3">
+<h3 id="org761890b"><span class="section-number-3">1.1</span> 广义线性的组成</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>广义线性建模是统计分析框架，线性回归和logistic回归是广义线性模型的特例。</li>
@@ -282,8 +282,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org10380a4" class="outline-3">
-<h3 id="org10380a4"><span class="section-number-3">1.2</span> 广义线性模型的种类</h3>
+<div id="outline-container-orge0d12a4" class="outline-3">
+<h3 id="orge0d12a4"><span class="section-number-3">1.2</span> 广义线性模型的种类</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>不同种类的广义线性模型，连接函数 \(g\) 和响应变量的条件分布 \(p\) 不同：
@@ -307,8 +307,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgfb38c61" class="outline-3">
-<h3 id="orgfb38c61"><span class="section-number-3">1.3</span> 泊松回归</h3>
+<div id="outline-container-org5907a34" class="outline-3">
+<h3 id="org5907a34"><span class="section-number-3">1.3</span> 泊松回归</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 例子：了解抗癫痫药物对癫痫发病率的影响
@@ -333,19 +333,19 @@ summary(breslow.dat[c(6, 7, 8, 10)])
  [1] "ID"    "Y1"    "Y2"    "Y3"    "Y4"    "Base"  "Age"   "Trt"   "Ysum" 
 [10] "sumY"  "Age10" "Base4"
 
-      Base             Age               Trt          sumY       
- Min.   :  6.00   Min.   :18.00   placebo  :28   Min.   :  0.00  
- 1st Qu.: 12.00   1st Qu.:23.00   progabide:31   1st Qu.: 11.50  
- Median : 22.00   Median :28.00                  Median : 16.00  
- Mean   : 31.22   Mean   :28.34                  Mean   : 33.05  
- 3rd Qu.: 41.00   3rd Qu.:32.00                  3rd Qu.: 36.00  
- Max.   :151.00   Max.   :42.00                  Max.   :302.00
+      Base            Age              Trt          sumY      
+ Min.   :  6.0   Min.   :18.0   placebo  :28   Min.   :  0.0  
+ 1st Qu.: 12.0   1st Qu.:23.0   progabide:31   1st Qu.: 11.5  
+ Median : 22.0   Median :28.0                  Median : 16.0  
+ Mean   : 31.2   Mean   :28.3                  Mean   : 33.1  
+ 3rd Qu.: 41.0   3rd Qu.:32.0                  3rd Qu.: 36.0  
+ Max.   :151.0   Max.   :42.0                  Max.   :302.0
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgc9982e5" class="outline-3">
-<h3 id="orgc9982e5"><span class="section-number-3">1.4</span> 泊松分布</h3>
+<div id="outline-container-orgfa91986" class="outline-3">
+<h3 id="orgfa91986"><span class="section-number-3">1.4</span> 泊松分布</h3>
 <div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
 <li>探索性分析：因变量严重偏态，并有离群点；药物治疗组的发病次数变少</li>
@@ -366,8 +366,8 @@ boxplot(sumY ~ Trt, xlab=<span style="color: #2d9574;">"Treatment"</span>, main=
 </div>
 </div>
 
-<div id="outline-container-org5edcbec" class="outline-3">
-<h3 id="org5edcbec"><span class="section-number-3">1.5</span> 拟合泊松回归</h3>
+<div id="outline-container-orgb1e7a6b" class="outline-3">
+<h3 id="orgb1e7a6b"><span class="section-number-3">1.5</span> 拟合泊松回归</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="org-src-container">
 <pre class="src src-R">fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(sumY ~ Base + Age + Trt, data=breslow.dat, family=poisson())
@@ -384,15 +384,15 @@ Age
 Trt, family = poisson(), data = breslow.dat)
 
 Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--6.0569  -2.0433  -0.9397   0.7929  11.0061  
+   Min      1Q  Median      3Q     Max  
+-6.057  -2.043  -0.940   0.793  11.006  
 
 Coefficients:
-               Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)   1.9488259  0.1356191  14.370  &lt; 2e-16 ***
-Base          0.0226517  0.0005093  44.476  &lt; 2e-16 ***
-Age           0.0227401  0.0040240   5.651 1.59e-08 ***
-Trtprogabide -0.1527009  0.0478051  -3.194   0.0014 ** 
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   1.948826   0.135619   14.37  &lt; 2e-16 ***
+Base          0.022652   0.000509   44.48  &lt; 2e-16 ***
+Age           0.022740   0.004024    5.65  1.6e-08 ***
+Trtprogabide -0.152701   0.047805   -3.19   0.0014 ** 
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -400,19 +400,19 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
     Null deviance: 2122.73  on 58  degrees of freedom
 Residual deviance:  559.44  on 55  degrees of freedom
-AIC: 850.71
+AIC: 850.7
 
 Number of Fisher Scoring iterations: 5
 
  (Intercept)         Base          Age Trtprogabide 
-   7.0204403    1.0229102    1.0230007    0.8583864
+       7.020        1.023        1.023        0.858
 </pre>
 </div>
 </div>
 
 
-<div id="outline-container-org247276c" class="outline-3">
-<h3 id="org247276c"><span class="section-number-3">1.6</span> 解释截距和系数？</h3>
+<div id="outline-container-org91977e7" class="outline-3">
+<h3 id="org91977e7"><span class="section-number-3">1.6</span> 解释截距和系数？</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 \[log(\lambda)=\beta_0+\sum_{j=1}^p\beta_jX_j\]
@@ -426,8 +426,8 @@ Number of Fisher Scoring iterations: 5
 </div>
 </div>
 
-<div id="outline-container-org3fcf071" class="outline-3">
-<h3 id="org3fcf071"><span class="section-number-3">1.7</span> 检验过度离散（overdispersion）</h3>
+<div id="outline-container-orgce09698" class="outline-3">
+<h3 id="orgce09698"><span class="section-number-3">1.7</span> 检验过度离散（overdispersion）</h3>
 <div class="outline-text-3" id="text-1-7">
 <ul class="org-ul">
 <li>泊松分布的均值和方差相等，当响应变量观测的方差比泊松分布预测的方差大时，可能发生过度离散，低估回归系数的误差，影响估计结果的准确性。</li>
@@ -445,9 +445,9 @@ deviance(fit)/df.residual(fit)
 
                    
 Overdispersion test Obs.Var/Theor.Var Statistic p-value
-       poisson data          62.87013  3646.468       0
+       poisson data              62.9      3646       0
 
-[1] 10.1717
+[1] 10.2
 
 </pre>
 
@@ -469,19 +469,19 @@ Trt, family = quasipoisson(),
     data = breslow.dat)
 
 Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--6.0569  -2.0433  -0.9397   0.7929  11.0061  
+   Min      1Q  Median      3Q     Max  
+-6.057  -2.043  -0.940   0.793  11.006  
 
 Coefficients:
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   1.948826   0.465091   4.190 0.000102 ***
-Base          0.022652   0.001747  12.969  &lt; 2e-16 ***
-Age           0.022740   0.013800   1.648 0.105085    
-Trtprogabide -0.152701   0.163943  -0.931 0.355702    
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   1.94883    0.46509    4.19   0.0001 ***
+Base          0.02265    0.00175   12.97   &lt;2e-16 ***
+Age           0.02274    0.01380    1.65   0.1051    
+Trtprogabide -0.15270    0.16394   -0.93   0.3557    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasipoisson family taken to be 11.76075)
+(Dispersion parameter for quasipoisson family taken to be 11.8)
 
     Null deviance: 2122.73  on 58  degrees of freedom
 Residual deviance:  559.44  on 55  degrees of freedom
@@ -492,8 +492,8 @@ Number of Fisher Scoring iterations: 5
 </div>
 </div>
 
-<div id="outline-container-org9f03d41" class="outline-3">
-<h3 id="org9f03d41"><span class="section-number-3">1.8</span> probit 回归</h3>
+<div id="outline-container-orgfb8d874" class="outline-3">
+<h3 id="orgfb8d874"><span class="section-number-3">1.8</span> probit 回归</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 probit 模型与 logit 模型相似，只不过是用正态分布代替了logistic分布。
@@ -524,27 +524,27 @@ Call:  glm(formula = switch ~ dist, family = binomial(link = "logit"))
 
 Coefficients:
 (Intercept)         dist  
-   0.605959    -0.006219  
+    0.60596     -0.00622  
 
 Degrees of Freedom: 3019 Total (i.e. Null);  3018 Residual
-Null Deviance:	    4118 
-Residual Deviance: 4076 	AIC: 4080
+Null Deviance:	    4120 
+Residual Deviance: 4080 	AIC: 4080
 
 Call:  glm(formula = switch ~ dist, family = binomial(link = "probit"))
 
 Coefficients:
 (Intercept)         dist  
-   0.377808    -0.003874  
+    0.37781     -0.00387  
 
 Degrees of Freedom: 3019 Total (i.e. Null);  3018 Residual
-Null Deviance:	    4118 
-Residual Deviance: 4076 	AIC: 4080
+Null Deviance:	    4120 
+Residual Deviance: 4080 	AIC: 4080
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org4914fe7" class="outline-3">
-<h3 id="org4914fe7"><span class="section-number-3">1.9</span> 多项logistic回归</h3>
+<div id="outline-container-orge09764f" class="outline-3">
+<h3 id="orge09764f"><span class="section-number-3">1.9</span> 多项logistic回归</h3>
 <div class="outline-text-3" id="text-1-9">
 <ul class="org-ul">
 <li>多项分布</li>
@@ -573,15 +573,15 @@ Residual Deviance: 4076 	AIC: 4080
 </div>
 </div>
 
-<div id="outline-container-org38348b7" class="outline-3">
-<h3 id="org38348b7"><span class="section-number-3">1.10</span> 多项logistic回归（nominal logistic regression）</h3>
+<div id="outline-container-orgf53d5db" class="outline-3">
+<h3 id="orgf53d5db"><span class="section-number-3">1.10</span> 多项logistic回归（nominal logistic regression）</h3>
 <div class="outline-text-3" id="text-1-10">
 <ul class="org-ul">
 <li>多项分布</li>
 </ul>
 
 <p>
-令独立随机变量 $Y_1,&ctdot;,Y_J$服从泊松分布 \(Y_j\sim Possion(\lambda_i)\) ，联合分布为：
+令独立随机变量 \(Y_1 ,\cdots,Y_J\) 服从泊松分布 \(Y_j\sim Possion(\lambda_i)\) ，联合分布为：
 </p>
 
 <p>
@@ -589,7 +589,7 @@ Residual Deviance: 4076 	AIC: 4080
 </p>
 
 <p>
-若 $n=Y_1+Y_2+&ctdot;+Y_J$，那么 $n&sim; Possion(&lambda;_1+&lambda;_2+&ctdot;+&lambda;_J)$，因此 $\mathbf{y}$的条件分布为：
+若 \(n=Y_1+Y_2+\cdots+Y_J\) ，那么 \(n\sim Possion(\lambda_1+\lambda_2+\cdots+\lambda_J)\) ，因此 \(\mathbf{y}\) 的条件分布为：
 </p>
 
 <p>
@@ -619,9 +619,9 @@ Residual Deviance: 4076 	AIC: 4080
 </p>
 
 <ul class="org-ul">
-<li>同时估计 $(J-1)$个logit方程得到参数估计值 $\mathbf{b}_j$，从而计算线性预测值 \(\mathbf{x}_j^T\mathbf{b}_j\)</li>
+<li>同时估计 \((J-1)\) 个logit方程得到参数估计值 \(\mathbf{b}_j\) ，从而计算线性预测值 \(\mathbf{x}_j^T\mathbf{b}_j\)</li>
 
-<li>从而，由 $\hat &pi;_j=\hat &pi;_1 exp(\mathbf{x}_j^T\mathbf{b}_j),\,\hat &pi;_1+\hat &pi;_2+&ctdot;+\hat &pi;_J=1$，可得</li>
+<li>从而，由 \(\hat \pi_j=\hat \pi_1 exp(\mathbf{x}_j^T\mathbf{b}_j),\,\hat \pi_1+\hat \pi_2+\cdots+\hat \pi_J=1\) ，可得</li>
 </ul>
 
 <p>
@@ -629,18 +629,18 @@ Residual Deviance: 4076 	AIC: 4080
 </p>
 
 <ul class="org-ul">
-<li>皮尔逊卡方残差为： $r_i=\frac{o_i-e_i}{\sqrt e_i}$，其中 $o_i$和 $e_i$分别为观察频数和期望频数， $i=1,&hellip;,N$，其中 N 为 J 乘以不同协变量模式的个数</li>
+<li>皮尔逊卡方残差为： \(r_i=\frac{o_i-e_i}{\sqrt e_i}\) ，其中 \(o_i\) 和 \(e_i\) 分别为观察频数和期望频数， \(i=1,\dots,N\) ，其中 N 为 J 乘以不同协变量模式的个数</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5e8dc58" class="outline-3">
-<h3 id="org5e8dc58"><span class="section-number-3">1.11</span> 多项logistic回归拟合优度</h3>
+<div id="outline-container-org06c8ccc" class="outline-3">
+<h3 id="org06c8ccc"><span class="section-number-3">1.11</span> 多项logistic回归拟合优度</h3>
 <div class="outline-text-3" id="text-1-11">
 <ul class="org-ul">
 <li>拟合优度的统计量：
 <ul class="org-ul">
-<li>卡方统计量： $X^2=&sum;_{i=1}^N r_i^2$；伪R方： \(Pseudo R^2=\frac{l(\mathbf{b}_{min})-l(\mathbf{b})}{l(\mathbf{b})}\)</li>
+<li>卡方统计量： \(X^2=\sum_{i=1}^N r_i^2\) ；伪R方： \(Pseudo R^2=\frac{l(\mathbf{b}_{min})-l(\mathbf{b})}{l(\mathbf{b})}\)</li>
 
 <li>偏差： \(Deviance=2[loglikelihood(\mathbf{b}_{max})-loglikelihood(\mathbf{b})]\)</li>
 
@@ -658,7 +658,7 @@ Residual Deviance: 4076 	AIC: 4080
 </p>
 
 <p>
-对于模型 $log(&pi;_j/&pi;_1)=&beta;_{0j}+&beta;_{1j}x,\quad j=2,&hellip;,J$，有： 
+对于模型 \(log(\pi_j/\pi_1)=\beta_{0j}+\beta_{1j}x,\quad j=2,\dots,J\) ，有： 
 </p>
 
 <p>
@@ -671,8 +671,8 @@ Residual Deviance: 4076 	AIC: 4080
 </div>
 </div>
 
-<div id="outline-container-orgee33595" class="outline-3">
-<h3 id="orgee33595"><span class="section-number-3">1.12</span> 例子：分析不同性别和年龄人群购买汽车时对助力转向系统的重视程度。</h3>
+<div id="outline-container-org2a02e25" class="outline-3">
+<h3 id="org2a02e25"><span class="section-number-3">1.12</span> 例子：分析不同性别和年龄人群购买汽车时对助力转向系统的重视程度。</h3>
 <div class="outline-text-3" id="text-1-12">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(nnet)
@@ -688,23 +688,12 @@ fitcar <span style="color: #ce537a; font-weight: bold;">&lt;-</span> multinom(re
 
 <pre class="example">
 
-The following objects are masked from car (pos = 4):
-
-    age, frequency, response, sex
-
-The following objects are masked from car (pos = 9):
-
-    age, frequency, response, sex
-
-The following objects are masked from car (pos = 12):
-
-    age, frequency, response, sex
-
 # weights:  15 (8 variable)
 initial  value 329.583687 
 iter  10 value 290.490920
 final  value 290.351098 
 converged
+
 </pre>
 
 <ul class="org-ul">
@@ -723,18 +712,18 @@ sex, data = car, weights = frequency)
 
 Coefficients:
                (Intercept)
-40 age24-40     sexmen
-important       -0.5907992 1.587709 1.128268 -0.3881301
-very important  -1.0390726 2.916757 1.478104 -0.8130202
+40 age24-40 sexmen
+important           -0.591    1.59     1.13 -0.388
+very important      -1.039    2.92     1.48 -0.813
 
 Std. Errors:
                (Intercept)
-40  age24-40    sexmen
-important        0.2839756 0.4028997 0.3416449 0.3005115
-very important   0.3305014 0.4229276 0.4009256 0.3210382
+40 age24-40 sexmen
+important            0.284   0.403    0.342  0.301
+very important       0.331   0.423    0.401  0.321
 
-Residual Deviance: 580.7022 
-AIC: 596.7022
+Residual Deviance: 581 
+AIC: 597
 </pre>
 
 <ul class="org-ul">
@@ -743,8 +732,8 @@ AIC: 596.7022
 </div>
 </div>
 
-<div id="outline-container-orgbeb211e" class="outline-3">
-<h3 id="orgbeb211e"><span class="section-number-3">1.13</span> 多项logistic回归系数解释</h3>
+<div id="outline-container-orgbbefa0b" class="outline-3">
+<h3 id="orgbbefa0b"><span class="section-number-3">1.13</span> 多项logistic回归系数解释</h3>
 <div class="outline-text-3" id="text-1-13">
 <ul class="org-ul">
 <li>回归系数的解释：自变量增加1个单位，类别J相对于参考类别的概率比（优势：odds） \(\Pr[Y = \text{category }j]/\Pr[Y = \text{base category}]\) 相应乘以系数的指数 \(exp(\beta_i^j)\) 。</li>
@@ -770,34 +759,35 @@ AIC: 596.7022
 
 <pre class="example">
 no/little      important very important 
-0.5242005      0.2903465      0.1854530
+    0.524          0.290          0.185
 
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org747f30e" class="outline-3">
-<h3 id="org747f30e"><span class="section-number-3">1.14</span> 多项logistic回归系数列表</h3>
+<div id="outline-container-org80754da" class="outline-3">
+<h3 id="org80754da"><span class="section-number-3">1.14</span> 多项logistic回归系数列表</h3>
 <div class="outline-text-3" id="text-1-14">
 <div class="org-src-container">
 <pre class="src src-R">datapred <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(sex=c(<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"women"</span>,<span style="color: #2d9574;">"men"</span>,<span style="color: #2d9574;">"men"</span>,<span style="color: #2d9574;">"men"</span>),
                        age=c(<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"&gt; 40"</span>,<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"&gt; 40"</span>))
 pred1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> predict(fitcar,datapred,type=<span style="color: #2d9574;">"probs"</span>)
-cbind(datapred,pred1)
+
+rownames(pred1) <span style="color: #ce537a; font-weight: bold;">&lt;-</span> paste(datapred$sex,c(<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"older 40"</span>,<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"older 40"</span>))
+round(pred1,digits=3)
 </pre>
 </div>
 
 <pre class="example">
 
-    sex   age  no/little important very important
-1 women 18-23 0.52420049 0.2903465      0.1854530
-2 women 24-40 0.23458355 0.4015294      0.3638870
-3 women
-40 0.09757772 0.2644254      0.6379968
-4   men 18-23 0.65247678 0.2451441      0.1023791
-5   men 24-40 0.35099404 0.4075274      0.2414786
-6   men
-40 0.17427519 0.3203504      0.5053744
+               no/little important very important
+women 18-23        0.524     0.290          0.185
+women 24-40        0.235     0.402          0.364
+women older 40     0.098     0.264          0.638
+men 18-23          0.652     0.245          0.102
+men 24-40          0.351     0.408          0.241
+men older 40       0.174     0.320          0.505
+
 </pre>
 
 <ul class="org-ul">
@@ -807,8 +797,8 @@ cbind(datapred,pred1)
 </div>
 
 
-<div id="outline-container-org93b8387" class="outline-3">
-<h3 id="org93b8387"><span class="section-number-3">1.15</span> 有序logistic回归（ordinal logistic regression）</h3>
+<div id="outline-container-orgfa181b3" class="outline-3">
+<h3 id="orgfa181b3"><span class="section-number-3">1.15</span> 有序logistic回归（ordinal logistic regression）</h3>
 <div class="outline-text-3" id="text-1-15">
 <ul class="org-ul">
 <li>许多研究包含有序变量作为响应变量，例如，幸福感的5个水平（非常幸福、比较幸福、一般幸福、不幸福、非常不幸福）</li>
@@ -830,11 +820,11 @@ cbind(datapred,pred1)
 </div>
 
 
-<div id="outline-container-orge01ba28" class="outline-3">
-<h3 id="orge01ba28"><span class="section-number-3">1.16</span> 有序logistic回归</h3>
+<div id="outline-container-org69aaa24" class="outline-3">
+<h3 id="org69aaa24"><span class="section-number-3">1.16</span> 有序logistic回归</h3>
 <div class="outline-text-3" id="text-1-16">
 <ul class="org-ul">
-<li>假想存在一个难测的潜在变量 \(z\)（病情严重度），可以采用一系列分割点 $C_j$将潜在变量归入不同的有序类别（无症状、轻微、明显、严重），每个类别相应的概率为 \(\pi_j\).</li>
+<li>假想存在一个难测的潜在变量 \(z\)（病情严重度），可以采用一系列分割点 \(C_j\) 将潜在变量归入不同的有序类别（无症状、轻微、明显、严重），每个类别相应的概率为 \(\pi_j\).</li>
 
 <li>第 j 个类别的累计优势为，</li>
 </ul>
@@ -852,7 +842,7 @@ cbind(datapred,pred1)
 </p>
 
 <ul class="org-ul">
-<li>如果线性预测部分 $\mathbf{x}_j^T\mathbf{&beta;}_j$中截距项 $&beta;_{0j}$依赖于类别 j，但是其他预测变量系数与类别无关，则为比例优势模型（proportional odds model: PO）。</li>
+<li>如果线性预测部分 \(\mathbf{x}_j^T\mathbf{\beta}_j\) 中截距项 \(\beta_{0j}\) 依赖于类别 j，但是其他预测变量系数与类别无关，则为比例优势模型（proportional odds model: PO）。</li>
 </ul>
 
 <p>
@@ -862,8 +852,8 @@ cbind(datapred,pred1)
 </div>
 
 
-<div id="outline-container-org69b4d3a" class="outline-3">
-<h3 id="org69b4d3a"><span class="section-number-3">1.17</span> 比例优势模型（PO）</h3>
+<div id="outline-container-orgae017ec" class="outline-3">
+<h3 id="orgae017ec"><span class="section-number-3">1.17</span> 比例优势模型（PO）</h3>
 <div class="outline-text-3" id="text-1-17">
 <ul class="org-ul">
 <li>假定响应变量的水平值为 \(1,2,\cdots ,k\) ，则有如下模型，其中 \(j=1,2,\dots,k-1\) .</li>
@@ -874,11 +864,11 @@ cbind(datapred,pred1)
 </p>
 
 <ul class="org-ul">
-<li>模型中有k-1个截距。如果 $k=1$，模型退化为二值分类变量的logit模型。如果模型只有一个二值分类预测变量，模型等同于双样本Wilcoxon-Mann-Whitney检验</li>
+<li>模型中有k-1个截距。如果 \(k=1\) ，模型退化为二值分类变量的logit模型。如果模型只有一个二值分类预测变量，模型等同于双样本Wilcoxon-Mann-Whitney检验</li>
 
-<li>PO模型隐含假定回归系数 $&beta;$与响应变量的水平划分 $j$相互独立。X与Y之间没有交互效应，无论在Y的哪个水平上，X对应的优势对数（log odds）变化是相同的。（这个假定现实吗？）</li>
+<li>PO模型隐含假定回归系数 \(\beta\) 与响应变量的水平划分 \(j\) 相互独立。X与Y之间没有交互效应，无论在Y的哪个水平上，X对应的优势对数（log odds）变化是相同的。（这个假定现实吗？）</li>
 
-<li>如果线性和叠加性假定成立，则在Y的任何水平上，X单位变化相应的 $Y &le; j$的优势变化为 \(exp(\beta)\)</li>
+<li>如果线性和叠加性假定成立，则在Y的任何水平上，X单位变化相应的 \(Y \leq j\) 的优势变化为 \(exp(\beta)\)</li>
 
 <li>PO模型采用MLE估计参数，估计的截距由大到小降序排列。</li>
 </ul>
@@ -886,8 +876,8 @@ cbind(datapred,pred1)
 </div>
 
 
-<div id="outline-container-org41bfd19" class="outline-3">
-<h3 id="org41bfd19"><span class="section-number-3">1.18</span> 比例优势模型示例</h3>
+<div id="outline-container-orgf42f3ee" class="outline-3">
+<h3 id="orgf42f3ee"><span class="section-number-3">1.18</span> 比例优势模型示例</h3>
 <div class="outline-text-3" id="text-1-18">
 <ul class="org-ul">
 <li>例子：同前例，将汽车安全系统重视程度视为有序变量。采用比例优势模型：</li>
@@ -904,13 +894,13 @@ cbind(datapred,pred1)
 <ul class="org-ul">
 <li>与多项logistic回归相比，残差偏差和AIC差异很小，估计的参数也都基本相似。</li>
 
-<li>回归系数的解释：自变量 $x_i$增加1个单位，小于等于任意水平的概率与大于该水平的概率的比值 \(\Pr[Y \leq j]/\Pr[Y >j]\) 相应乘以系数的指数 \(exp(\beta_i)\) 。</li>
+<li>回归系数的解释：自变量 \(x_i\) 增加1个单位，小于等于任意水平的概率与大于该水平的概率的比值 \(\Pr[Y \leq j]/\Pr[Y >j]\) 相应乘以系数的指数 \(exp(\beta_i)\) 。</li>
 
-<li>age&gt;40的系数为2.23，指数化后为 $e^{2.23}=9.3$，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“不重视安全系统的概率与重视或非常重视安全系统的概率之比”要相应乘以9.3，类似“不重视或重视的概率与非常重视的概率之比”也要相应乘以9.3</li>
+<li>age&gt;40的系数为2.23，指数化后为 \(e^{2.23}=9.3\) ，意味着在其他条件相同的情况下，年龄大于40岁的人比年龄在18-23岁的人，其“不重视安全系统的概率与重视或非常重视安全系统的概率之比”要相应乘以9.3，类似“不重视或重视的概率与非常重视的概率之比”也要相应乘以9.3</li>
 
 <li>优势比的解释非常不直观，建议计算自变量在特定取值组合的概率。</li>
 
-<li>年龄为18-23岁的女性，即 $x_1=0,\,x_2=0,\,x_3=0$时， \(\hat\pi_1=0.511,\quad \hat\pi_2=0.329,\quad \hat\pi_3=0.160\)</li>
+<li>年龄为18-23岁的女性，即 \(x_1=0,\,x_2=0,\,x_3=0\) 时， \(\hat\pi_1=0.511,\quad \hat\pi_2=0.329,\quad \hat\pi_3=0.160\)</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(MASS)
@@ -918,7 +908,8 @@ car$response <span style="color: #ce537a; font-weight: bold;">&lt;-</span> facto
 fitpo <span style="color: #ce537a; font-weight: bold;">&lt;-</span> polr(response~age+sex,weights = frequency,data = car)
 summary(fitpo)
 pred2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> predict(fitpo,datapred,type=<span style="color: #2d9574;">"probs"</span>)
-cbind(datapred,pred2)
+rownames(pred2) <span style="color: #ce537a; font-weight: bold;">&lt;-</span> paste(datapred$sex,c(<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"older 40"</span>,<span style="color: #2d9574;">"18-23"</span>,<span style="color: #2d9574;">"24-40"</span>,<span style="color: #2d9574;">"older 40"</span>))
+round(pred2,digits=3)
 </pre>
 </div>
 
@@ -931,28 +922,26 @@ polr(formula = response ~ age
 sex, data = car, weights = frequency)
 
 Coefficients:
-           Value Std. Error t value
-40   2.2325     0.2915   7.659
-age24-40  1.1471     0.2776   4.132
-sexmen   -0.5762     0.2262  -2.548
+          Value Std. Error t value
+40   2.232      0.291    7.66
+age24-40  1.147      0.278    4.13
+sexmen   -0.576      0.226   -2.55
 
 Intercepts:
-                         Value   Std. Error t value
-no/little|important       0.0435  0.2323     0.1874
-important|very important  1.6550  0.2556     6.4744
+                         Value  Std. Error t value
+no/little|important       0.044  0.232      0.187 
+important|very important  1.655  0.256      6.474 
 
-Residual Deviance: 581.2956 
-AIC: 591.2956
+Residual Deviance: 581.30 
+AIC: 591.30
 
-    sex   age no/little important very important
-1 women 18-23 0.5108826 0.3286797     0.16043777
-2 women 24-40 0.2490730 0.3752352     0.37569186
-3 women
-40 0.1007497 0.2587618     0.64048855
-4   men 18-23 0.6501647 0.2528518     0.09698344
-5   men 24-40 0.3711383 0.3761309     0.25273073
-6   men
-40 0.1662146 0.3334706     0.50031477
+               no/little important very important
+women 18-23        0.511     0.329          0.160
+women 24-40        0.249     0.375          0.376
+women older 40     0.101     0.259          0.640
+men 18-23          0.650     0.253          0.097
+men 24-40          0.371     0.376          0.253
+men older 40       0.166     0.333          0.500
 </pre>
 
 <ul class="org-ul">
@@ -974,24 +963,24 @@ sex, data = car, weights = frequency,
     method = "probit")
 
 Coefficients:
-           Value Std. Error t value
-40   1.3288     0.1684   7.891
-age24-40  0.6817     0.1653   4.124
-sexmen   -0.3467     0.1357  -2.555
+          Value Std. Error t value
+40   1.329      0.168    7.89
+age24-40  0.682      0.165    4.12
+sexmen   -0.347      0.136   -2.55
 
 Intercepts:
-                         Value   Std. Error t value
-no/little|important       0.0184  0.1408     0.1310
-important|very important  0.9759  0.1485     6.5724
+                         Value  Std. Error t value
+no/little|important       0.018  0.141      0.131 
+important|very important  0.976  0.148      6.572 
 
-Residual Deviance: 581.8437 
-AIC: 591.8437
+Residual Deviance: 581.84 
+AIC: 591.84
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgacb55df" class="outline-3">
-<h3 id="orgacb55df"><span class="section-number-3">1.19</span> 其他有序logit回归模型</h3>
+<div id="outline-container-orgb72f5b3" class="outline-3">
+<h3 id="orgb72f5b3"><span class="section-number-3">1.19</span> 其他有序logit回归模型</h3>
 <div class="outline-text-3" id="text-1-19">
 <ul class="org-ul">
 <li>相邻类别logit模型（Adjacent categories logit model, ACL）
@@ -1021,66 +1010,63 @@ AIC: 591.8437
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(VGAM)
 car <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.csv(<span style="color: #2d9574;">"carpref.csv"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#22810;&#39033;logistic&#22238;&#24402;</span>
+fitmnr <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = multinomial(refLevel = <span style="color: #2d9574;">"no/little"</span>),weights = frequency,data = car)
+car$response <span style="color: #ce537a; font-weight: bold;">&lt;-</span> ordered(car$response)
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27604;&#20363;&#20248;&#21183;&#27169;&#22411;</span>
 fitprop <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = propodds,weights = frequency,data = car)
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#32047;&#35745;&#36830;&#25509;&#27169;&#22411;&#65288;logit&#65289;</span>
 fitacm <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cumulative(parallel = F,reverse = T),weights = frequency,data = car)
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20559;&#27604;&#20363;&#20248;&#21183;&#27169;&#22411;</span>
 fitpprop <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cumulative(parallel = <span style="color: #a45bad;">FALSE</span>~sex,reverse = T),weights = frequency,data = car)
-<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#22810;&#39033;logistic&#22238;&#24402;</span>
-fitmnr <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = multinomial(refLevel = <span style="color: #2d9574;">"no/little"</span>),weights = frequency,data = car)
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#30456;&#37051;&#31867;&#21035;&#27169;&#22411;&#65288;logit&#65289;</span>
 fitacl <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = acat,weights = frequency,data = car)
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36830;&#32493;&#27604;&#29575;&#27169;&#22411;&#65288;logit&#65289;</span>
 fitcrl <span style="color: #ce537a; font-weight: bold;">&lt;-</span> vglm(response~age+sex, family = cratio,weights = frequency,data = car)
 </pre>
 </div>
-
-<pre class="example">
-
-Warning message:
-In eval(slot(family, "initialize")) :
-  response should be ordinal---see ordered()
-
-Warning message:
-In eval(slot(family, "initialize")) :
-  response should be ordinal---see ordered()
-
-Warning message:
-In eval(slot(family, "initialize")) :
-  response should be ordinal---see ordered()
-
-Warning message:
-In eval(slot(family, "initialize")) :
-  response should be ordinal---see ordered()
-
-Warning message:
-In eval(slot(family, "initialize")) :
-  response should be ordinal---see ordered()
-</pre>
 </div>
 </div>
 
-<div id="outline-container-org01a2958" class="outline-3">
-<h3 id="org01a2958"><span class="section-number-3">1.20</span> 有序logit回归检验</h3>
+<div id="outline-container-org0c7b7fe" class="outline-3">
+<h3 id="org0c7b7fe"><span class="section-number-3">1.20</span> 有序logit回归检验</h3>
+<div class="outline-text-3" id="text-1-20">
 </div>
-</div>
-<div id="outline-container-org2c59d2e" class="outline-2">
-<h2 id="org2c59d2e"><span class="section-number-2">2</span> 似然比检验（likelihood ratio test）</h2>
-<div class="outline-text-2" id="text-2">
+<ol class="org-ol">
+<li><a id="org22e4b6a"></a>似然比检验（likelihood ratio test）<br />
+<div class="outline-text-4" id="text-1-20-1">
 <div class="org-src-container">
 <pre class="src src-R">lrtest(fitprop,fitacm)
+<span style="color: #4f97d7;">detach</span>(car)
 </pre>
 </div>
+
+<pre class="example">
+Likelihood ratio test
+
+Model 1: response ~ age
+sex
+Model 2: response ~ age
+sex
+  #Df LogLik Df Chisq Pr(&gt;Chisq)    
+1  31   -318                        
+2  28   -290 -3  56.2    3.8e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre>
+
 <p>
 比较比例优势模型和累计logit模型是否有显著差异可以验证等比优势假定是否成立。当然同时还要考虑样本量，样本量越大，差异越显著。
 </p>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-07-11 四 17:36</p>
+<p class="date">Created: 2019-07-16 二 18:09</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
