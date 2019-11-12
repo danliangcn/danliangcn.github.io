@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-12 二 23:30 -->
+<!-- 2019-11-12 二 23:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>数据分析与R语言应用课程作业</title>
@@ -252,11 +252,11 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">数据分析与R语言应用课程作业</h1>
-<div id="outline-container-org7351ed8" class="outline-2">
-<h2 id="org7351ed8"><span class="section-number-2">1</span> R语言操作1</h2>
+<div id="outline-container-orgea549d3" class="outline-2">
+<h2 id="orgea549d3"><span class="section-number-2">1</span> R语言操作1</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-第一部分：（来源：Gelman and Hill 2007 第2章课后习题）
+第一部分：（来源：Gelman and Hill 2007 第2章课后习题，增加部分提示）
 </p>
 <ol class="org-ol">
 <li><p>
@@ -279,11 +279,21 @@ von Mises (1957) used these proportions to claim that the sex ratios were less v
 (b) The actual and theoretical standard deviations from (a) differ, of course. Is this difference statistically significant? (Hint: \((n-1)s^2 /\sigma^2 \sim \chi^2 (n-1) \)) 
 </p></li>
 
-<li>Demonstration of the Central Limit Theorem: let x = x1 + · · · + x20, the sum of 20 independent Uniform(0,1) random variables. In R, create 1000 simulations of x and plot their histogram. On the histogram, overlay a graph of the normal density function. Comment on any differences between the histogram and the curve. 
-(Hint: the R function for getting 20 random values from uniform distribution with a starting point 0 and an ending point 1 is runif(20); you can use dnorm() to get a normal density function and use lines() to draw it)</li>
+<li><p>
+Demonstration of the Central Limit Theorem: let x = x1 + · · · + x20, the sum of 20 independent Uniform(0,1) random variables. In R, create 1000 simulations of x and plot their histogram. On the histogram, overlay a graph of the normal density function. Comment on any differences between the histogram and the curve. 
+</p>
 
-<li>Distribution of averages and differences: the heights of men in the United States are approximately normally distributed with mean 69.1 inches and standard deviation 2.9 inches. The heights of women are approximately normally distributed with mean 63.7 inches and standard deviation 2.7 inches. Let x be the average height of 100 randomly sampled men, and y be the average height of 100 randomly sampled women. In R, create 1000 simulations of x − y and plot their histogram. Using the simulations, compute the mean and standard deviation of the distribution of x − y and compare to their exact values. 
-(Hint: you can use rnorm(100, mean=69.1, sd=2.9) to get 100 simulated male random sample)</li>
+<p>
+(Hint: the R function for getting 20 random values from uniform distribution with a starting point 0 and an ending point 1 is runif(20); you can use dnorm() to get a normal density function and use lines() to draw it)
+</p></li>
+
+<li><p>
+Distribution of averages and differences: the heights of men in the United States are approximately normally distributed with mean 69.1 inches and standard deviation 2.9 inches. The heights of women are approximately normally distributed with mean 63.7 inches and standard deviation 2.7 inches. Let x be the average height of 100 randomly sampled men, and y be the average height of 100 randomly sampled women. In R, create 1000 simulations of x − y and plot their histogram. Using the simulations, compute the mean and standard deviation of the distribution of x − y and compare to their exact values. 
+</p>
+
+<p>
+(Hint: you can use rnorm(100, mean=69.1, sd=2.9) to get 100 simulated male random sample)
+</p></li>
 </ol>
 
 <p>
@@ -301,8 +311,8 @@ von Mises (1957) used these proportions to claim that the sex ratios were less v
 </ol>
 </div>
 </div>
-<div id="outline-container-org870f4cb" class="outline-2">
-<h2 id="org870f4cb"><span class="section-number-2">2</span> 数据 （整理后的数据，供参考，如无法独立完成第一步可以载入后进行后面的分析）</h2>
+<div id="outline-container-orgbd0ed34" class="outline-2">
+<h2 id="orgbd0ed34"><span class="section-number-2">2</span> 数据 （整理后的数据，供参考，如无法独立完成第1-2步可以载入后继续后面的分析）</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="./cgssincome.RData">cgssincome数据</a>
@@ -312,7 +322,7 @@ von Mises (1957) used these proportions to claim that the sex ratios were less v
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-11-12 二 23:30</p>
+<p class="date">Created: 2019-11-12 二 23:41</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
