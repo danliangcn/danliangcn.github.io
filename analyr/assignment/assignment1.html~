@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-02 二 17:27 -->
+<!-- 2019-11-12 二 23:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>数据分析与R语言应用课程作业</title>
@@ -226,13 +226,69 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
 <h1 class="title">数据分析与R语言应用课程作业</h1>
-<div id="outline-container-orgf721ac0" class="outline-2">
-<h2 id="orgf721ac0"><span class="section-number-2">1</span> R语言操作1</h2>
+<div id="outline-container-org7351ed8" class="outline-2">
+<h2 id="org7351ed8"><span class="section-number-2">1</span> R语言操作1</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+第一部分：（来源：Gelman and Hill 2007 第2章课后习题）
+</p>
+<ol class="org-ol">
+<li><p>
+The following are the proportions of girl births in Vienna for each month in 1908 and 1909 (out of an average of 3900 births per month):
+</p>
+
+<p>
+.4777 .4875 .4859 .4754 .4874 .4864 .4813 .4787 .4895 .4797 .4876 .4859 .4857 .4907 .5010 .4903 .4860 .4911 .4871 .4725 .4822 .4870 .4823 .4973 
+</p>
+
+<p>
+von Mises (1957) used these proportions to claim that the sex ratios were less variable than would be expected by chance. 
+</p>
+
+<p>
+(a) Compute the standard deviation of these proportions and compare to the standard deviation that would be expected if the sexes of babies were independently decided with a constant probability over the 24-month period. 
+</p>
+
+<p>
+(b) The actual and theoretical standard deviations from (a) differ, of course. Is this difference statistically significant? (Hint: \((n-1)s^2 /\sigma^2 \sim \chi^2 (n-1) \)) 
+</p></li>
+
+<li>Demonstration of the Central Limit Theorem: let x = x1 + · · · + x20, the sum of 20 independent Uniform(0,1) random variables. In R, create 1000 simulations of x and plot their histogram. On the histogram, overlay a graph of the normal density function. Comment on any differences between the histogram and the curve. 
+(Hint: the R function for getting 20 random values from uniform distribution with a starting point 0 and an ending point 1 is runif(20); you can use dnorm() to get a normal density function and use lines() to draw it)</li>
+
+<li>Distribution of averages and differences: the heights of men in the United States are approximately normally distributed with mean 69.1 inches and standard deviation 2.9 inches. The heights of women are approximately normally distributed with mean 63.7 inches and standard deviation 2.7 inches. Let x be the average height of 100 randomly sampled men, and y be the average height of 100 randomly sampled women. In R, create 1000 simulations of x − y and plot their histogram. Using the simulations, compute the mean and standard deviation of the distribution of x − y and compare to their exact values. 
+(Hint: you can use rnorm(100, mean=69.1, sd=2.9) to get 100 simulated male random sample)</li>
+</ol>
+
+<p>
+第二部分：
+</p>
 <ol class="org-ol">
 <li>在<a href="http://cgss.ruc.edu.cn/">中国综合社会调查网站</a>上下载cgss2015的数据（spss版本）。</li>
 <li>在Rstudio中将数据导入，选择样本类型（s1）、居住省份（s41）、个人全年总收入（A8a）、出生年份（a301）、性别（A2）、教育程度（A7a）、政治面貌（A10）、工作年限（A59c）、工作经历及状态（A58）、父亲教育程度（A89b）、母亲教育程度（A90b）、父亲的工作单位类型（A89g）、母亲的工作单位类型（A90g）等变量构成新的工作数据集cgssincome，再根据样本类型（s1）变量选取城市的被调查对象（s1值不为2）并保存（注意：如果采用菜单方式载入，haven包会默认给变量添加值标签，应采用zap_labels函数去除值标签，否则有些函数无法使用，如cgssincome &lt;- zap_labels(cgssincome)）。</li>
@@ -245,27 +301,18 @@ for the JavaScript code in this tag.
 </ol>
 </div>
 </div>
-<div id="outline-container-org5dfae79" class="outline-2">
-<h2 id="org5dfae79"><span class="section-number-2">2</span> 数据</h2>
+<div id="outline-container-org870f4cb" class="outline-2">
+<h2 id="org870f4cb"><span class="section-number-2">2</span> 数据 （整理后的数据，供参考，如无法独立完成第一步可以载入后进行后面的分析）</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="./cgssincome.RData">cgssincome数据</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org077cc04" class="outline-2">
-<h2 id="org077cc04"><span class="section-number-2">3</span> R代码</h2>
-<div class="outline-text-2" id="text-3">
-<ul class="org-ul">
-<li><a href="./homework-getdata.R">数据导入与变量选取</a></li>
-<li><a href="./homework-analysis.R">数据探索分析</a></li>
-</ul>
-</div>
-</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-07-02 二 17:27</p>
+<p class="date">Created: 2019-11-12 二 23:30</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

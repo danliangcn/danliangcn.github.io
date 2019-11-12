@@ -5,8 +5,8 @@
 
 
 * 课程
-** 数据分析与R语言应用
-*** [[./analyr/lecture1/1intro.html][课程介绍]]
+** 定量研究方法（统计分析与R语言应用部分）
+*** [[./analyr/lecture1/1intro.html][课程介绍]] :noexport:
 *** [[./analyr/lecture2/rintro.html][R语言基本设置与操作]]
 *** [[./analyr/lecture3/basicstats.html][一般统计方法的操作]]
 *** [[./analyr/lecture4/lregress.html][线性回归分析]]
