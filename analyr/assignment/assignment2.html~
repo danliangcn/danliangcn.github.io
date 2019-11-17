@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-13 三 21:23 -->
+<!-- 2019-11-13 三 21:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>数据分析与R语言应用课程作业</title>
@@ -230,8 +230,8 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">数据分析与R语言应用课程作业</h1>
-<div id="outline-container-org385c7e1" class="outline-2">
-<h2 id="org385c7e1"><span class="section-number-2">1</span> R语言操作2</h2>
+<div id="outline-container-org3126bc4" class="outline-2">
+<h2 id="org3126bc4"><span class="section-number-2">1</span> R语言操作2</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 第一部分：
@@ -263,6 +263,9 @@ The child.iq folder contains a subset of the children and mother data. You have 
 
 <p>
 library ("foreign")  
+</p>
+
+<p>
 iq.data &lt;- read.dta ("child.iq.dta")
 </p>
 
@@ -289,8 +292,8 @@ iq.data &lt;- read.dta ("child.iq.dta")
 </div>
 </div>
 
-<div id="outline-container-org6877420" class="outline-2">
-<h2 id="org6877420"><span class="section-number-2">2</span> 数据</h2>
+<div id="outline-container-org1a88a12" class="outline-2">
+<h2 id="org1a88a12"><span class="section-number-2">2</span> 数据</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="./cgssincome.RData">cgssincome数据</a>
@@ -300,7 +303,7 @@ iq.data &lt;- read.dta ("child.iq.dta")
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-11-13 三 21:23</p>
+<p class="date">Created: 2019-11-13 三 21:25</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
