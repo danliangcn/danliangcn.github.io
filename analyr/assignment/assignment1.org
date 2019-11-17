@@ -33,7 +33,7 @@
 1. 检验被调查者的父亲与母亲教育程度是否有差异？
 * 第二部分数据 （整理后的数据，供参考，如无法独立完成第1-2步可以载入后继续后面的分析）
 [[./cgssincome.RData][cgssincome数据]]
-* R代码 :noexport:
+* R代码 
 + [[./homework1-part1.R][第一部分答案与代码]]
 + [[./homework-getdata.R][第二部分之数据导入与变量选取代码]]
 + [[./homework-analysis.R][第二部分之数据探索分析代码]]

@@ -3,6 +3,41 @@
 #+EMAIL: 
 #+OPTIONS: H:2 toc:nil num:t tex:t ^:nil
 * R语言操作2
+第一部分：
+1. The [[./exercise2.1.dat][exercise2.1.dat]] dataset contains outcome y and inputs x1, x2 for 40 data points, with a further 20 points with the inputs but no observed outcome. Save the file to your working directory and read it into R using the read.table() function.
+   
+   (a) Use R to fit a linear regression model predicting y from x1,x2, using the first 40 data points in the file. Summarize the inferences and check the fit of your model.
+
+   (b) Display the estimated model graphically as plotting y against x1 with x2 held to it's average value.
+   
+   (c) Make a residual plot for this model. Do the assumptions appear to be met?
+   
+   (d) Make predictions for the remaining 20 data points in the file. How confident do you feel about these predictions?
+
+1. The [[./child.iq.dta][child.iq.dta]] dataset contains a set of the children and mother data including children’s test scores at age 3, mother’s education, and the mother’s age at the time she gave birth for a sample of 400 children. The data are a Stata file which you can read into R by saving in your working directory and then typing the following:
+  
+     library ("foreign")  
+     
+     iq.data <- read.dta ("child.iq.dta")
+  
+   (a) Fit a regression of child test scores on mother’s age, display the data and fitted model, check assumptions, and interpret the slope coefficient. When do you recommend mothers should give birth? What are you assuming in making these recommendations?
+  
+   (b) Repeat this for a regression that further includes mother’s education, interpreting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
+
+   (c) Now create an indicator variable reflecting whether the mother has completed high school or not (educ_cat >= 2). Consider interactions between the high school completion and mother’s age in family. Also, create a plot that shows the separate regression lines for each high school completion status group.
+
+   (d) Finally, fit a regression of child test scores on mother’s age and education level for the first 200 children and use this model to predict test scores for the next 200. Graphically display comparisons of the predicted and actual scores for the final 200 children.
+
+1. The [[./ProfEvaltnsBeautyPublic.csv][ProfEvaltnsBeautyPublic.csv]] dataset comes from Hamermesh and Parker (2005) on student evaluations of instructors’ beauty and teaching quality for several courses at the University of Texas. The teaching evaluations were conducted at the end of the semester, and the beauty judgments were made later, by six students who had not attended the classes and were not aware of the course evaluations. You can look for the description of variables in the original article [[./CourseRatings.pdf][Hamermesh and Parker (2005)]].
+
+   (a) Run a regression using beauty (the variable btystdave) to predict course evaluations (courseevaluation), controlling for various other inputs (Suggestion: female, minority, nonenglish, tenuretrack, lower and onecredit). Display the fitted model graphically, and explaining the meaning of each of the coefficients, along with the residual standard deviation. Plot the residuals versus fitted values. Compare you results with Table 3 in Hamermesh and Parker (2005).
+
+   (b) Plot the residuals versus the variable didevaluation (the number of students completing evaluation forms in each class). What pattern do you find? Refit the model with setting the parameter weights as didevaluation. Compare you results with Table 3 in Hamermesh and Parker (2005) again.  
+
+   (c) Fit some other models, including beauty and also other input variables. Consider at least one model with interactions. For each model, state what the predictors are, and what the inputs are, and explain the meaning of each of its coefficients.
+
+
+第二部分：
 1. 检验被调查者的父亲与母亲教育程度是否有差异？利用上次获得的数据集cgssincome，构建线性回归模型，因变量为收入（income）的对数，自变量为教育年限（eduyear）。根据模型的参数估计结果，写出回归方程，并解释教育年限的回归系数的含义，该系数在0.05的显著性水平上显著吗？截距的估计值是多少，其含义是什么？（建议：构建回归方程前，剔除掉收入为零的观测）
 2. 将回归模型所代表的直线绘制在其散点图上。回归系数的95%的置信区间是多少（可以使用confint函数直接计算）？教育年限为12年的人的收入预测值为多少？预测值的95%的置信区间是多少？并且（较难可选做）绘制回归直线的95%置信区间。
 3. 根据下面给定的关系构建线性回归模型，，其中因变量为收入（income）的对数，自变量为教育年限（eduyear）、工作年限（workexp）、是否党员（party）、性别（sex）。解释得到的各个回归系数。与前面的简单回归相比，教育年限的系数发生了什么变化，可能是什么原因导致的变化？
@@ -10,7 +45,7 @@
 5. （较难可选做）将两个回归模型所代表的直线绘制在其散点图上比较其差异；通过分性别制图对比教育对收入的影响在性别间的差异；绘制工作年限与收入对数之间的关系的拟合曲线。
 6. 在回归模型中添加性别与工作年限的交互项，解释交互项的系数。通过模型比较，有必要增加该交互项吗？（可选做）将省份变量（province）转化为若干个虚拟变量，将虚拟变量引入回归模型，解释省份虚拟变量的回归系数。
 
-* 数据 :noexport:
+* 数据
 [[./cgssincome.RData][cgssincome数据]]
 * R代码 :noexport:
 [[./homework-regress.R][回归分析代码]]

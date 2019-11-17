@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-11 四 17:45 -->
+<!-- 2019-11-13 三 21:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>数据分析与R语言应用课程作业</title>
@@ -230,9 +230,54 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">数据分析与R语言应用课程作业</h1>
-<div id="outline-container-org855850f" class="outline-2">
-<h2 id="org855850f"><span class="section-number-2">1</span> R语言操作2</h2>
+<div id="outline-container-org385c7e1" class="outline-2">
+<h2 id="org385c7e1"><span class="section-number-2">1</span> R语言操作2</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+第一部分：
+</p>
+<ol class="org-ol">
+<li><p>
+The folder pyth contains outcome y and inputs x1, x2 for 40 data points, with a further 20 points with the inputs but no observed outcome. Save the file to your working directory and read it into R using the read.table() function.
+</p>
+
+<p>
+(a) Use R to fit a linear regression model predicting y from x1,x2, using the first 40 data points in the file. Summarize the inferences and check the fit of your model.
+</p>
+
+<p>
+(b) Display the estimated model graphically as plotting y against x1 with x2 held to it's average value.
+</p>
+
+<p>
+(c) Make a residual plot for this model. Do the assumptions appear to be met?
+</p>
+
+<p>
+(d) Make predictions for the remaining 20 data points in the file. How confident do you feel about these predictions?
+</p></li>
+
+<li><p>
+The child.iq folder contains a subset of the children and mother data. You have access to children’s test scores at age 3, mother’s education, and the mother’s age at the time she gave birth for a sample of 400 children. The data are a Stata file which you can read into R by saving in your working directory and then typing the following:
+</p>
+
+<p>
+library ("foreign")  
+iq.data &lt;- read.dta ("child.iq.dta")
+</p>
+
+<p>
+(a) Fit a regression of child test scores on mother’s age, display the data and fitted model, check assumptions, and interpret the slope coefficient. When do you recommend mothers should give birth? What are you assuming in making these recommendations?
+</p>
+
+<p>
+(b) Repeat this for a regression that further includes mother’s education, inter- preting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
+</p></li>
+</ol>
+
+<p>
+第二部分：
+</p>
 <ol class="org-ol">
 <li>检验被调查者的父亲与母亲教育程度是否有差异？利用上次获得的数据集cgssincome，构建线性回归模型，因变量为收入（income）的对数，自变量为教育年限（eduyear）。根据模型的参数估计结果，写出回归方程，并解释教育年限的回归系数的含义，该系数在0.05的显著性水平上显著吗？截距的估计值是多少，其含义是什么？（建议：构建回归方程前，剔除掉收入为零的观测）</li>
 <li>将回归模型所代表的直线绘制在其散点图上。回归系数的95%的置信区间是多少（可以使用confint函数直接计算）？教育年限为12年的人的收入预测值为多少？预测值的95%的置信区间是多少？并且（较难可选做）绘制回归直线的95%置信区间。</li>
@@ -244,26 +289,18 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org01b6726" class="outline-2">
-<h2 id="org01b6726"><span class="section-number-2">2</span> 数据</h2>
+<div id="outline-container-org6877420" class="outline-2">
+<h2 id="org6877420"><span class="section-number-2">2</span> 数据</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="./cgssincome.RData">cgssincome数据</a>
 </p>
 </div>
 </div>
-<div id="outline-container-orgf747d37" class="outline-2">
-<h2 id="orgf747d37"><span class="section-number-2">3</span> R代码</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-<a href="./homework-regress.R">回归分析代码</a>
-</p>
-</div>
-</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-07-11 四 17:45</p>
+<p class="date">Created: 2019-11-13 三 21:23</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
