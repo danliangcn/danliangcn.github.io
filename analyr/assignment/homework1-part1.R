@@ -30,7 +30,7 @@ lines(xfit,yfit,col="blue",lwd=2)
 
 # Problem 3
 diff <- NULL
-for(i in 1:1000){
+for(i in 1:10000){
   x <- mean(rnorm(100,mean=69.1,sd=2.9))
   y <- mean(rnorm(100,mean=63.7,sd=2.7))
   diff[i] <- x-y
@@ -41,5 +41,5 @@ mean(diff)
 sd(diff)
 # exact value or theoretical value
 # E(X-Y)=E(X)-E(Y)=69.1-63.7=5.4
-# D(X-Y)=D(X)+D(Y)=2.9^2+2.7^2=15.7
-# sd(X-Y)=15.7^0.5=3.96
+# D(X-Y)=D(X)+D(Y)=(2.9^2)/100+(2.7^2)/100=15.7/100=0.157
+# sd(X-Y)=15.7^0.5=0.396

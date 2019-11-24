@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-13 三 21:25 -->
+<!-- 2019-11-24 日 20:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>数据分析与R语言应用课程作业</title>
@@ -230,15 +230,15 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">数据分析与R语言应用课程作业</h1>
-<div id="outline-container-org3126bc4" class="outline-2">
-<h2 id="org3126bc4"><span class="section-number-2">1</span> R语言操作2</h2>
+<div id="outline-container-orgb11e135" class="outline-2">
+<h2 id="orgb11e135"><span class="section-number-2">1</span> R语言操作2</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 第一部分：
 </p>
 <ol class="org-ol">
 <li><p>
-The folder pyth contains outcome y and inputs x1, x2 for 40 data points, with a further 20 points with the inputs but no observed outcome. Save the file to your working directory and read it into R using the read.table() function.
+The <a href="./exercise2.1.dat">exercise2.1.dat</a> dataset contains outcome y and inputs x1, x2 for 40 data points, with a further 20 points with the inputs but no observed outcome. Save the file to your working directory and read it into R using the read.table() function.
 </p>
 
 <p>
@@ -258,7 +258,7 @@ The folder pyth contains outcome y and inputs x1, x2 for 40 data points, with a 
 </p></li>
 
 <li><p>
-The child.iq folder contains a subset of the children and mother data. You have access to children’s test scores at age 3, mother’s education, and the mother’s age at the time she gave birth for a sample of 400 children. The data are a Stata file which you can read into R by saving in your working directory and then typing the following:
+The <a href="./child.iq.dta">child.iq.dta</a> dataset contains a set of the children and mother data including children’s test scores at age 3, mother’s education, and the mother’s age at the time she gave birth for a sample of 400 children. The data are a Stata file which you can read into R by saving in your working directory and then typing the following:
 </p>
 
 <p>
@@ -274,9 +274,34 @@ iq.data &lt;- read.dta ("child.iq.dta")
 </p>
 
 <p>
-(b) Repeat this for a regression that further includes mother’s education, inter- preting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
+(b) Repeat this for a regression that further includes mother’s education, interpreting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
+</p>
+
+<p>
+(c) Now create an indicator variable reflecting whether the mother has completed high school or not (educ_cat &gt;= 2). Consider interactions between the high school completion and mother’s age in family. Also, create a plot that shows the separate regression lines for each high school completion status group.
+</p>
+
+<p>
+(d) Finally, fit a regression of child test scores on mother’s age and education level for the first 200 children and use this model to predict test scores for the next 200. Graphically display comparisons of the predicted and actual scores for the final 200 children.
+</p></li>
+
+<li><p>
+The <a href="./ProfEvaltnsBeautyPublic.csv">ProfEvaltnsBeautyPublic.csv</a> dataset comes from Hamermesh and Parker (2005) on student evaluations of instructors’ beauty and teaching quality for several courses at the University of Texas. The teaching evaluations were conducted at the end of the semester, and the beauty judgments were made later, by six students who had not attended the classes and were not aware of the course evaluations. You can look for the description of variables in the original article <a href="./CourseRatings.pdf">Hamermesh and Parker (2005)</a>.
+</p>
+
+<p>
+(a) Run a regression using beauty (the variable btystdave) to predict course evaluations (courseevaluation), controlling for various other inputs (Suggestion: female, minority, nonenglish, tenuretrack, lower and onecredit). Display the fitted model graphically, and explaining the meaning of each of the coefficients, along with the residual standard deviation. Plot the residuals versus fitted values. Compare you results with Table 3 in Hamermesh and Parker (2005).
+</p>
+
+<p>
+(b) Plot the residuals versus the variable didevaluation (the number of students completing evaluation forms in each class). What pattern do you find? Refit the model with setting the parameter weights as didevaluation. Compare you results with Table 3 in Hamermesh and Parker (2005) again.  
+</p>
+
+<p>
+(c) Fit some other models, including beauty and also other input variables. Consider at least one model with interactions. For each model, state what the predictors are, and what the inputs are, and explain the meaning of each of its coefficients.
 </p></li>
 </ol>
+
 
 <p>
 第二部分：
@@ -292,18 +317,29 @@ iq.data &lt;- read.dta ("child.iq.dta")
 </div>
 </div>
 
-<div id="outline-container-org1a88a12" class="outline-2">
-<h2 id="org1a88a12"><span class="section-number-2">2</span> 数据</h2>
+<div id="outline-container-orgb389d7f" class="outline-2">
+<h2 id="orgb389d7f"><span class="section-number-2">2</span> 数据</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="./cgssincome.RData">cgssincome数据</a>
 </p>
 </div>
 </div>
+<div id="outline-container-org21c9f96" class="outline-2">
+<h2 id="org21c9f96"><span class="section-number-2">3</span> R代码</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>[[./homework2-part1.R][第一部分代码</li>
+</ul>
+<p>
+]]+ <a href="./homework-regress.R">第二部分回归分析代码</a>
+</p>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-11-13 三 21:25</p>
+<p class="date">Created: 2019-11-24 日 20:23</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

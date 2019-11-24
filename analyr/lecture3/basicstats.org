@@ -12,6 +12,7 @@
 #+BEAMER_HEADER:
 #+LATEX_HEADER: \usepackage{ctex}
 #+LATEX_COMPILER: xelatex
+#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
 
 * 概率分布  
 :PROPERTIES:
@@ -667,6 +668,7 @@ $$ t=\frac{\bar x-\mu_0}{s/\sqrt{n}}\sim t(n-1)$$
 |序号|1|2|3|4|5|6|7|8|9|10|
 |--|--|--|--|--|--|--|--|--|--|--|
 |里程|22|24|21|24|23|24|23|22|21|25|
++ 此种情况实践中比较少见，只能采用自编函数完成
 #+BEGIN_SRC R
 options(digits = 2)
 u.test<-function(x,mu,thegma)
@@ -707,6 +709,7 @@ prop.test(45,100,p=0.5)
 
 ** 总体方差检验示例
 某地区环保部门规定，废水经设备处理后水中某种有毒物质的平均浓度，均值和标准差单位是微克。通过抽查20个废水样品，如何判断水样的标准差是否为20微克？
++ 只能采用自编函数var.test1完成，R里面的var.test函数是用来比较两个对象的。
 #+BEGIN_SRC R
 var.test1<-function(x, sigma2){
   n<-length(x)
@@ -758,9 +761,9 @@ $$t=\frac{(\bar x_1-\bar x_2)-(\mu_1-\mu_2)}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2
 |------+----+----+----+----+----+----+----+----+----+----|
 | 开车 | 36 | 45 | 47 | 38 | 39 | 42 | 36 | 42 | 46 | 35 |
 
-1. 两样本均值检验，需要先验证样本是否服从正态分布（后面介绍）  
+1. 两样本均值检验，需要先验证样本是否服从正态分布（后面介绍），如果已知总体服从正态，样本量较大就不需要。  
 1. 判断两个样本是否有相同的方差  
-1. t 检验判断均值
+1. t 检验判断均值（t.test默认方差不等）
 
 #+BEGIN_SRC R
 x1=c(48,47,44,45,46,47,43,47,42,48)
@@ -798,7 +801,7 @@ $$ t=\frac{\bar d-d_0}{s_d/\sqrt{n_d}}\sim t(n-1)$$
 #+BEGIN_SRC R
 before = c(94.5,101,110,103.5,97,88.5,96.5,101,104,116.5)
 after = c(85,89.5,101.5,96,86,80.5,87,93.5,93,102)
-t.test(before,after,paired=T)
+t.test(before-after, mu=8.5, alternative = "greater")
 #+END_SRC
 
 

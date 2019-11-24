@@ -47,5 +47,6 @@
 
 * 数据
 [[./cgssincome.RData][cgssincome数据]]
-* R代码 :noexport:
-[[./homework-regress.R][回归分析代码]]
+* R代码
++ [[./homework2-part1.R][第一部分代码]]
++ [[./homework-regress.R][第二部分回归分析代码]]

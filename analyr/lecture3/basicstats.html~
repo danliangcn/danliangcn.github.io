@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-06-27 四 17:08 -->
+<!-- 2019-11-25 一 01:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>一般统计方法的操作</title>
@@ -253,13 +253,13 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">一般统计方法的操作</h1>
 
-<div id="outline-container-orgd4e285a" class="outline-2">
-<h2 id="orgd4e285a"><span class="section-number-2">1</span> 概率分布</h2>
+<div id="outline-container-org816079d" class="outline-2">
+<h2 id="org816079d"><span class="section-number-2">1</span> 概率分布</h2>
 <div class="outline-text-2" id="text-1">
 </div>
 
-<div id="outline-container-org3707f69" class="outline-3">
-<h3 id="org3707f69"><span class="section-number-3">1.1</span> 概率基础知识</h3>
+<div id="outline-container-orgda89bd4" class="outline-3">
+<h3 id="orgda89bd4"><span class="section-number-3">1.1</span> 概率基础知识</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 概率：在随机试验中，某个结果所代表的事件发生的可能性。在实践中经常用频率来近似表示概率。
@@ -361,12 +361,12 @@ A和B独立吗？
 </div>
 </div>
 
-<div id="outline-container-org383e66a" class="outline-3">
-<h3 id="org383e66a"><span class="section-number-3">1.2</span> 频数表与列联表</h3>
+<div id="outline-container-org58757b9" class="outline-3">
+<h3 id="org58757b9"><span class="section-number-3">1.2</span> 频数表与列联表</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="org3c86460"></a>频数表<br />
+<li><a id="orgdf160ef"></a>频数表<br />
 <div class="outline-text-4" id="text-1-2-1">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(vcd)
@@ -404,7 +404,7 @@ table(Improved)
 </div>
 </li>
 
-<li><a id="org7631ad3"></a>列联表<br />
+<li><a id="org2aff885"></a>列联表<br />
 <div class="outline-text-4" id="text-1-2-2">
 <div class="org-src-container">
 <pre class="src src-R">my <span style="color: #ce537a; font-weight: bold;">&lt;-</span> table(Treatment,Improved)
@@ -423,7 +423,7 @@ Treatment None Some Marked
 </div>
 </li>
 
-<li><a id="org009a782"></a>转化为比例（概率、条件概率）<br />
+<li><a id="orgcef93ed"></a>转化为比例（概率、条件概率）<br />
 <div class="outline-text-4" id="text-1-2-3">
 <div class="org-src-container">
 <pre class="src src-R">prop.table(my)
@@ -436,31 +436,31 @@ prop.table(my,2)
 
 <pre class="example">
          Improved
-Treatment   None   Some Marked
-  Placebo 0.3452 0.0833 0.0833
-  Treated 0.1548 0.0833 0.2500
+Treatment       None       Some     Marked
+  Placebo 0.34523810 0.08333333 0.08333333
+  Treated 0.15476190 0.08333333 0.25000000
 
          Improved
-Treatment  None  Some Marked
-  Placebo 0.674 0.163  0.163
-  Treated 0.317 0.171  0.512
+Treatment      None      Some    Marked
+  Placebo 0.6744186 0.1627907 0.1627907
+  Treated 0.3170732 0.1707317 0.5121951
 
          Improved
-Treatment None Some Marked
-  Placebo 0.69 0.50   0.25
-  Treated 0.31 0.50   0.75
+Treatment      None      Some    Marked
+  Placebo 0.6904762 0.5000000 0.2500000
+  Treated 0.3095238 0.5000000 0.7500000
 </pre>
 </div>
 </li>
 </ol>
 </div>
 
-<div id="outline-container-org393a9e6" class="outline-3">
-<h3 id="org393a9e6"><span class="section-number-3">1.3</span> 频数表与列联表</h3>
+<div id="outline-container-orgbbce041" class="outline-3">
+<h3 id="orgbbce041"><span class="section-number-3">1.3</span> 频数表与列联表</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org503cbd4"></a>添加边际频数<br />
+<li><a id="orgb901268"></a>添加边际频数<br />
 <div class="outline-text-4" id="text-1-3-1">
 <div class="org-src-container">
 <pre class="src src-R">addmargins(my)
@@ -491,7 +491,7 @@ Treatment None Some Marked Sum
 </div>
 </li>
 
-<li><a id="org3aec066"></a>添加边际概率<br />
+<li><a id="orgce26268"></a>添加边际概率<br />
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 <pre class="src src-R">addmargins(prop.table(my))
@@ -500,16 +500,16 @@ Treatment None Some Marked Sum
 
 <pre class="example">
          Improved
-Treatment   None   Some Marked    Sum
-  Placebo 0.3452 0.0833 0.0833 0.5119
-  Treated 0.1548 0.0833 0.2500 0.4881
-  Sum     0.5000 0.1667 0.3333 1.0000
+Treatment       None       Some     Marked        Sum
+  Placebo 0.34523810 0.08333333 0.08333333 0.51190476
+  Treated 0.15476190 0.08333333 0.25000000 0.48809524
+  Sum     0.50000000 0.16666667 0.33333333 1.00000000
 
 </pre>
 </div>
 </li>
 
-<li><a id="orgd56e5fb"></a>列联表的另一种方法<br />
+<li><a id="orgbd8ff78"></a>列联表的另一种方法<br />
 <div class="outline-text-4" id="text-1-3-3">
 <div class="org-src-container">
 <pre class="src src-R">xtabs(~Treatment+Improved)
@@ -528,8 +528,8 @@ Treatment None Some Marked
 </ol>
 </div>
 
-<div id="outline-container-orgc059b3f" class="outline-3">
-<h3 id="orgc059b3f"><span class="section-number-3">1.4</span> 变量的概率分布</h3>
+<div id="outline-container-org8dcda99" class="outline-3">
+<h3 id="org8dcda99"><span class="section-number-3">1.4</span> 变量的概率分布</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 概率分布指随机变量可能的结果（或结果区间）及其概率
@@ -537,7 +537,7 @@ Treatment None Some Marked
 </div>
 
 <ol class="org-ol">
-<li><a id="org4a2ccf3"></a>离散型变量<br />
+<li><a id="org934e6be"></a>离散型变量<br />
 <div class="outline-text-4" id="text-1-4-1">
 <p>
 P(y) 表示变量 y 的可能结果和概率
@@ -546,7 +546,7 @@ P(y) 表示变量 y 的可能结果和概率
 </div>
 </li>
 
-<li><a id="org4b72bee"></a>连续型变量<br />
+<li><a id="org4767de2"></a>连续型变量<br />
 <div class="outline-text-4" id="text-1-4-2">
 <p>
 连续型变量的概率分布是取值区间的分配概率。
@@ -574,8 +574,8 @@ polygon(c(1,seq(1,4,0.1),4),c(0,dnorm(seq(1,4,0.1)),0),col = <span style="color:
 </ol>
 </div>
 
-<div id="outline-container-org5eb00e3" class="outline-3">
-<h3 id="org5eb00e3"><span class="section-number-3">1.5</span> 正态曲线尾部概率表</h3>
+<div id="outline-container-orgf25ba18" class="outline-3">
+<h3 id="orgf25ba18"><span class="section-number-3">1.5</span> 正态曲线尾部概率表</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 尾部概率：大于 \(\mu + z\sigma\) 的值出现的概率，或距离均值超过z个标准差的值出现的概率  
@@ -692,8 +692,8 @@ z的第二个小数点位
 </div>
 </div>
 
-<div id="outline-container-org8f896a3" class="outline-3">
-<h3 id="org8f896a3"><span class="section-number-3">1.6</span> z分数（z-scores）和标准正态分布</h3>
+<div id="outline-container-org74673f7" class="outline-3">
+<h3 id="org74673f7"><span class="section-number-3">1.6</span> z分数（z-scores）和标准正态分布</h3>
 <div class="outline-text-3" id="text-1-6">
 <ul class="org-ul">
 <li>变量值y的z分数是y离开均值的标准差数: \(z = (观测值-均值)/ 标准差 = (y - \mu )/\sigma\)</li>
@@ -727,8 +727,8 @@ qnorm(0.072)*(-1)
 </div>
 </div>
 
-<div id="outline-container-orgcec04f1" class="outline-3">
-<h3 id="orgcec04f1"><span class="section-number-3">1.7</span> 抽样分布</h3>
+<div id="outline-container-org2d5444a" class="outline-3">
+<h3 id="org2d5444a"><span class="section-number-3">1.7</span> 抽样分布</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 抽样分布：抽样分布展现一个统计量（平均值、标准差等）的可以取的值，以及这些值的概率。
@@ -795,8 +795,8 @@ qnorm(0.072)*(-1)
 </div>
 </div>
 
-<div id="outline-container-orgfafd357" class="outline-3">
-<h3 id="orgfafd357"><span class="section-number-3">1.8</span> 样本均值的抽样分布</h3>
+<div id="outline-container-orgc2cdbdd" class="outline-3">
+<h3 id="orgc2cdbdd"><span class="section-number-3">1.8</span> 样本均值的抽样分布</h3>
 <div class="outline-text-3" id="text-1-8">
 <ul class="org-ul">
 <li>样本均值 \(\bar y\) 的值随样本的改变而改变，是围绕总体均值 &mu; 波动的变量。</li>
@@ -811,8 +811,8 @@ qnorm(0.072)*(-1)
 </ul>
 </div>
 </div>
-<div id="outline-container-org5d2985d" class="outline-3">
-<h3 id="org5d2985d"><span class="section-number-3">1.9</span> 中心极限定理</h3>
+<div id="outline-container-org754bbf0" class="outline-3">
+<h3 id="org754bbf0"><span class="section-number-3">1.9</span> 中心极限定理</h3>
 <div class="outline-text-3" id="text-1-9">
 <p>
 中心极限定理：对于大样本量n的随机抽样，样本均值 \(\bar y\) 的抽样分布是一个近似的正态分布  。
@@ -878,13 +878,13 @@ samplemean <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span s
 </div>
 
 
-<div id="outline-container-org2f00427" class="outline-2">
-<h2 id="org2f00427"><span class="section-number-2">2</span> 统计推断：估计</h2>
+<div id="outline-container-orgd656238" class="outline-2">
+<h2 id="orgd656238"><span class="section-number-2">2</span> 统计推断：估计</h2>
 <div class="outline-text-2" id="text-2">
 </div>
 
-<div id="outline-container-orgf52deee" class="outline-3">
-<h3 id="orgf52deee"><span class="section-number-3">2.1</span> 参数估计</h3>
+<div id="outline-container-orge9a8f6f" class="outline-3">
+<h3 id="orge9a8f6f"><span class="section-number-3">2.1</span> 参数估计</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>目标：如何利用样本数据估计总体参数的值</li>
@@ -894,8 +894,8 @@ samplemean <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span s
 </div>
 </div>
 
-<div id="outline-container-org71af315" class="outline-3">
-<h3 id="org71af315"><span class="section-number-3">2.2</span> 点估计</h3>
+<div id="outline-container-orgb3f2bf2" class="outline-3">
+<h3 id="orgb3f2bf2"><span class="section-number-3">2.2</span> 点估计</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>利用样本均值估计总体均值 &mu;</li>
@@ -916,8 +916,8 @@ samplemean <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span s
 </div>
 </div>
 
-<div id="outline-container-org7f259f8" class="outline-3">
-<h3 id="org7f259f8"><span class="section-number-3">2.3</span> 好估计量具有的性质</h3>
+<div id="outline-container-org2dba1f4" class="outline-3">
+<h3 id="org2dba1f4"><span class="section-number-3">2.3</span> 好估计量具有的性质</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li><b>无偏的：</b> 估计量的抽样分布以参数为中心</li>
@@ -934,8 +934,8 @@ e.g. 如果总体分布是对称的，并且接近正态，样本均值比样本
 </div>
 </div>
 
-<div id="outline-container-org0472cee" class="outline-3">
-<h3 id="org0472cee"><span class="section-number-3">2.4</span> 置信区间（Confidence Intervals）</h3>
+<div id="outline-container-org8666cc5" class="outline-3">
+<h3 id="org8666cc5"><span class="section-number-3">2.4</span> 置信区间（Confidence Intervals）</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li>参数的置信区间是一个相信参数落在其中的数值区间。</li>
@@ -957,8 +957,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 
-<div id="outline-container-orge0f7a9f" class="outline-3">
-<h3 id="orge0f7a9f"><span class="section-number-3">2.5</span> 比例的置信区间</h3>
+<div id="outline-container-org725f687" class="outline-3">
+<h3 id="org725f687"><span class="section-number-3">2.5</span> 比例的置信区间</h3>
 <div class="outline-text-3" id="text-2-5">
 <ul class="org-ul">
 <li>当 \(y = 1\) 代表感兴趣类别的一个观测值时， \(y = 0\) 就代表另外的观测值，样本比例 \(\hat \pi\) 是一个均值。</li>
@@ -985,8 +985,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 
-<div id="outline-container-org69b9681" class="outline-3">
-<h3 id="org69b9681"><span class="section-number-3">2.6</span> 比例的置信区间</h3>
+<div id="outline-container-orge8212bd" class="outline-3">
+<h3 id="orge8212bd"><span class="section-number-3">2.6</span> 比例的置信区间</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
 <li>对于大的随机样本，样本比例的抽样分布是接近正态的（中心极限定理）</li>
@@ -1023,8 +1023,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 
-<div id="outline-container-orgdabe39b" class="outline-3">
-<h3 id="orgdabe39b"><span class="section-number-3">2.7</span> 置信区间的性质</h3>
+<div id="outline-container-org18e776e" class="outline-3">
+<h3 id="org18e776e"><span class="section-number-3">2.7</span> 置信区间的性质</h3>
 <div class="outline-text-3" id="text-2-7">
 <ul class="org-ul">
 <li>置信区间的宽度随置信水平的增大而增大；随样本量的增大而变小。</li>
@@ -1082,8 +1082,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 
-<div id="outline-container-org01f7a46" class="outline-3">
-<h3 id="org01f7a46"><span class="section-number-3">2.8</span> 均值的置信区间</h3>
+<div id="outline-container-org203d88b" class="outline-3">
+<h3 id="org203d88b"><span class="section-number-3">2.8</span> 均值的置信区间</h3>
 <div class="outline-text-3" id="text-2-8">
 <ul class="org-ul">
 <li>对于大的随机样本，样本均值有渐进正态的抽样分布，其均值为&mu;，标准误 \(\sigma_{\bar y}=\sigma / \sqrt n\)</li>
@@ -1105,8 +1105,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 
-<div id="outline-container-orgddfbbb3" class="outline-3">
-<h3 id="orgddfbbb3"><span class="section-number-3">2.9</span> t 分布  (Student’s t from W.S. Gosset)</h3>
+<div id="outline-container-orgb365642" class="outline-3">
+<h3 id="orgb365642"><span class="section-number-3">2.9</span> t 分布  (Student’s t from W.S. Gosset)</h3>
 <div class="outline-text-3" id="text-2-9">
 <ul class="org-ul">
 <li>t分布是钟形分布并关于均值0对称。</li>
@@ -1129,8 +1129,8 @@ e.g. 构造拥有“95%置信度”的一个置信区间，可用点估计加减
 </div>
 </div>
 </div>
-<div id="outline-container-org0d95fba" class="outline-3">
-<h3 id="org0d95fba"><span class="section-number-3">2.10</span> 部分 t 分数</h3>
+<div id="outline-container-orgf047439" class="outline-3">
+<h3 id="orgf047439"><span class="section-number-3">2.10</span> 部分 t 分数</h3>
 <div class="outline-text-3" id="text-2-10">
 <p>
 <b>置信水平</b>  
@@ -1235,8 +1235,8 @@ qt(0.025, df=10, lower.tail=<span style="color: #a45bad;">FALSE</span>)
 </div>
 </div>
 
-<div id="outline-container-org51cea27" class="outline-3">
-<h3 id="org51cea27"><span class="section-number-3">2.11</span> 总体均值的置信区间</h3>
+<div id="outline-container-orgfe2b49f" class="outline-3">
+<h3 id="orgfe2b49f"><span class="section-number-3">2.11</span> 总体均值的置信区间</h3>
 <div class="outline-text-3" id="text-2-11">
 <ul class="org-ul">
 <li>对于来自正态总体分布的随机样本，均值 &mu; 的95%置信区间为：</li>
@@ -1265,8 +1265,8 @@ qt(0.025, df=10, lower.tail=<span style="color: #a45bad;">FALSE</span>)
 </div>
 </div>
 
-<div id="outline-container-org3d52574" class="outline-3">
-<h3 id="org3d52574"><span class="section-number-3">2.12</span> 用R计算置信区间</h3>
+<div id="outline-container-org32e6ae9" class="outline-3">
+<h3 id="org32e6ae9"><span class="section-number-3">2.12</span> 用R计算置信区间</h3>
 <div class="outline-text-3" id="text-2-12">
 <ul class="org-ul">
 <li>比例的置信区间：1000人的样本中700人选择“YES”，总体比例的95%的置信区间</li>
@@ -1323,8 +1323,8 @@ attr(,"conf.level")
 </div>
 </div>
 
-<div id="outline-container-org18a42dd" class="outline-3">
-<h3 id="org18a42dd"><span class="section-number-3">2.13</span> 置信区间的含义</h3>
+<div id="outline-container-orgb3e27ed" class="outline-3">
+<h3 id="orgb3e27ed"><span class="section-number-3">2.13</span> 置信区间的含义</h3>
 <div class="outline-text-3" id="text-2-13">
 <ul class="org-ul">
 <li>置信区间是长期正确的比例：95% 的置信度为有95%的区间会覆盖总体均值 \(\mu\)</li>
@@ -1376,8 +1376,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org8055853" class="outline-3">
-<h3 id="org8055853"><span class="section-number-3">2.14</span> 样本量的选择</h3>
+<div id="outline-container-org0b5c4ed" class="outline-3">
+<h3 id="org0b5c4ed"><span class="section-number-3">2.14</span> 样本量的选择</h3>
 <div class="outline-text-3" id="text-2-14">
 <ul class="org-ul">
 <li>在估计总体比例时，选取多大的样本量，才能使得置信度为0.95，误差不超过0.03？
@@ -1406,8 +1406,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org76b99bb" class="outline-3">
-<h3 id="org76b99bb"><span class="section-number-3">2.15</span> 样本量的选择</h3>
+<div id="outline-container-orge23b9c2" class="outline-3">
+<h3 id="orge23b9c2"><span class="section-number-3">2.15</span> 样本量的选择</h3>
 <div class="outline-text-3" id="text-2-15">
 <ul class="org-ul">
 <li>确定估计的参数的类别（总体比例或者总体均值）</li>
@@ -1443,8 +1443,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org94a08b4" class="outline-3">
-<h3 id="org94a08b4"><span class="section-number-3">2.16</span> 实际使用置信区间时需要考虑的因素</h3>
+<div id="outline-container-orgf3d1c72" class="outline-3">
+<h3 id="orgf3d1c72"><span class="section-number-3">2.16</span> 实际使用置信区间时需要考虑的因素</h3>
 <div class="outline-text-3" id="text-2-16">
 <ul class="org-ul">
 <li>确定感兴趣的变量类型：
@@ -1475,13 +1475,13 @@ abline(v=10, lty=2)
 </div>
 
 
-<div id="outline-container-orgbca3687" class="outline-2">
-<h2 id="orgbca3687"><span class="section-number-2">3</span> 统计推断：显著性检验</h2>
+<div id="outline-container-orgd4cc023" class="outline-2">
+<h2 id="orgd4cc023"><span class="section-number-2">3</span> 统计推断：显著性检验</h2>
 <div class="outline-text-2" id="text-3">
 </div>
 
-<div id="outline-container-org54a6f26" class="outline-3">
-<h3 id="org54a6f26"><span class="section-number-3">3.1</span> 显著性检验</h3>
+<div id="outline-container-orga57311f" class="outline-3">
+<h3 id="orga57311f"><span class="section-number-3">3.1</span> 显著性检验</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>目的：利用统计方法检验假设
@@ -1503,8 +1503,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org626ad52" class="outline-3">
-<h3 id="org626ad52"><span class="section-number-3">3.2</span> 显著性检验的5个部分</h3>
+<div id="outline-container-org0574ccc" class="outline-3">
+<h3 id="org0574ccc"><span class="section-number-3">3.2</span> 显著性检验的5个部分</h3>
 <div class="outline-text-3" id="text-3-2">
 <ol class="org-ol">
 <li>前提假定（Assumptions）：数据类型（定量数据、分类数据）、抽样方式（随机化）、总体分布（正态分布等）、样本量（是否足够大）</li>
@@ -1528,8 +1528,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org95a7b4a" class="outline-3">
-<h3 id="org95a7b4a"><span class="section-number-3">3.3</span> 均值的显著性检验</h3>
+<div id="outline-container-org699c5b8" class="outline-3">
+<h3 id="org699c5b8"><span class="section-number-3">3.3</span> 均值的显著性检验</h3>
 <div class="outline-text-3" id="text-3-3">
 <ul class="org-ul">
 <li>前提假定：随机化，定量变量，正态总体分布（稳健性）</li>
@@ -1556,8 +1556,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org37dfb52" class="outline-3">
-<h3 id="org37dfb52"><span class="section-number-3">3.4</span> 例子：厌食症的治疗</h3>
+<div id="outline-container-org2c81ed5" class="outline-3">
+<h3 id="org2c81ed5"><span class="section-number-3">3.4</span> 例子：厌食症的治疗</h3>
 <div class="outline-text-3" id="text-3-4">
 <ul class="org-ul">
 <li>y为治疗后与治疗前的体重差值：11.4, 11.0, 5.5, 9.4, 13.6, -2.9, -0.1, 7.4, 21.5, -5.3, -3.8, 13.4, 13.1, 9.0, 3.9, 5.7, 10.7</li>
@@ -1620,8 +1620,8 @@ abline(v=10, lty=2)
 </div>
 </div>
 
-<div id="outline-container-org08bf06b" class="outline-3">
-<h3 id="org08bf06b"><span class="section-number-3">3.5</span> 单样本均值的显著性检验</h3>
+<div id="outline-container-org4e38191" class="outline-3">
+<h3 id="org4e38191"><span class="section-number-3">3.5</span> 单样本均值的显著性检验</h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
 <pre class="src src-R">y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(11.4, 11.0, 5.5, 9.4, 13.6, -2.9, -0.1, 7.4, 21.5, -5.3, -3.8, 13.4, 13.1, 9.0, 3.9, 5.7, 10.7)
@@ -1651,8 +1651,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-orga9f9d6c" class="outline-3">
-<h3 id="orga9f9d6c"><span class="section-number-3">3.6</span> 双侧检验与置信区间之间的对应关系</h3>
+<div id="outline-container-org7a9caf3" class="outline-3">
+<h3 id="org7a9caf3"><span class="section-number-3">3.6</span> 双侧检验与置信区间之间的对应关系</h3>
 <div class="outline-text-3" id="text-3-6">
 <ul class="org-ul">
 <li>当双侧检验的 P值 &le; 0.05时，总体均值 &mu; 的95%的置信区间不包括原假设 H<sub>0</sub> 预测的均值 (例如为0)</li>
@@ -1669,8 +1669,8 @@ mean of x
 </p>
 </div>
 </div>
-<div id="outline-container-orgc9c58f3" class="outline-3">
-<h3 id="orgc9c58f3"><span class="section-number-3">3.7</span> 均值的单侧检验</h3>
+<div id="outline-container-orga8b6dee" class="outline-3">
+<h3 id="orga8b6dee"><span class="section-number-3">3.7</span> 均值的单侧检验</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 例子：
@@ -1684,8 +1684,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-orgfae761c" class="outline-3">
-<h3 id="orgfae761c"><span class="section-number-3">3.8</span> 统计决策</h3>
+<div id="outline-container-orgaccec6b" class="outline-3">
+<h3 id="orgaccec6b"><span class="section-number-3">3.8</span> 统计决策</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 &alpha; 水平是一个选定的数值，被称为显著性水平。 
@@ -1706,8 +1706,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-orgecb54e5" class="outline-3">
-<h3 id="orgecb54e5"><span class="section-number-3">3.9</span> 样本量大小对检验的影响</h3>
+<div id="outline-container-orgfa89846" class="outline-3">
+<h3 id="orgfa89846"><span class="section-number-3">3.9</span> 样本量大小对检验的影响</h3>
 <div class="outline-text-3" id="text-3-9">
 <ul class="org-ul">
 <li>当样本量 n 比较大时（例如，n &gt; 30），根据中心极限定理，正态总体分布假定变得不重要。</li>
@@ -1723,8 +1723,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-orgd973e23" class="outline-3">
-<h3 id="orgd973e23"><span class="section-number-3">3.10</span> 比例的显著性检验</h3>
+<div id="outline-container-orge4ff611" class="outline-3">
+<h3 id="orge4ff611"><span class="section-number-3">3.10</span> 比例的显著性检验</h3>
 <div class="outline-text-3" id="text-3-10">
 <ul class="org-ul">
 <li>前提假定：类别变量、随机化、大样本（但是小样本做双侧检验也OK）</li>
@@ -1755,8 +1755,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-org5c0a6a3" class="outline-3">
-<h3 id="org5c0a6a3"><span class="section-number-3">3.11</span> 例子：狗能闻出膀胱癌吗？(British Medical Journal, 2004)</h3>
+<div id="outline-container-org7c7c11e" class="outline-3">
+<h3 id="org7c7c11e"><span class="section-number-3">3.11</span> 例子：狗能闻出膀胱癌吗？(British Medical Journal, 2004)</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 每次测试，1个膀胱癌尿样放在6个控制尿样中，如何检验狗能否比随机猜测得到更好的结果？
@@ -1792,8 +1792,8 @@ p值=标准正态分布的右尾概率=0.00000001
 </div>
 </div>
 
-<div id="outline-container-org6c25782" class="outline-3">
-<h3 id="org6c25782"><span class="section-number-3">3.12</span> 检验中的决策</h3>
+<div id="outline-container-orgbd01349" class="outline-3">
+<h3 id="orgbd01349"><span class="section-number-3">3.12</span> 检验中的决策</h3>
 <div class="outline-text-3" id="text-3-12">
 <ul class="org-ul">
 <li>&alpha; 水平（显著性水平）：是一个事先指定的“门槛”，如果P值落在它（一般采用0.05或者0.01）之下，那么拒绝原假设 \(H_0\)</li>
@@ -1814,8 +1814,8 @@ p值=标准正态分布的右尾概率=0.00000001
 </div>
 </div>
 
-<div id="outline-container-org3d8ef2f" class="outline-3">
-<h3 id="org3d8ef2f"><span class="section-number-3">3.13</span> 正态总体单样本参数假设检验</h3>
+<div id="outline-container-orgf451357" class="outline-3">
+<h3 id="orgf451357"><span class="section-number-3">3.13</span> 正态总体单样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-13">
 <ul class="org-ul">
 <li>总体均值的检验（大样本： \(n \ge 30\)）</li>
@@ -1846,8 +1846,8 @@ p值=标准正态分布的右尾概率=0.00000001
 </div>
 </div>
 
-<div id="outline-container-org61b2a54" class="outline-3">
-<h3 id="org61b2a54"><span class="section-number-3">3.14</span> 例子</h3>
+<div id="outline-container-orgf2e5258" class="outline-3">
+<h3 id="orgf2e5258"><span class="section-number-3">3.14</span> 例子</h3>
 <div class="outline-text-3" id="text-3-14">
 <p>
 某汽车生产商声称其生产的汽车每加仑汽油可行驶的里程不低于25英里，标准差为2.4英里。消协组织了一个由10位汽车主组成的小组，他们的汽车每加仑汽油的可行驶英里数如下表。假定汽车每加仑可行驶里程服从正态分布。现在问，汽车生产商的诺言可信吗？
@@ -1910,6 +1910,9 @@ p值=标准正态分布的右尾概率=0.00000001
 </tr>
 </tbody>
 </table>
+<ul class="org-ul">
+<li>此种情况实践中比较少见，只能采用自编函数完成</li>
+</ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">options</span>(digits = 2)
 <span style="color: #bc6ec5; font-weight: bold;">u.test</span><span style="color: #ce537a; font-weight: bold;">&lt;-</span><span style="color: #4f97d7; font-weight: bold;">function</span>(x,mu,thegma)
@@ -1932,8 +1935,8 @@ u.test(b, 25,2.4)
 </div>
 </div>
 
-<div id="outline-container-org6637c05" class="outline-3">
-<h3 id="org6637c05"><span class="section-number-3">3.15</span> 例子</h3>
+<div id="outline-container-org08b5495" class="outline-3">
+<h3 id="org08b5495"><span class="section-number-3">3.15</span> 例子</h3>
 <div class="outline-text-3" id="text-3-15">
 <p>
 一位投资者考虑是否选择新的资产管理公司，为使收益最大化，如果新的资产公司平均收益率大于原来资产管理公司的平均收益率，公司将选择新的资产管理公司。原来的资产公司的客户平均收益率为50.0%，对新资产管理公司的客户进行抽样检验，12个客户的收益率如下：50.2%，49.6%，51.0%，50.8%，50.6%，49.8%，51.2%，49.7%，51.5%，50.3%，51.0%和50.6%，假设资产管理公司客户收益率的分布比较近似于正态分布，问新资产管理公司的平均收益率是否大于原来的资产管理公司? 
@@ -1961,8 +1964,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-orgfc61958" class="outline-3">
-<h3 id="orgfc61958"><span class="section-number-3">3.16</span> 正态总体单样本参数假设检验</h3>
+<div id="outline-container-org59cf760" class="outline-3">
+<h3 id="org59cf760"><span class="section-number-3">3.16</span> 正态总体单样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-16">
 <ul class="org-ul">
 <li><p>
@@ -1991,8 +1994,8 @@ mean of x
 </div>
 </div>
 
-<div id="outline-container-org03969f5" class="outline-3">
-<h3 id="org03969f5"><span class="section-number-3">3.17</span> 总体比例检验示例</h3>
+<div id="outline-container-org0df2cdd" class="outline-3">
+<h3 id="org0df2cdd"><span class="section-number-3">3.17</span> 总体比例检验示例</h3>
 <div class="outline-text-3" id="text-3-17">
 <p>
 为调查某大学男女比率是否是1:1，在校门处观察，发现100学生中有45个女性。那么，这是否支持该大学总体男性占比为50%的假设？
@@ -2019,12 +2022,15 @@ sample estimates:
 </div>
 </div>
 
-<div id="outline-container-orgd508f64" class="outline-3">
-<h3 id="orgd508f64"><span class="section-number-3">3.18</span> 总体方差检验示例</h3>
+<div id="outline-container-orgc966d18" class="outline-3">
+<h3 id="orgc966d18"><span class="section-number-3">3.18</span> 总体方差检验示例</h3>
 <div class="outline-text-3" id="text-3-18">
 <p>
 某地区环保部门规定，废水经设备处理后水中某种有毒物质的平均浓度，均值和标准差单位是微克。通过抽查20个废水样品，如何判断水样的标准差是否为20微克？
 </p>
+<ul class="org-ul">
+<li>只能采用自编函数var.test1完成，R里面的var.test函数是用来比较两个对象的。</li>
+</ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">var.test1</span><span style="color: #ce537a; font-weight: bold;">&lt;-</span><span style="color: #4f97d7; font-weight: bold;">function</span>(x, sigma2){
   n<span style="color: #ce537a; font-weight: bold;">&lt;-</span>length(x)
@@ -2047,12 +2053,12 @@ var.test1(x,400)
 </div>
 </div>
 
-<div id="outline-container-org4752367" class="outline-3">
-<h3 id="org4752367"><span class="section-number-3">3.19</span> 正态总体双样本参数假设检验</h3>
+<div id="outline-container-orgd078301" class="outline-3">
+<h3 id="orgd078301"><span class="section-number-3">3.19</span> 正态总体双样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-19">
 </div>
 <ol class="org-ol">
-<li><a id="org37aac03"></a>双样本方差的检验（方差齐性检验）<br />
+<li><a id="org56c2cb3"></a>双样本方差的检验（方差齐性检验）<br />
 <div class="outline-text-4" id="text-3-19-1">
 <p>
 假定条件：
@@ -2069,8 +2075,8 @@ var.test1(x,400)
 </ol>
 </div>
 
-<div id="outline-container-orgbff4df3" class="outline-3">
-<h3 id="orgbff4df3"><span class="section-number-3">3.20</span> 例子</h3>
+<div id="outline-container-org0883b18" class="outline-3">
+<h3 id="org0883b18"><span class="section-number-3">3.20</span> 例子</h3>
 <div class="outline-text-3" id="text-3-20">
 <p>
 假设您是一个轮胎生产商，您从两个厂家买入轮轴，假设每个轮轴的直径服从正态分布，请问如何检验两者方差大小？
@@ -2099,8 +2105,8 @@ ratio of variances
 </div>
 </div>
 
-<div id="outline-container-org044c055" class="outline-3">
-<h3 id="org044c055"><span class="section-number-3">3.21</span> 正态总体双样本参数假设检验</h3>
+<div id="outline-container-orgb8728fe" class="outline-3">
+<h3 id="orgb8728fe"><span class="section-number-3">3.21</span> 正态总体双样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-21">
 <p>
 <b>两样本均值检验:</b>
@@ -2108,7 +2114,7 @@ ratio of variances
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="org032ef75"></a>两独立样本 t 检验（方差齐性）<br />
+<li><a id="org2f4a875"></a>两独立样本 t 检验（方差齐性）<br />
 <div class="outline-text-4" id="text-3-21-1">
 <p>
 假定条件：
@@ -2123,7 +2129,7 @@ ratio of variances
 </p>
 </div>
 </li>
-<li><a id="org56a8073"></a>两独立样本 t 检验（方差不齐时）：<br />
+<li><a id="org11a4fe1"></a>两独立样本 t 检验（方差不齐时）：<br />
 <div class="outline-text-4" id="text-3-21-2">
 <p>
 \(\sigma_1^2，\sigma_2^2未知且不相等，即\sigma_1^2\ne\sigma_2^2。\)
@@ -2134,8 +2140,8 @@ ratio of variances
 </ol>
 </div>
 
-<div id="outline-container-orga383507" class="outline-3">
-<h3 id="orga383507"><span class="section-number-3">3.22</span> 例子</h3>
+<div id="outline-container-org2399451" class="outline-3">
+<h3 id="org2399451"><span class="section-number-3">3.22</span> 例子</h3>
 <div class="outline-text-3" id="text-3-22">
 <p>
 一员工对乘当地公交车上班快还是自己开车快的问题产生了兴趣。通过对两种方式所用时间各进行了10次记录，具体数据见下表。设每一种方式的天数是随机选取的，假设乘车时间服从正态分布。这些数据能提供充分的证据说明开车去的平均时间快吗？
@@ -2200,9 +2206,9 @@ ratio of variances
 </table>
 
 <ol class="org-ol">
-<li>两样本均值检验，需要先验证样本是否服从正态分布（后面介绍）</li>
+<li>两样本均值检验，需要先验证样本是否服从正态分布（后面介绍），如果已知总体服从正态，样本量较大就不需要。</li>
 <li>判断两个样本是否有相同的方差</li>
-<li>t 检验判断均值</li>
+<li>t 检验判断均值（t.test默认方差不等）</li>
 </ol>
 
 <div class="org-src-container">
@@ -2244,12 +2250,12 @@ mean of x mean of y
 </div>
 </div>
 
-<div id="outline-container-org868e5da" class="outline-3">
-<h3 id="org868e5da"><span class="section-number-3">3.23</span> 正态总体双样本参数假设检验</h3>
+<div id="outline-container-orga2161b1" class="outline-3">
+<h3 id="orga2161b1"><span class="section-number-3">3.23</span> 正态总体双样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-23">
 </div>
 <ol class="org-ol">
-<li><a id="org0a90ccf"></a>两配对样本 t 检验<br />
+<li><a id="orgd135f85"></a>两配对样本 t 检验<br />
 <div class="outline-text-4" id="text-3-23-1">
 <p>
 假定条件:
@@ -2280,8 +2286,8 @@ mean of x mean of y
 </ol>
 </div>
 
-<div id="outline-container-org5dc0a93" class="outline-3">
-<h3 id="org5dc0a93"><span class="section-number-3">3.24</span> 例子</h3>
+<div id="outline-container-org1f45e5b" class="outline-3">
+<h3 id="org1f45e5b"><span class="section-number-3">3.24</span> 例子</h3>
 <div class="outline-text-3" id="text-3-24">
 <p>
 一个减肥俱乐部声称，参加其训练班至少可以使肥胖者平均体重减轻8.5kg以上。为了验证该宣传是否可信，调查人员随机抽取了10名参加者，得到他们的体重记录如下：
@@ -2348,34 +2354,34 @@ mean of x mean of y
 <div class="org-src-container">
 <pre class="src src-R">before = c(94.5,101,110,103.5,97,88.5,96.5,101,104,116.5)
 after = c(85,89.5,101.5,96,86,80.5,87,93.5,93,102)
-t.test(before,after,paired=T)
+t.test(before-after, mu=8.5, alternative = <span style="color: #2d9574;">"greater"</span>)
 </pre>
 </div>
 
 <pre class="example">
 
-	Paired t-test
+	One Sample t-test
 
-data:  before and after
-t = 14.164, df = 9, p-value = 1.854e-07
-alternative hypothesis: true difference in means is not equal to 0
+data:  before - after
+t = 1.9413, df = 9, p-value = 0.04207
+alternative hypothesis: true mean is greater than 8.5
 95 percent confidence interval:
-  8.276847 11.423153
+ 8.575214      Inf
 sample estimates:
-mean of the differences 
-                   9.85 
+mean of x 
+     9.85 
 
 </pre>
 </div>
 </div>
 
 
-<div id="outline-container-org3d31b29" class="outline-3">
-<h3 id="org3d31b29"><span class="section-number-3">3.25</span> 正态总体双样本参数假设检验</h3>
+<div id="outline-container-org7c08ef9" class="outline-3">
+<h3 id="org7c08ef9"><span class="section-number-3">3.25</span> 正态总体双样本参数假设检验</h3>
 <div class="outline-text-3" id="text-3-25">
 </div>
 <ol class="org-ol">
-<li><a id="orga463de5"></a>两样本比例检验<br />
+<li><a id="org6924ad7"></a>两样本比例检验<br />
 <div class="outline-text-4" id="text-3-25-1">
 <p>
 假定条件：
@@ -2404,8 +2410,8 @@ mean of the differences
 </ol>
 </div>
 
-<div id="outline-container-org7d6ef16" class="outline-3">
-<h3 id="org7d6ef16"><span class="section-number-3">3.26</span> 例子</h3>
+<div id="outline-container-org29cd474" class="outline-3">
+<h3 id="org29cd474"><span class="section-number-3">3.26</span> 例子</h3>
 <div class="outline-text-3" id="text-3-26">
 <p>
 民意测验专家想知道某广告是否对观众产生明显影响，为此播出前后做了两次调查：
@@ -2466,13 +2472,13 @@ sample estimates:
 </div>
 </div>
 
-<div id="outline-container-orga16af11" class="outline-2">
-<h2 id="orga16af11"><span class="section-number-2">4</span> 非参数假设检验</h2>
+<div id="outline-container-orgb9e8c98" class="outline-2">
+<h2 id="orgb9e8c98"><span class="section-number-2">4</span> 非参数假设检验</h2>
 <div class="outline-text-2" id="text-4">
 </div>
 
-<div id="outline-container-orgac690cf" class="outline-3">
-<h3 id="orgac690cf"><span class="section-number-3">4.1</span> 非参数检验</h3>
+<div id="outline-container-org9d622b4" class="outline-3">
+<h3 id="org9d622b4"><span class="section-number-3">4.1</span> 非参数检验</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 参数假设检验是在假设总体分布已知的情况下进行的. 但实践中，难以对总体的分布进行假定. 数据并不是来自所假定分布的总体, 或者，数据根本不是来自一个总体.
@@ -2501,12 +2507,12 @@ sample estimates:
 </div>
 </div>
 
-<div id="outline-container-org8ebe48e" class="outline-3">
-<h3 id="org8ebe48e"><span class="section-number-3">4.2</span> 单一样本的检验</h3>
+<div id="outline-container-org52c1d4e" class="outline-3">
+<h3 id="org52c1d4e"><span class="section-number-3">4.2</span> 单一样本的检验</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
 <ol class="org-ol">
-<li><a id="org9063e62"></a>单一样本位置参数的检验<br />
+<li><a id="orge485503"></a>单一样本位置参数的检验<br />
 <div class="outline-text-4" id="text-4-2-1">
 <ul class="org-ul">
 <li>前提：总体分布未知；小样本</li>
@@ -2535,7 +2541,7 @@ alternative hypothesis: true location is not equal to 6064
 </div>
 </li>
 
-<li><a id="org2c2108f"></a>卡方拟合优度检验<br />
+<li><a id="org41b0f86"></a>卡方拟合优度检验<br />
 <div class="outline-text-4" id="text-4-2-2">
 <p>
 卡方拟合优度检验(Chi-squared goodness of fit tests)用来检验样本是否来自于特定类型分布的一种假设检验。  
@@ -2615,7 +2621,7 @@ X-squared = 6.72, df = 5, p-value = 0.2423
 </div>
 </li>
 
-<li><a id="org89f38a5"></a>K-S单样本总体分布检验（验证连续型分布）<br />
+<li><a id="orga01adda"></a>K-S单样本总体分布检验（验证连续型分布）<br />
 <div class="outline-text-4" id="text-4-2-3">
 <div class="org-src-container">
 <pre class="src src-R">x=rnorm(50)
@@ -2634,21 +2640,21 @@ ks.test(x,<span style="color: #2d9574;">"pexp"</span>,0.5)
 	One-sample Kolmogorov-Smirnov test
 
 data:  x
-D = 0.10346, p-value = 0.6209
+D = 0.064919, p-value = 0.9753
 alternative hypothesis: two-sided
 
 
 	One-sample Kolmogorov-Smirnov test
 
 data:  y
-D = 0.11019, p-value = 0.5417
+D = 0.089278, p-value = 0.7873
 alternative hypothesis: two-sided
 
 
 	One-sample Kolmogorov-Smirnov test
 
 data:  x
-D = 0.58226, p-value = 8.882e-16
+D = 0.52047, p-value = 3.982e-13
 alternative hypothesis: two-sided
 
 </pre>
@@ -2657,8 +2663,8 @@ alternative hypothesis: two-sided
 </ol>
 </div>
 
-<div id="outline-container-orgb108682" class="outline-3">
-<h3 id="orgb108682"><span class="section-number-3">4.3</span> 常用正态分布检验</h3>
+<div id="outline-container-orgf8765c0" class="outline-3">
+<h3 id="orgf8765c0"><span class="section-number-3">4.3</span> 常用正态分布检验</h3>
 <div class="outline-text-3" id="text-4-3">
 <ul class="org-ul">
 <li>Jarque-Bera检验(偏度和峰度的联合分布检验法)</li>
@@ -2716,12 +2722,12 @@ W = 0.94756, p-value = 0.1229
 </div>
 </div>
 
-<div id="outline-container-orgb2e308c" class="outline-3">
-<h3 id="orgb2e308c"><span class="section-number-3">4.4</span> 双样本比较与检验</h3>
+<div id="outline-container-org7e31b43" class="outline-3">
+<h3 id="org7e31b43"><span class="section-number-3">4.4</span> 双样本比较与检验</h3>
 <div class="outline-text-3" id="text-4-4">
 </div>
 <ol class="org-ol">
-<li><a id="org4349091"></a>卡方独立性检验（Chi-squared tests of independence）<br />
+<li><a id="org0bf4b6e"></a>卡方独立性检验（Chi-squared tests of independence）<br />
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 在两个分类变量相互独立的原假设下，比较理论频数和实际频数的吻合程度。
@@ -2798,8 +2804,8 @@ X-squared = 59.224, df = 3, p-value = 8.61e-13
 </ol>
 </div>
 
-<div id="outline-container-org53b1018" class="outline-3">
-<h3 id="org53b1018"><span class="section-number-3">4.5</span> 双样本比较与检验（独立性）</h3>
+<div id="outline-container-org6c1e3ab" class="outline-3">
+<h3 id="org6c1e3ab"><span class="section-number-3">4.5</span> 双样本比较与检验（独立性）</h3>
 <div class="outline-text-3" id="text-4-5">
 <ul class="org-ul">
 <li>Fisher 精确检验：当每个样本在每个类别上的结果（列联表单元格中的观察数）小于5个时采用</li>
@@ -2827,8 +2833,8 @@ odds ratio
 </div>
 </div>
 
-<div id="outline-container-org5240c52" class="outline-3">
-<h3 id="org5240c52"><span class="section-number-3">4.6</span> 双样本比较与检验（比较中心位置）</h3>
+<div id="outline-container-org24331af" class="outline-3">
+<h3 id="org24331af"><span class="section-number-3">4.6</span> 双样本比较与检验（比较中心位置）</h3>
 <div class="outline-text-3" id="text-4-6">
 <ul class="org-ul">
 <li>Wilcoxon 秩和检验法</li>
@@ -2863,8 +2869,8 @@ alternative hypothesis: true location shift is not equal to 0
 </div>
 </div>
 
-<div id="outline-container-org63e7e93" class="outline-3">
-<h3 id="org63e7e93"><span class="section-number-3">4.7</span> 双样本比较与检验（同分布检验）</h3>
+<div id="outline-container-orge1fb702" class="outline-3">
+<h3 id="orge1fb702"><span class="section-number-3">4.7</span> 双样本比较与检验（同分布检验）</h3>
 <div class="outline-text-3" id="text-4-7">
 <ul class="org-ul">
 <li>卡方两样本同质性检验(Chi-squared tests for homogeneity)</li>
@@ -2899,8 +2905,8 @@ alternative hypothesis: two-sided
 </div>
 </div>
 
-<div id="outline-container-org23795d8" class="outline-3">
-<h3 id="org23795d8"><span class="section-number-3">4.8</span> 多样本的比较与检验（比较位置参数）</h3>
+<div id="outline-container-org8c7ad5e" class="outline-3">
+<h3 id="org8c7ad5e"><span class="section-number-3">4.8</span> 多样本的比较与检验（比较位置参数）</h3>
 <div class="outline-text-3" id="text-4-8">
 <ul class="org-ul">
 <li>多个独立样本的Kruskal-Wallis 秩和检验  
@@ -2935,8 +2941,8 @@ Kruskal-Wallis chi-squared = 1.9387, df = 2, p-value = 0.3793
 </div>
 </div>
 
-<div id="outline-container-org89d794c" class="outline-3">
-<h3 id="org89d794c"><span class="section-number-3">4.9</span> 多样本的比较与检验（比较位置参数）</h3>
+<div id="outline-container-orga79511b" class="outline-3">
+<h3 id="orga79511b"><span class="section-number-3">4.9</span> 多样本的比较与检验（比较位置参数）</h3>
 <div class="outline-text-3" id="text-4-9">
 <ul class="org-ul">
 <li>多个相关样本的 Friedman 秩和检验  
@@ -3064,8 +3070,8 @@ Friedman chi-squared = 2.4, df = 2, p-value = 0.3012
 </div>
 
 
-<div id="outline-container-orgb9176fb" class="outline-3">
-<h3 id="orgb9176fb"><span class="section-number-3">4.10</span> 多样本的比较与检验（比较尺度参数）</h3>
+<div id="outline-container-org3d7f41a" class="outline-3">
+<h3 id="org3d7f41a"><span class="section-number-3">4.10</span> 多样本的比较与检验（比较尺度参数）</h3>
 <div class="outline-text-3" id="text-4-10">
 <ul class="org-ul">
 <li>尺度参数的Ansari-Bradley检验和Fligner-Killeen检验  
@@ -3100,11 +3106,33 @@ alternative hypothesis: true ratio of scales is not equal to 1
 </pre>
 </div>
 </div>
+
+<div id="outline-container-org6f7ace5" class="outline-3">
+<h3 id="org6f7ace5"><span class="section-number-3">4.11</span> 补充作业需要的代码</h3>
+<div class="outline-text-3" id="text-4-11">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#36830;&#32493;&#21464;&#37327;&#36716;&#21270;&#20026;&#31867;&#21035;&#21464;&#37327;</span>
+x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(1,0,1,1,0,0,1)
+xfac <span style="color: #ce537a; font-weight: bold;">&lt;-</span> factor(x)
+
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#36830;&#32493;&#21464;&#37327;&#36716;&#21270;&#20026;&#26377;&#24207;&#21464;&#37327;</span>
+y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(rep(1,5),rep(2,4),rep(3,6))
+yord <span style="color: #ce537a; font-weight: bold;">&lt;-</span> ordered(y)
+
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#31665;&#32447;&#22270;</span>
+boxplot(mtcars$wt)
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#20998;&#31867;&#31665;&#32447;&#22270;</span>
+boxplot(mtcars$wt~mtcars$am)
+
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-06-27 四 17:08</p>
+<p class="date">Created: 2019-11-25 一 01:03</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
