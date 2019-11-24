@@ -10,11 +10,260 @@
 #+BEAMER_INNER_THEME:
 #+BEAMER_OUTER_THEME:
 #+BEAMER_HEADER:
-#+LATEX_HEADER: \usepackage{ctex}
+#+LATEX_HEADER: \usepackage{ctex}  \usepackage{dcolumn}
 #+LATEX_COMPILER: xelatex
+#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
 
-* 最大似然估计                                                         :noexport:
-** 似然推断基本概念 
+* 最大似然估计                                                        
+:PROPERTIES:
+:header-args: :results output :exports both :session mle
+:END:
+** 引例
+投三次硬币决定来上课还是在宿舍睡觉，每出现一次正面代表上课多一票，每出现一次反面代表睡觉多一票。结果是前两次为正面、最后一次为反面。你可能会怀疑硬币是不是有问题，正面出现的概率真是1/2吗？可以计算正面的概率不同取值时，该事件的概率。
+
+| \(\mathbf{y}\) | \(\hat{\theta}\) | \(\theta^{1s} \times (1-\theta)^{0s}\) | \(f_B (\mathbf{y} \vert \hat{\theta})\) |
+|----------------+------------------+----------------------------------------+-----------------------------------------|
+| \({1,1,0}\)    | \( 0.00\)        | \( 0.00^2\times (1-0.00)^1\)           | \( 0.000\)                              |
+| \({1,1,0}\)    | \( 0.10\)        | \( 0.10^2\times (1-0.10)^1\)           | \( 0.009\)                              |
+| \({1,1,0}\)    | \( 0.20\)        | \( 0.20^2\times (1-0.20)^1\)           | \( 0.032\)                              |
+| \({1,1,0}\)    | \( 0.30\)        | \( 0.30^2\times (1-0.30)^1\)           | \( 0.063\)                              |
+| \({1,1,0}\)    | \( 0.40\)        | \( 0.40^2\times (1-0.40)^1\)           | \( 0.096\)                              |
+| \({1,1,0}\)    | \( 0.50\)        | \( 0.50^2\times (1-0.50)^1\)           | \( 0.125\)                              |
+| \({1,1,0}\)    | \( 0.60\)        | \( 0.60^2\times (1-0.60)^1\)           | \( 0.144\)                              |
+| \({1,1,0}\)    | \( 0.67\)        | \( 0.67^2\times (1-0.67)^1\)           | \( 0.148\)                              |
+| \({1,1,0}\)    | \( 0.70\)        | \( 0.70^2\times (1-0.70)^1\)           | \( 0.147\)                              |
+| \({1,1,0}\)    | \( 0.80\)        | \( 0.80^2\times (1-0.80)^1\)           | \( 0.128\)                              |
+| \({1,1,0}\)    | \( 0.90\)        | \( 0.90^2\times (1-0.90)^1\)           | \( 0.081\)                              |
+| \({1,1,0}\)    | \( 1.00\)        | \( 1.00^2\times (1-1.00)^1\)           | \( 0.000\)                              |
+                
+我们将以分布参数的函数来描述观察数据的联合分布概率称之为似然函数（likelihood function），表示为\(L(\mathbf{y};\theta)\)。
+\[L=\theta^2(1-\theta)^1\]
+\[log L=2log\theta + 1log(1-\theta)\]
+\[\frac{\partial log L}{\partial \theta}=\frac{2}{\theta}-\frac{1}{(1-\theta)}=0\]
+\[\hat \theta=2/3\]
+最大化似然函数的\(\theta\)值是最大似然估计（maximum likelihood estimate, MLE）
+#+BEGIN_SRC R :results output graphics :file mle1.png :width 1000 :height 600
+pi.hat <- seq(0,1,.001)
+f.y <- pi.hat^2*(1-pi.hat)^1
+
+plot(pi.hat,f.y,type="l",bty="l",ylab="",lwd=3,xlab=substitute(hat(theta)),las=1)
+segments(.67, 0.0, x1 = .67, y1 = .148,
+         col = "grey30",  lwd = 2)
+segments(.62, .149, x1 = .72, y1 = .149,
+         col = "grey30", lty = par("lty"), lwd = 2)      
+#+END_SRC
+
+** 最大似然推断
+最大似然推断并不是将数据视为随机的、参数视为固定的，而是将数据视为固定的，寻找什么样的参数最有可能生成这个数据，即将数据的联合分布视作某个分布密度或概率分布函数的参数的函数。
++ 线性回归系数的最大似然推断
+2012年189个国家的二氧化碳排放量与人均GDP（购买力平价），如果构建简单模型：\(Y=\beta_0+\beta_1 X +\epsilon \)，其中Y为二氧化碳排放量的对数，X为人均GDP的对数。
+#+BEGIN_SRC R :results output graphics :file mle2.png :width 1000 :height 600
+library(WDI)
+wdi<-WDI(country = "all",
+indicator = c("EN.POP.DNST", #人口密度
+    "EN.ATM.CO2E.KT", #二氧化碳排放量
+     "NY.GDP.PCAP.PP.CD"), #购买力平价计算的人均GDP
+   start = 2012, end = 2012, extra = TRUE, cache = NULL)
+wdi<-na.omit(subset(wdi, region !="Aggregates"))
+names(wdi)[4:6]<-c("pop.den", "co2.kt","gdp.pc.ppp" )
+out<-lm(log(co2.kt) ~ log(gdp.pc.ppp), data=wdi)
+
+plot(log(wdi$gdp.pc.ppp ), log(wdi$co2.kt ), pch=19,
+     xlab="2012 GDP per capita at PPP, log $US",
+     ylab="2012 CO2 emissions, log Ktons",bty="l",
+      las=1)
+abline(reg=out,lwd=3)
+arrows(x1=log(wdi[wdi$iso3c=="CHN","gdp.pc.ppp"]),
+       y1=fitted(out)[rownames(out$model)[which(wdi$iso3c=="CHN")]],
+       x0=log(wdi[wdi$iso3c=="CHN","gdp.pc.ppp"]),
+       y0=log(wdi[wdi$iso3c=="CHN","co2.kt"]),
+       col="black", length=0.1, angle=20,
+       lwd=2.5)
+points(log(wdi[wdi$iso3c=="CHN","gdp.pc.ppp"]), 
+       log(wdi[wdi$iso3c=="CHN","co2.kt"]),
+       pch = 19, cex= 3, col="red")
+#+END_SRC
+
+  1. 首先假定每个观测\(Y_i\)独立同分布，服从正态分布\(f_{N}(y_i ;\mu_i ,\sigma^2 )\)
+  2. 根据线性模型，等同于\(\epsilon_i \sim f_{N}(\epsilon_i ;0,\sigma^2 )\)
+    \[f_N (\epsilon_i ) =\frac{1}{\sigma\sqrt{2\pi}}exp[\frac{-(\epsilon_i)^2}{2\sigma^2}] =\frac{1}{\sigma\sqrt{2\pi}}exp[\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}] \]
+  3. 似然函数是样本数据的联合分布概率，每个样本观测都是独立的，其联合分布概率等于每个观测边缘分布概率的乘积
+    \[L(\beta_0 ,\beta_1 ,\sigma)|{y_1,\cdots,y_n},{x_1,\cdots,x_n}) = (2\pi\sigma^2)^{(-n/2)}\prod_{i=1}^{n}exp[\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}] =  (2\pi\sigma^2)^{(-n/2)}exp[\sum_{i=1}^{n}\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}]\]
+    取对数进行简化：
+    \[ log L = log{(2\pi\sigma^2)^{(-n/2)}exp[\sum_{i=1}^{n}\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}]} \]
+    \[ = -\frac{n}{2}log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2 \]
+    \[ =  -\frac{n}{2}log(2\pi) - nlog\sigma - \frac{\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2} \]
+    剔除与被估计参数无关的项：
+    \[logL \propto -nlog\sigma - \frac{\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2} \]
+    计算机优化程序更擅长计算最小值，采用\(-2logL\)，并且采用固定或已知的 \sigma 简化：
+    \[-2logL \propto \sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2 \]
+    上式显示最大似然估计与最小二乘法的参数结果是一致的。但是如果我们只是得到了一个与最小二乘法一样的结果，那么最大似然估计的意义在哪里？
+
+#+BEGIN_SRC R :results output graphics :file mle3.png :width 1000 :height 600
+library(ProfileLikelihood)
+wdi$lgdppc<-log(wdi$gdp.pc.ppp)
+xx <- profilelike.lm(formula = log(co2.kt)~1, data=wdi, profile.theta="lgdppc",
+lo.theta=0.84, hi.theta=1.15, length=500)
+
+with(xx, 
+  plot(theta,profile.lik,las=1,lty=1,lwd=3,
+    type="l",pch=19,xlab=substitute(beta[1]),
+    ylab="likelihood",yaxt="n",bty="l",main="Least Squares as MLE",
+    xlim=c(0.85,1.1))
+  )
+abline(v=coef(out)[2],col="gray50",lwd=3)
+abline(h=max(xx$profile.lik),col="gray50",lwd=4)
+#+END_SRC
++ 利用R最大化似然函数
+#+BEGIN_SRC R
+# 建立自变量（含常数项）与因变量矩阵
+x <- cbind(1,as.matrix(log(wdi$gdp.pc.ppp)))    # 增加1列含1的常数项
+y <- as.matrix(log(wdi$co2.kt))
+K <- ncol(x); n <- nrow(x)                      # 观测数n和变量数K
+# 定义似然函数，可以选择多种参数化方式，此处采用logL的完整形式
+loglik.my <- function(par,X,Y) {               
+  Y <- as.vector(y)
+  X <- as.matrix(x)
+  xbeta <- X%*%par[1:K]
+  sigma <- sqrt(sum(((X[,2]-mean(X[,2]))^2)/(n-K))) # 假定标准误已知，有多种设定形式
+  sum(-(1/2)*log(2*pi)-(1/2)*log(sigma^2)-(1/(2*sigma^2))*(y-xbeta)^2) # 对数似然函数，加负号变为最小化
+}
+# 将似然函数传递给最优化函数，提供初始值，选择算法，设定迭代次数等
+mle.fit <- optim(c(5,5),loglik.my, method = "BFGS", control = 
+            list(trace=TRUE,maxit=10000,fnscale = -1),hessian = TRUE)    
+if(mle.fit$convergence!=0) 
+  print("MDW WARNING: Convergence Problems; Try again!")
+# 计算标准诊断量
+stderrors<- sqrt(diag(-solve(mle.fit$hessian)))
+z<-mle.fit$par/stderrors
+p.z <- 2* (1 - pnorm(abs(z)))
+out.table <- data.frame(Est=mle.fit$par, SE=stderrors, Z=z, pval=p.z)
+round(out.table, 2)
+#+END_SRC
+
+** 异方差数据的最大似然估计
++ 线性回归模型假定同方差，即对于所有的观测都有 \(y_i \sim N(\mu_i , \sigma^2 ) \)，但是如果误差项是异方差的，即 \(y_i \sim N(\mu_i , \sigma_i^2 ) \)，则会导致\(se(\hat{\beta})\)是有偏的，\(\hat{\beta}\)的估计是无效的。
++ 一般采用稳健性标准误来替代“有问题”的标准误，但是，异方差被看做是数据存在的一个“问题”，仅仅是因为我们假定它不应该在“正常”的数据中存在。真实的可能是我们的线性回归假定框定了我们解决问题的范围。类比一下，为什么我们不会说“异均值”是一个问题，是因为线性回归的框架中允许了因变量均值随自变量变动（这也正是我们建模的基础），那如果我们能把\(\sigma_i^2 \) 也纳入到模型中，即对因变量方差建模，也就能更好的利用自变量解释解释因变量的均值和方差两方面的变化。
++ 异方差暗含了自变量与因变量方差的关系，这可能正是我们想研究的内容。
+  - 实力相当的两个人才会打架，所以实力相当使得是否打架的变异程度更大
+  - 公立医院民营化可能不会降低平均的社会健康水平，但是会由于覆盖风险增加社会健康水平的变异程度
++ 异方差正态模型的最大似然估计
+  - 随机部分：
+  \[y_i \sim f_N (\mu_i , \sigma_i^2 )\]
+  - 系统部分： 
+  \[\mu_i = X_i \beta \]
+  \[\sigma_i^2 = exp(Z_i \gamma) \]
++ 异方差最大似然估计的推导：
+   1. 首先假定每个观测\(Y_i\)独立同分布，服从正态分布: \[f_{N}(y_i ;\mu_i ,\sigma_i^2 )\]
+   2. 样本数据的联合分布：\[P(y|\mu,\sigma_2 ) = \prod_{i=1}^{n}f_{N}(y_i ;\mu_i ,\sigma_i^2 ) \]
+   3. 根据正态分布密度函数：\[P(y|\mu,\sigma_2 ) = \prod_{i=1}^{n}(2\pi\sigma_i^2 )^(-1/2)exp[\frac{-(y_i - \mu_i )^2 }{2\sigma_i^2 }] \]
+   4. 对数似然函数：\[logL(\beta,\sigma^2 |y) \propto  -\frac{1}{2}\sum_{i=1}^{n}log\sigma_i^2 - \frac{1}{2}\sum_{i=1}^{n}\frac{(y_i-\mu_i)^2}{\sigma_i^2 } \]
+   5. 代入系统参数：\[logL(\beta,\gamma |y) \propto  -\frac{1}{2}\sum_{i=1}^{n}z_i \gamma - \frac{1}{2}\sum_{i=1}^{n}\frac{(y_i-\mu_i)^2}{exp(z_i \gamma }) \]
++ 假想样本量为2000的异方差数据来自真实模型：
+  \[y_i \sim N (\mu_i , \sigma_i^2 )\]
+  \[\mu_i = 5 + 10x_i \]
+  \[\sigma_i^2 = exp(1+3x_i ) \]
++ 分别采用线性回归与异方差的最大似然估计去拟合
+  #+BEGIN_SRC R 
+set.seed(1234)
+
+obs <- 2000
+x <- runif(obs)
+
+mu <- 5+10*x
+sigma2 <- exp(1+3*x)
+
+y <- rnorm(obs, mu, sqrt(sigma2))
+
+# 线性回归拟合
+lm.fit <- lm(y~x)
+summary(lm.fit)
+
+
+# 最大似然法拟合
+# 建立两个系统部分的自变量
+xcovariates <- x
+zcovariates <- x
+
+# 设置参数初始值beta0,beta1,gamma0,gamma1
+stval <- c(0,0,0,0)
+
+# 设定似然函数
+llk.hetnormlin <- function(param,y,x,z) {
+  x <- as.matrix(x)
+  z <- as.matrix(z)
+  x <- cbind(1,x)
+  z <- cbind(1,z)
+  b <- param[ 1 : ncol(x) ]
+  g <- param[ (ncol(x)+1) : (ncol(x) + ncol(z)) ]
+  xb <- x%*%b
+  s2 <- exp(z%*%g)
+  sum(0.5*(log(s2)+(y-xb)^2/s2))  # optim是最小化函数，所以公式要乘以-1
+}
+
+# 运行优化函数得到拟合结果
+mle.fit <- optim(stval,llk.hetnormlin,method="BFGS",hessian=T,y=y,x=xcovariates,z=zcovariates)
+# 提取估计值
+pe <- mle.fit$par   # 参数的点估计
+vc <- solve(mle.fit$hessian)  # 协方差矩阵
+se <- sqrt(diag(vc))    # 标准误
+z <- mle.fit$par/se  # z值
+p.z <- 2* (1 - pnorm(abs(z))) # p值
+out.table <- data.frame(Coefs=c("beta0","beta1","gamma0","gamma1"), Est=mle.fit$par, SE=se, Z=z, pval=p.z)
+print(out.table, digits=2)
+
+  #+END_SRC
++ 哪个模型更好？可以比较95%的预测区间
+  #+BEGIN_SRC R :results output graphics :file mle4.png :width 1500 :height 600
+par(mfrow=c(1,2))
+
+plot(x,y,pch=20)
+abline(a=coef(lm.fit)[1],b=coef(lm.fit)[2], col="red",lwd=3)
+text(0.2, 25, labels = "Linear regression fit \n 95% prediction interval", col = "red")
+
+#绘制95%预测区间
+xhyp <- seq(0,1,length.out = 100)
+xnew <- data.frame(x=xhyp)
+ypred <- predict(lm.fit, newdata=xnew, interval="prediction", level=0.95)
+xpoly <- c(xhyp, rev(xhyp), xhyp[1])
+ypoly <- c(ypred[,2], rev(ypred[,3]), ypred[1,2])
+polygon(x=xpoly, y=ypoly, density=20, col="red", border=FALSE)
+
+plot(x,y,pch=20)
+abline(a=pe[1],b=pe[2], col="blue",lwd=3)
+text(0.2, 25, labels = "Heteroskedastic MLE fit \n 95% prediction interval", col = "blue")
+
+#绘制95%预测区间
+# 从模型预测的分布中抽取参数来模拟结果
+sims <- 10000
+simparam <- mvrnorm(sims,pe,vc) # 抽取参数
+# 将抽取的参数分配给betas和gammas
+simbetas <- simparam[,1:(ncol(as.matrix(xcovariates))+1)]
+simgammas <- simparam[,(ncol(simbetas)+1):ncol(simparam)]
+# 自变量的假想数据
+xhyp <- seq(0,1,length.out = 100)
+# 获取因变量的预测值的期望与95%的预测区间 
+ypred <- matrix(NA,nrow=nrow(as.matrix(xhyp)),ncol = 3)
+for (i in 1:nrow(as.matrix(xhyp))) {
+  simmu <- simbetas%*%rbind(1,xhyp[i])  # 模拟系统均值
+  simsigma2 <- exp(simgammas%*%rbind(1,xhyp[i])) # 模拟系统方差
+# 依据模拟的均值与方差构建正态分布，并抽取10000个预测值
+  simy <- sqrt(simsigma2)*rnorm(sims)+simmu 
+  simy <- sort(simy) # 排序
+  ypred[i,1] <- mean(simy) # 预测值的期望
+  length.simy <- length(simy) 
+  ci = 0.95
+# 根据抽取的预测值计算预测值的置信区间
+  ypred[i,2] <- simy[trunc((1-ci)/2*length.simy)] # 概率0.025对应分位数
+  ypred[i,3] <- simy[trunc((1-(1-ci)/2)*length.simy)] # 概率0.975对应的分位数
+}
+
+xpoly <- c(xhyp, rev(xhyp), xhyp[1])
+ypoly <- c(ypred[,2], rev(ypred[,3]), ypred[1,2])
+polygon(x=xpoly, y=ypoly, density=20, col="blue", border=FALSE)
+
+  #+END_SRC
+** 似然推断基本概念  :noexport:
 \[P(\theta|y)=\frac{P(\theta)}{P(y)}P(y|\theta)\]
 \[L(\theta|y)=k(y)P(y|\theta)\]
 \[L(\theta|y)\propto P(y|\theta)\]
@@ -25,45 +274,144 @@
 #+BEGIN_SRC R
 
 #+END_SRC
-** Interpreting profile likelihoods
-** Deriving maximum likelihood estimates (MLEs)
-** An MLE for heteroskedastic data 
-** Numerical methods of finding MLEs 
-** Statistical properties of MLEs 
-** Summarizing the uncertainty of MLEs
-* 单个预测变量的logistic回归
-:PROPERTIES:
-:header-args: :results output :exports both :session logit
-:END:
-** 通过收入解释政治偏好
-1992年美国大选[[./nescleaned.RData][民调数据]]，对于选民i，如果 $y_i=1$ ，那么他会选布什，如果 $y_i=0$ ，那么他会选克林顿，通过收入（5个收入等级）来预测选民的政治偏好。  
-logistic回归模型如下：
-#+BEGIN_SRC R
-nes <- load("nescleaned.RData")
-yr <- 1992
-ok <- data$year==yr & data$presvote<3
-vote <- data$presvote[ok] - 1
-income <- data$income[ok]
-fit.1 <- glm (vote ~ income, family=binomial(link="logit"))
-summary(fit.1)
-result <- summary(fit.1)
-round(result$coefficients, digits=2)
-#+END_SRC
+** 最大似然估计的理论与性质（略）
 
-#+BEGIN_SRC R :results output graphics :file election1.png :width 1000 :height 600
+* 二值响应变量的logistic回归
+:PROPERTIES:
+:header-args: :results output :exports both :session binary
+:END:
+** 二值数据（binary data）
++ 1992年美国大选[[./nescleaned.RData][民调数据]]，对于选民i，如果 $y_i=1$ ，那么他会选布什，如果 $y_i=0$ ，那么他会选克林顿，通过收入（5个收入等级）来预测选民的政治偏好。
+  
+  | 政治偏好            | 收入等级1 | 收入等级2 | 收入等级3 | 收入等级4 | 收入等级5 |
+  |---------------------+-----------+-----------+-----------+-----------+-----------|
+  | 克林顿              |        98 |       138 |       222 |       208 |        36 |
+  | 布什                |        30 |        69 |       144 |       196 |        38 |
+  |---------------------+-----------+-----------+-----------+-----------+-----------|
+  | 选布什的几率        |      0.31 |      0.50 |      0.65 |      0.94 |      1.06 |
+  | 相比收入等级1的风险 |      1.00 |      1.42 |      1.68 |      2.07 |      2.19 |
++ 几率（odds）、几率比（odds ratios）和相对风险（relative risk）
+  - 几率，也叫胜率、优势、比率，表示随机事件发生的概率与不发生的概率之比，其取值范围是零到正无穷。
+    \[\omega_i \equiv Odds(y_i =1 ) = \frac{Pr(y_i =1 ) }{1-(y_i =1 ) } \]
+  - 相对风险，也叫风险比，表示两个随机事件概率的比值，与几率不同，这两个随机事件不存在互补的关系。
+  - 上表显示，收入等级1的选民选布什的几率为0.31；收入等级2的选民选布什的几率为0.51，与收入等级1的选民相对风险为1.42，即收入等级2的选民选择布什的概率比收入等级1的选民要高42%；并且随着收入等级上升，选择布什的几率上升，最终在收入等级5达到1.06，即选择布什概率反超选择克林顿的概率。
+  - 几率比即几率的比值，也叫优势比、比数比等。例如，收入等级2与等级1的选民选择布什的几率比为0.50/0.31=1.61，即收入等级2的选民选择布什的几率是收入等级1的选民的1.61倍。
+** 线性概率模型（LPM）
++ 线性概率模型：\(P(y_i =1) = \beta_0 + \beta_1 income_i + \beta_2 age_i + \beta_3 age_i^2 + \beta_4 black_i + \epsilon_i \)
+#+BEGIN_SRC R
+load("nescleaned.RData")
+nes <- data[data$year==1992 & data$presvote<3,]
+nes$presvote <- nes$presvote - 1
+
+lm.fit <- lm(presvote ~ income + age + I(age^2) + black, data = nes)
+summary(lm.fit)
+#+END_SRC
++ 线性概率模型诊断
+  - 概率预测值可能会超出[0, 1]的范围，做出无意义的预测。并且预测值中无意义的值越多，参数估计偏差越大。
+  - 假定协变量与概率的关系是固定的，即回归系数是固定值。
+  - 残差一定会存在异方差，导致参数估计的置信区间是有偏的。
+#+BEGIN_SRC R :results output graphics :file binary1.png :width 1500 :height 600
+par(mfrow=c(1,3))
+plot(fitted(lm.fit), lm.fit$model$presvote, xlim = c(-0.2,1), xlab = "predicted", ylab = "actual")
+abline(v=c(0,1), col="red",lty=3,lwd=2)
+plot(fitted(lm.fit), resid(lm.fit), xlab = "fitted values", ylab = "residuals")
+library(car)
+qqPlot(lm.fit)
+#+END_SRC
++ 继续使用线性概率模型（特别是经济学）的理由：
+  - 政策评价中，如果刺激是随机分配的并且只需要关注平均处理效应，刺激一般是二值变量，尽管OLS的回归系数代表刺激引起的概率变化，而logit模型的回归系数代表刺激起来的几率比的变化，但是OLS与logit模型给出的结果本质是一样的，函数形式对估计结果没有影响（Angrist and Pischke, 2009）。
+  #+BEGIN_SRC R
+  # compare linear probability model with logit model
+lm.fit.black <- lm(presvote ~ black, data = nes)
+summary(lm.fit.black)
+glm.fit.black <- glm(presvote ~ black, family = binomial(link="logit"),data = nes)
+summary(glm.fit.black)
+
+odds0 <- exp(coef(glm.fit.black)[1])
+(p0 <- odds0/(1+odds0))
+odds1 <- exp(coef(glm.fit.black)[1]+coef(glm.fit.black)[2])
+(p1 <- odds1/(1+odds1))
+(p1-p0)
+  #+END_SRC
+  - 近来社会科学强调因果推断，推动了短面板的固定效应模型、工具变量方法的应用，这些方法都更容易在OLS的框架下实施。
+  - Heckman等（1997）严格证明了线性概率模型代表某种特定类别的随机效用模型，对决策者的效用是非对称随机施加的，即线性概率模型是具有理论基础的。
+  - 其他“理由”：观测量过大、相比logit易于解释、OLS对分布的假定更为宽松。
++ 但是因果推断只是拟合模型的目的之一，基于数据生成过程（data generation process, DGP）的模型比较和预测更倾向于使用logit或probit模型。
+** logit模型（logistic回归模型）的设定
++ logit转换：将取值为[0, 1]的概率转换为无边界的实数
+  \[logit(p)=log(\frac{p}{1-p})\]
++ logistic转换：logit的的反函数，将实数转换为取值范围为[0, 1]的概率
+  \[logit^{-1}(x)=\frac{e^x}{1+e^x}=\frac{1}{1+e^{-x}}\]
++ 概率论中，二值结果的数据来自于伯努利试验（Bernoulli trials），随机变量\(Y_i\)服从参数为\(\theta_i\)的两点分布，模型分为系统与随机两部分：
+  - 随机部分：
+    \[Y_i \sim f_B (y_i ; \theta_i ) \]
+    或者，
+    \[Pr(Y_i = y_i ) = \theta_i^{Y_i }(1-\theta_i )^{1-y_i } = \begin{cases}
+                                                                \theta_i & \text{for } y_i = 1 \\
+                                                                1- \theta_i & \text{for } y_i = 0
+                                                               \end{cases} \]
+  - 系统部分：
+    \[\theta_i \equiv logit_{-1}(x_i^T \beta)=\frac{1}{1+e^{-x_i^T \beta}}\]
+  - 给定模型的系统与随机部分，可知数据的联合分布：
+    \[Pr(y|\theta)= \prod_{i=1}^{n} \theta_i^{y_i}(1-\theta_i )^{1-y_i } \]
+  - 带入系统部分整理后，可得对数似然函数：
+    \[logL(\theta |y) = \sum_{i=1}^n log(\frac{e^{-x_i^T \beta (1-y_i )}}{1+e^{-x_i^T \beta}})\]
+** logit模型参数估计
++ 自编对数似然函数进行模型最大似然估计
+  #+BEGIN_SRC R
+# 最大似然法拟合
+# 准备数据
+mledata <- nes[,c("presvote","income")]
+mledata <- na.omit(mledata)
+xcovariates <- mledata$income
+response <- mledata$presvote
+
+# 设置参数初始值beta0,beta1
+stval <- c(0,0)
+
+# 设定似然函数
+llk.hettheta <- function(param,y,x) {
+  x <- as.matrix(x)
+  x <- cbind(1,x)
+  b <- param[ 1 : ncol(x) ]
+  xb <- x%*%b
+  sum(xb*(1-y)+log(1+exp(-xb)))  # optim是最小化函数，所以公式要乘以-1
+}
+
+# 运行优化函数得到拟合结果
+mle.fit <- optim(stval,llk.hettheta,method="BFGS",hessian=T,y=response,x=xcovariates)
+# 提取估计值
+pe <- mle.fit$par   # 参数的点估计
+vc <- solve(mle.fit$hessian)  # 协方差矩阵
+se <- sqrt(diag(vc))    # 标准误
+z <- mle.fit$par/se  # z值
+p.z <- 2* (1 - pnorm(abs(z))) # p值
+AIC <- 2*mle.fit$value + 2*length(mle.fit$par)
+out.table <- data.frame(Coefs=c("beta0","beta1"), Est=mle.fit$par, SE=se, Z=z, pval=p.z)
+print(out.table, digits=2)
+print(paste("Deviance:", round(2*mle.fit$value, digits = 1), "    AIC:", round(AIC, digits = 1)))
+  #+END_SRC
++ 采用glm函数进行估计
+  #+BEGIN_SRC R
+glm.fit <- glm(presvote ~ income, family = binomial(link="logit"),data = nes)
+summary(glm.fit)
+  #+END_SRC
+** logit模型结果的呈现
+#+BEGIN_SRC R :results output graphics :file binary2.png :width 1500 :height 600
+# 定义logit反函数
 invlogit <- function(x){
   p <- exp(x)/(1+exp(x))
   return(p)
 }
 par(mfrow=c(1,2))
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), 1, 5, ylim=c(-.01,1.01),
-       xlim=c(-2,8), xaxt="n", xaxs="i", mgp=c(2,.5,0),
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), 1, 5, ylim=c(-.01,1.01),
+       xlim=c(-2, 8), xaxt="n", xaxs="i", mgp=c(2,.5,0),
        ylab="Pr (Republican vote)", xlab="Income", lwd=4)
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), -2, 8, lwd=.5, add=T)
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), -2, 8, lwd=.5, add=T)
 axis (1, 1:5, mgp=c(2,.5,0))
 mtext ("(poor)", 1, 1.5, at=1, adj=.5)
 mtext ("(rich)", 1, 1.5, at=5, adj=.5)
-points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+points (jitter(glm.fit$data$income, .5), jitter(glm.fit$data$presvote, .08), pch=20, cex=.1)
 
 ##模拟回归系数的函数
 sim <- function(fit, n.sims=100)
@@ -79,6 +427,7 @@ sim <- function(fit, n.sims=100)
   # 获取回归系数的协方差矩阵
   V.beta <- corr.beta * array(sd.beta,c(k,k)) * t(array(sd.beta,c(k,k)))
   # 以估计的参数构建多元正态分布，并从中抽取模拟的参数
+  library(MASS)
   beta <- MASS::mvrnorm (n.sims, beta.hat, V.beta)
   sigma <- rep (sqrt(summ$dispersion), n.sims)
   
@@ -86,62 +435,47 @@ sim <- function(fit, n.sims=100)
   return(ans)
 }
 
-sim.1 <- sim(fit.1)
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), .5, 5.5, ylim=c(-.01,1.01),
-       xlim=c(.5,5.5), xaxt="n", xaxs="i", mgp=c(2,.5,0),
+sim.1 <- sim(glm.fit)
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), -2, 8, ylim=c(-.01,1.01),
+       xlim=c(-2,8), xaxt="n", xaxs="i", mgp=c(2,.5,0),
        ylab="Pr (Republican vote)", xlab="Income", lwd=1)
 for (j in 1:20){
-  curve (invlogit(sim.1$coef[j,1] + sim.1$coef[j,2]*x), col="gray", lwd=.5, add=T)
+  curve (invlogit(sim.1$coef[j,1] + sim.1$coef[j,2]*x), 1, 5, col="red", lwd=.5, add=T)
 }
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), add=T)
+#curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), add=T)
 axis (1, 1:5, mgp=c(2,.5,0))
 mtext ("(poor)", 1, 1.5, at=1, adj=.5)
 mtext ("(rich)", 1, 1.5, at=5, adj=.5)
-points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+points (jitter(glm.fit$data$income, .5), jitter(glm.fit$data$presvote, .08), pch=20, cex=.1)
 #+END_SRC
-
-** logistic回归模型
-$$Pr(y_i=1)=logit^{-1}(X_i\beta)$$
-函数 $logit^{-1}(x)=\frac{e^x}{1+e^x}$ 将连续数值转化为0到1之间的数。  
-
-模型等同于 $Pr(y_i=1)=p_i$ 和 $logit(p_i)=X_i\beta$ ，其中 $logit(x)=log(x/(1-x))$  
-
- logit反函数是曲线形式的，因此对于x的变化，y的变化不会是常量。  
-
-  + $logit(0.5)=0$, $logit(0.6)=0.4$ ，意味着logit值增加0.4，相应的概率从50%增加到60%  
-
-  + $logit(0.9)=2.2$ , $logit(0.93)=2.6$ ，则意味着logit值增加0.4，相应的概率从90%增加到93%  
-
 ** logistic回归系数的解释
-+ 由于非线性模型，系数解释比较复杂 
-$$Pr(支持布什)=logit^{-1}(-1.4+0.33\cdot income)$$
-*针对数据均值进行评价:*
- 具有平均收入水平选民支持布什的概率: 40.5%
-#+BEGIN_SRC R
-invlogit(-1.40 + 0.33*mean(income, na.rm=T))
++ 用glm拟合多个自变量的模型（包括收入、年龄、年龄二次项、是否为黑人）并与其他模型比较
+#+BEGIN_SRC R 
+glm.fit1 <- glm(presvote ~ income+age+I(age^2)+black, family = binomial(link="logit"),data = nes)
+library(stargazer)
+stargazer(lm.fit.black, glm.fit.black, glm.fit, lm.fit, glm.fit1, type = "text")
 #+END_SRC
-
-+ 收入水平变化1个等级所产生的概率变化  
-$$logit^{-1}(-1.4+0.33\cdot 3)-logit^{-1}(-1.4+0.33\cdot 2)=0.08$$
-也可以计算logit反函数曲线在中心值处的斜率
-$$logit^{-1}(\alpha +\beta x)的导数: \frac{\beta e^{\alpha +\beta x}}{(1+e^{\alpha +\beta x})^2}，带入\bar{x}=3.1，得到\frac{0.33e^{-0.39}}{(1+e^{-0.39})^2}=0.13$$
-
-+ 除4法则  
-logit反函数曲线在中心位置斜率最大，此时 $\alpha +\beta x=0$ ，因此 $logit^{-1}(\alpha +\beta x)=0.5$ ，并且函数的导数也在此点最大，且为 $\beta e^0 /(1+e^0)^2=\beta /4$ ，它是收入改变1个单位引起概率变化的最大值。  
-
-+ 推断  
-  - 系数的估计量与标准差：采用最大似然法估计，统计显著性与线性回归相似
-  - 预测：logit回归预测概率，对于还未观测的 $\tilde y_i$ ，其概率为 $\tilde p_i=Pr(\tilde y_i=1)=logit^{-1}(\tilde X_i\beta)$
-
-+ 模型拟合与展示
-#+BEGIN_SRC R :results output graphics :file election2.png :width 800 :height 600
-plot (income, vote)
-curve(invlogit(coef(fit.1)[1] + coef(fit.1)[2]*x),add = TRUE)
-#+END_SRC
++ logit与OLS估计量的符号与p值都是相似的，但是系数解释更为复杂。
++ 因为模型是非线性的，自变量对因变量的效应不再是恒定的。logit反函数是曲线形式的，因此对于x的变化，y的变化不会是常量。  
+  - \(logit^{-1}(0)=0.5\), \(logit^{-1}(0.4)=0.6\)，意味着logit值从0增加到0.4，相应的概率从50%增加到60%，增加了10%。  
+  - \(logit^{-1}(2.2)=0.9\) , \(logit^{-1}(2.6)=0.93\) ，则意味着logit值从2.2增加2.6，同样增加0.4，而相应的概率从90%增加到93%，只增加了3%。  
++ logit模型的边际效应显示自变量\(x_k\)变化所引起的因变量变化不仅与其回归系数\(\beta_k\)相关，还取决于所有协变量的值。一般针对变量类型，根据数据均值、中位数、众数进行评价。
+  \[\frac{\partial E[Y_i ]}{\partial x_{ki}} = \frac{\partial \theta_i }{\partial x_{ki}} = \beta_k \frac{exp(x_i^T \beta)}{(1+exp(x_i^T \beta))^2} \]
+  - 以第3个模型为例，解释回归系数。
+    \[Pr(支持布什)=logit^{-1}(-1.4+0.33\cdot income)\]
+    #+BEGIN_SRC R
+     invlogit(-1.40 + 0.33*median(nes$income, na.rm=T))
+    #+END_SRC
+  - 具有中位数收入等级的选民支持布什的概率为39.9%
+  - 收入等级从3变化到2所产生的概率变化  
+    \[logit^{-1}(-1.4+0.33\cdot 3)-logit^{-1}(-1.4+0.33\cdot 2)=0.08\]
+  - 还可以计算logit反函数曲线在中心值处的斜率，作为边际效应的代表。
+    \[logit^{-1}(\alpha +\beta x)的导数: \frac{\beta e^{\alpha +\beta x}}{(1+e^{\alpha +\beta x})^2}，带入\bar{x}=3.1，得到\frac{0.33e^{-0.39}}{(1+e^{-0.39})^2}=0.13 \]
+  - 除4法则：logit反函数曲线在中心位置斜率最大，此时 \(\alpha +\beta x=0\)，因此\(logit^{-1}(\alpha +\beta x)=0.5\) ，并且函数的导数也在此点最大，且为 \(\beta e^0 /(1+e^0)^2=\beta /4\) ，它是收入改变1个单位引起概率变化的最大值。 
 
 ** 展示多个logistic回归的结果  
   + 采用1952-2000年的13届选前民调回归，收入系数的估计值 $\pm 1$ 标准差，显示高收入选民更支持共和党，但是这种关系随着时间的推移越来越强。
-#+BEGIN_SRC R :results output graphics :file election3.png :width 800 :height 600
+#+BEGIN_SRC R :results output graphics :file binary3.png :width 800 :height 600
 income.year <- NULL
 income.coef <- NULL
 income.se <- NULL
@@ -179,8 +513,28 @@ z_i=X_i\beta+\epsilon_i
 curve(dlogis(x,location = -1.07),-9,7,yaxs='i')
 polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),col = "gray")
 #+END_SRC
+ 
+* 单个预测变量的logistic回归 :noexport:
+:PROPERTIES:
+:header-args: :results output :exports both :session logit
+:END:
+** logistic回归系数的解释
 
-** logistic回归模型示例：孟加拉居民水井砷污染 [[./wells.dat][数据]]
++ 推断  
+  - 系数的估计量与标准差：采用最大似然法估计，统计显著性与线性回归相似
+  - 预测：logit回归预测概率，对于还未观测的 $\tilde y_i$ ，其概率为 $\tilde p_i=Pr(\tilde y_i=1)=logit^{-1}(\tilde X_i\beta)$
+
++ 模型拟合与展示
+#+BEGIN_SRC R :results output graphics :file election2.png :width 800 :height 600
+plot (income, vote)
+curve(invlogit(coef(fit.1)[1] + coef(fit.1)[2]*x),add = TRUE)
+#+END_SRC
+
+* logistic回归示例
+:PROPERTIES:
+:header-args: :results output :exports both :session well
+:END:
+** 孟加拉居民水井砷污染 [[./wells.dat][数据]]
 #+ATTR_HTML: :width 800
 [[./image1.jpg]]
 
@@ -210,6 +564,11 @@ summary(fit.2)
 
 + 绘制拟合模型
 #+BEGIN_SRC R :results output graphics :file well1.png :width 800 :height 600
+invlogit <- function(x){
+  p <- exp(x)/(1+exp(x))
+  return(p)
+}
+
 jitter.binary <- function(a, jitt=.05){
   ifelse (a==0, runif (length(a), 0, jitt), runif (length(a), 1-jitt, 1))
 }
@@ -232,7 +591,7 @@ $$Pr(switch)=logit^{-1}(0.61-0.62\cdot dist100)$$
   1. 标准差为0.10，95%的置信区间[-0.82, -0.42]
 
 *** 增加第二个变量（砷的浓度水平）
-#+BEGIN_SRC R :results output graphics :file well2.png :width 800 :height 600
+#+BEGIN_SRC R :results output graphics :file well2.png :width 1500 :height 600
 fit.3 <- glm (switch ~ dist100 + arsenic, family=binomial(link="logit"))
 summary(fit.3)
 par(mfrow=c(1,2))
@@ -284,7 +643,7 @@ summary(fit.5)
 + 交互项的显著性不强，但方向符合预期，保留。
 
 *** 含有交互项模型示意图
-#+BEGIN_SRC R :results output graphics :file well3.png :width 800 :height 600
+#+BEGIN_SRC R :results output graphics :file well3.png :width 1500 :height 600
 par(mfrow=c(1,2))
 plot(dist, switch.jitter, xlim=c(0,max(dist)), xlab="Distance (in meters) to nearest safe well", 
      ylab="Pr (switching)", type="n", xaxs="i", yaxs="i", mgp=c(2,.5,0))
@@ -413,7 +772,7 @@ fit.9 <- glm (switch ~ c.dist100 + c.log.arsenic + c.educ4 +
 summary(fit.9)
 #+END_SRC
 比较拟合的logistic回归
-#+BEGIN_SRC R :results output graphics :file well6.png :width 800 :height 600
+#+BEGIN_SRC R :results output graphics :file well6.png :width 1500 :height 600
 par(mfrow=c(1,2))
 
 fit.9a <- glm (switch ~ dist100 + log.arsenic + educ4 +

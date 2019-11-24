@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-11 四 16:56 -->
+<!-- 2019-11-25 一 03:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Logistic回归</title>
@@ -180,6 +180,7 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -253,41 +254,812 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">Logistic回归</h1>
 
-<div id="outline-container-org7b0f99b" class="outline-2">
-<h2 id="org7b0f99b"><span class="section-number-2">1</span> 单个预测变量的logistic回归</h2>
+<div id="outline-container-org08a9a91" class="outline-2">
+<h2 id="org08a9a91"><span class="section-number-2">1</span> 最大似然估计</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org3bf3aff" class="outline-3">
-<h3 id="org3bf3aff"><span class="section-number-3">1.1</span> 通过收入解释政治偏好</h3>
+<div id="outline-container-orgcdb9f62" class="outline-3">
+<h3 id="orgcdb9f62"><span class="section-number-3">1.1</span> 引例</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-1992年美国大选<a href="./nescleaned.RData">民调数据</a>，对于选民i，如果 \(y_i=1\) ，那么他会选布什，如果 \(y_i=0\) ，那么他会选克林顿，通过收入（5个收入等级）来预测选民的政治偏好。  
-logistic回归模型如下：
+投三次硬币决定来上课还是在宿舍睡觉，每出现一次正面代表上课多一票，每出现一次反面代表睡觉多一票。结果是前两次为正面、最后一次为反面。你可能会怀疑硬币是不是有问题，正面出现的概率真是1/2吗？可以计算正面的概率不同取值时，该事件的概率。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\(\mathbf{y}\)</th>
+<th scope="col" class="org-left">\(\hat{\theta}\)</th>
+<th scope="col" class="org-left">\(\theta^{1s} \times (1-\theta)^{0s}\)</th>
+<th scope="col" class="org-left">\(f_B (\mathbf{y} \vert \hat{\theta})\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.00\)</td>
+<td class="org-left">\( 0.00^2\times (1-0.00)^1\)</td>
+<td class="org-left">\( 0.000\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.10\)</td>
+<td class="org-left">\( 0.10^2\times (1-0.10)^1\)</td>
+<td class="org-left">\( 0.009\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.20\)</td>
+<td class="org-left">\( 0.20^2\times (1-0.20)^1\)</td>
+<td class="org-left">\( 0.032\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.30\)</td>
+<td class="org-left">\( 0.30^2\times (1-0.30)^1\)</td>
+<td class="org-left">\( 0.063\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.40\)</td>
+<td class="org-left">\( 0.40^2\times (1-0.40)^1\)</td>
+<td class="org-left">\( 0.096\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.50\)</td>
+<td class="org-left">\( 0.50^2\times (1-0.50)^1\)</td>
+<td class="org-left">\( 0.125\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.60\)</td>
+<td class="org-left">\( 0.60^2\times (1-0.60)^1\)</td>
+<td class="org-left">\( 0.144\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.67\)</td>
+<td class="org-left">\( 0.67^2\times (1-0.67)^1\)</td>
+<td class="org-left">\( 0.148\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.70\)</td>
+<td class="org-left">\( 0.70^2\times (1-0.70)^1\)</td>
+<td class="org-left">\( 0.147\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.80\)</td>
+<td class="org-left">\( 0.80^2\times (1-0.80)^1\)</td>
+<td class="org-left">\( 0.128\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 0.90\)</td>
+<td class="org-left">\( 0.90^2\times (1-0.90)^1\)</td>
+<td class="org-left">\( 0.081\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\({1,1,0}\)</td>
+<td class="org-left">\( 1.00\)</td>
+<td class="org-left">\( 1.00^2\times (1-1.00)^1\)</td>
+<td class="org-left">\( 0.000\)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+我们将以分布参数的函数来描述观察数据的联合分布概率称之为似然函数（likelihood function），表示为\(L(\mathbf{y};\theta)\)。
+\[L=\theta^2(1-\theta)^1\]
+\[log L=2log\theta + 1log(1-\theta)\]
+\[\frac{\partial log L}{\partial \theta}=\frac{2}{\theta}-\frac{1}{(1-\theta)}=0\]
+\[\hat \theta=2/3\]
+最大化似然函数的\(\theta\)值是最大似然估计（maximum likelihood estimate, MLE）
 </p>
 <div class="org-src-container">
-<pre class="src src-R">nes <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7;">load</span>(<span style="color: #2d9574;">"nescleaned.RData"</span>)
-yr <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1992
-ok <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data$year==yr &amp; data$presvote&lt;3
-vote <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data$presvote[ok] - 1
-income <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data$income[ok]
-fit.1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (vote ~ income, family=binomial(link=<span style="color: #2d9574;">"logit"</span>))
-summary(fit.1)
-result <span style="color: #ce537a; font-weight: bold;">&lt;-</span> summary(fit.1)
-round(result$coefficients, digits=2)
+<pre class="src src-R">pi.hat <span style="color: #ce537a; font-weight: bold;">&lt;-</span> seq(0,1,.001)
+f.y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> pi.hat^2*(1-pi.hat)^1
+
+plot(pi.hat,f.y,type=<span style="color: #2d9574;">"l"</span>,bty=<span style="color: #2d9574;">"l"</span>,ylab=<span style="color: #2d9574;">""</span>,lwd=3,xlab=substitute(hat(theta)),las=1)
+segments(.67, 0.0, x1 = .67, y1 = .148,
+         col = <span style="color: #2d9574;">"grey30"</span>,  lwd = 2)
+segments(.62, .149, x1 = .72, y1 = .149,
+         col = <span style="color: #2d9574;">"grey30"</span>, lty = <span style="color: #4f97d7;">par</span>(<span style="color: #2d9574;">"lty"</span>), lwd = 2)      
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="mle1.png" alt="mle1.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13b9f8d" class="outline-3">
+<h3 id="org13b9f8d"><span class="section-number-3">1.2</span> 最大似然推断</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+最大似然推断并不是将数据视为随机的、参数视为固定的，而是将数据视为固定的，寻找什么样的参数最有可能生成这个数据，即将数据的联合分布视作某个分布密度或概率分布函数的参数的函数。
+</p>
+<ul class="org-ul">
+<li>线性回归系数的最大似然推断</li>
+</ul>
+<p>
+2012年189个国家的二氧化碳排放量与人均GDP（购买力平价），如果构建简单模型：\(Y=\beta_0+\beta_1 X +\epsilon \)，其中Y为二氧化碳排放量的对数，X为人均GDP的对数。
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(WDI)
+wdi<span style="color: #ce537a; font-weight: bold;">&lt;-</span>WDI(country = <span style="color: #2d9574;">"all"</span>,
+indicator = c(<span style="color: #2d9574;">"EN.POP.DNST"</span>, <span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#20154;&#21475;&#23494;&#24230;</span>
+    <span style="color: #2d9574;">"EN.ATM.CO2E.KT"</span>, <span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#20108;&#27687;&#21270;&#30899;&#25490;&#25918;&#37327;</span>
+     <span style="color: #2d9574;">"NY.GDP.PCAP.PP.CD"</span>), <span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#36141;&#20080;&#21147;&#24179;&#20215;&#35745;&#31639;&#30340;&#20154;&#22343;GDP</span>
+   start = 2012, end = 2012, extra = <span style="color: #a45bad;">TRUE</span>, cache = <span style="color: #a45bad;">NULL</span>)
+wdi<span style="color: #ce537a; font-weight: bold;">&lt;-</span>na.omit(subset(wdi, region !=<span style="color: #2d9574;">"Aggregates"</span>))
+names(wdi)[4:6]<span style="color: #ce537a; font-weight: bold;">&lt;-</span>c(<span style="color: #2d9574;">"pop.den"</span>, <span style="color: #2d9574;">"co2.kt"</span>,<span style="color: #2d9574;">"gdp.pc.ppp"</span> )
+out<span style="color: #ce537a; font-weight: bold;">&lt;-</span>lm(log(co2.kt) ~ log(gdp.pc.ppp), data=wdi)
+
+plot(log(wdi$gdp.pc.ppp ), log(wdi$co2.kt ), pch=19,
+     xlab=<span style="color: #2d9574;">"2012 GDP per capita at PPP, log $US"</span>,
+     ylab=<span style="color: #2d9574;">"2012 CO2 emissions, log Ktons"</span>,bty=<span style="color: #2d9574;">"l"</span>,
+      las=1)
+abline(reg=out,lwd=3)
+arrows(x1=log(wdi[wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>,<span style="color: #2d9574;">"gdp.pc.ppp"</span>]),
+       y1=fitted(out)[rownames(out$model)[which(wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>)]],
+       x0=log(wdi[wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>,<span style="color: #2d9574;">"gdp.pc.ppp"</span>]),
+       y0=log(wdi[wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>,<span style="color: #2d9574;">"co2.kt"</span>]),
+       col=<span style="color: #2d9574;">"black"</span>, length=0.1, angle=20,
+       lwd=2.5)
+points(log(wdi[wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>,<span style="color: #2d9574;">"gdp.pc.ppp"</span>]), 
+       log(wdi[wdi$iso3c==<span style="color: #2d9574;">"CHN"</span>,<span style="color: #2d9574;">"co2.kt"</span>]),
+       pch = 19, cex= 3, col=<span style="color: #2d9574;">"red"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="mle2.png" alt="mle2.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>首先假定每个观测\(Y_i\)独立同分布，服从正态分布\(f_{N}(y_i ;\mu_i ,\sigma^2 )\)</li>
+<li>根据线性模型，等同于\(\epsilon_i \sim f_{N}(\epsilon_i ;0,\sigma^2 )\)
+\[f_N (\epsilon_i ) =\frac{1}{\sigma\sqrt{2\pi}}exp[\frac{-(\epsilon_i)^2}{2\sigma^2}] =\frac{1}{\sigma\sqrt{2\pi}}exp[\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}] \]</li>
+<li>似然函数是样本数据的联合分布概率，每个样本观测都是独立的，其联合分布概率等于每个观测边缘分布概率的乘积
+\[L(\beta_0 ,\beta_1 ,\sigma)|{y_1,\cdots,y_n},{x_1,\cdots,x_n}) = (2\pi\sigma^2)^{(-n/2)}\prod_{i=1}^{n}exp[\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}] =  (2\pi\sigma^2)^{(-n/2)}exp[\sum_{i=1}^{n}\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}]\]
+取对数进行简化：
+\[ log L = log{(2\pi\sigma^2)^{(-n/2)}exp[\sum_{i=1}^{n}\frac{-(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2}]} \]
+\[ = -\frac{n}{2}log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2 \]
+\[ =  -\frac{n}{2}log(2\pi) - nlog\sigma - \frac{\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2} \]
+剔除与被估计参数无关的项：
+\[logL \propto -nlog\sigma - \frac{\sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2}{2\sigma^2} \]
+计算机优化程序更擅长计算最小值，采用\(-2logL\)，并且采用固定或已知的 &sigma; 简化：
+\[-2logL \propto \sum_{i=1}^{n}(y_i-\beta_0 - \beta_1 x_i)^2 \]
+上式显示最大似然估计与最小二乘法的参数结果是一致的。但是如果我们只是得到了一个与最小二乘法一样的结果，那么最大似然估计的意义在哪里？</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(ProfileLikelihood)
+wdi$lgdppc<span style="color: #ce537a; font-weight: bold;">&lt;-</span>log(wdi$gdp.pc.ppp)
+xx <span style="color: #ce537a; font-weight: bold;">&lt;-</span> profilelike.lm(formula = log(co2.kt)~1, data=wdi, profile.theta=<span style="color: #2d9574;">"lgdppc"</span>,
+lo.theta=0.84, hi.theta=1.15, length=500)
+
+with(xx, 
+  plot(theta,profile.lik,las=1,lty=1,lwd=3,
+    type=<span style="color: #2d9574;">"l"</span>,pch=19,xlab=substitute(beta[1]),
+    ylab=<span style="color: #2d9574;">"likelihood"</span>,yaxt=<span style="color: #2d9574;">"n"</span>,bty=<span style="color: #2d9574;">"l"</span>,main=<span style="color: #2d9574;">"Least Squares as MLE"</span>,
+    xlim=c(0.85,1.1))
+  )
+abline(v=coef(out)[2],col=<span style="color: #2d9574;">"gray50"</span>,lwd=3)
+abline(h=max(xx$profile.lik),col=<span style="color: #2d9574;">"gray50"</span>,lwd=4)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="mle3.png" alt="mle3.png" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>利用R最大化似然函数</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#24314;&#31435;&#33258;&#21464;&#37327;&#65288;&#21547;&#24120;&#25968;&#39033;&#65289;&#19982;&#22240;&#21464;&#37327;&#30697;&#38453;</span>
+x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cbind(1,as.matrix(log(wdi$gdp.pc.ppp)))    <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#22686;&#21152;1&#21015;&#21547;1&#30340;&#24120;&#25968;&#39033;</span>
+y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.matrix(log(wdi$co2.kt))
+K <span style="color: #ce537a; font-weight: bold;">&lt;-</span> ncol(x); n <span style="color: #ce537a; font-weight: bold;">&lt;-</span> nrow(x)                      <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35266;&#27979;&#25968;n&#21644;&#21464;&#37327;&#25968;K</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23450;&#20041;&#20284;&#28982;&#20989;&#25968;&#65292;&#21487;&#20197;&#36873;&#25321;&#22810;&#31181;&#21442;&#25968;&#21270;&#26041;&#24335;&#65292;&#27492;&#22788;&#37319;&#29992;logL&#30340;&#23436;&#25972;&#24418;&#24335;</span>
+<span style="color: #bc6ec5; font-weight: bold;">loglik.my</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(par,X,Y) {               
+  Y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.vector(y)
+  X <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.matrix(x)
+  xbeta <span style="color: #ce537a; font-weight: bold;">&lt;-</span> X<span style="color: #7590db;">%*%</span>par[1:K]
+  sigma <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sqrt(sum(((X[,2]-mean(X[,2]))^2)/(n-K))) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20551;&#23450;&#26631;&#20934;&#35823;&#24050;&#30693;&#65292;&#26377;&#22810;&#31181;&#35774;&#23450;&#24418;&#24335;</span>
+  sum(-(1/2)*log(2*pi)-(1/2)*log(sigma^2)-(1/(2*sigma^2))*(y-xbeta)^2) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23545;&#25968;&#20284;&#28982;&#20989;&#25968;&#65292;&#21152;&#36127;&#21495;&#21464;&#20026;&#26368;&#23567;&#21270;</span>
+}
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23558;&#20284;&#28982;&#20989;&#25968;&#20256;&#36882;&#32473;&#26368;&#20248;&#21270;&#20989;&#25968;&#65292;&#25552;&#20379;&#21021;&#22987;&#20540;&#65292;&#36873;&#25321;&#31639;&#27861;&#65292;&#35774;&#23450;&#36845;&#20195;&#27425;&#25968;&#31561;</span>
+mle.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> optim(c(5,5),loglik.my, method = <span style="color: #2d9574;">"BFGS"</span>, control = 
+            list(trace=<span style="color: #a45bad;">TRUE</span>,maxit=10000,fnscale = -1),hessian = <span style="color: #a45bad;">TRUE</span>)    
+<span style="color: #4f97d7; font-weight: bold;">if</span>(mle.fit$convergence!=0) 
+  print(<span style="color: #2d9574;">"MDW WARNING: Convergence Problems; Try again!"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35745;&#31639;&#26631;&#20934;&#35786;&#26029;&#37327;</span>
+stderrors<span style="color: #ce537a; font-weight: bold;">&lt;-</span> sqrt(diag(-solve(mle.fit$hessian)))
+z<span style="color: #ce537a; font-weight: bold;">&lt;-</span>mle.fit$par/stderrors
+p.z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 2* (1 - pnorm(abs(z)))
+out.table <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(Est=mle.fit$par, SE=stderrors, Z=z, pval=p.z)
+round(out.table, 2)
+</pre>
+</div>
+
+<pre class="example">
+
+initial  value 118297.641065 
+final  value 551.103146 
+converged
+
+   Est   SE     Z pval
+1 0.33 0.68  0.49 0.62
+2 0.97 0.07 13.24 0.00
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org076014f" class="outline-3">
+<h3 id="org076014f"><span class="section-number-3">1.3</span> 异方差数据的最大似然估计</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>线性回归模型假定同方差，即对于所有的观测都有 \(y_i \sim N(\mu_i , \sigma^2 ) \)，但是如果误差项是异方差的，即 \(y_i \sim N(\mu_i , \sigma_i^2 ) \)，则会导致\(se(\hat{\beta})\)是有偏的，\(\hat{\beta}\)的估计是无效的。</li>
+<li>一般采用稳健性标准误来替代“有问题”的标准误，但是，异方差被看做是数据存在的一个“问题”，仅仅是因为我们假定它不应该在“正常”的数据中存在。真实的可能是我们的线性回归假定框定了我们解决问题的范围。类比一下，为什么我们不会说“异均值”是一个问题，是因为线性回归的框架中允许了因变量均值随自变量变动（这也正是我们建模的基础），那如果我们能把\(\sigma_i^2 \) 也纳入到模型中，即对因变量方差建模，也就能更好的利用自变量解释解释因变量的均值和方差两方面的变化。</li>
+<li>异方差暗含了自变量与因变量方差的关系，这可能正是我们想研究的内容。
+<ul class="org-ul">
+<li>实力相当的两个人才会打架，所以实力相当使得是否打架的变异程度更大</li>
+<li>公立医院民营化可能不会降低平均的社会健康水平，但是会由于覆盖风险增加社会健康水平的变异程度</li>
+</ul></li>
+<li><p>
+异方差正态模型的最大似然估计
+</p>
+<ul class="org-ul">
+<li>随机部分：</li>
+</ul>
+<p>
+\[y_i \sim f_N (\mu_i , \sigma_i^2 )\]
+</p>
+<ul class="org-ul">
+<li>系统部分：</li>
+</ul>
+<p>
+\[\mu_i = X_i \beta \]
+\[\sigma_i^2 = exp(Z_i \gamma) \]
+</p></li>
+<li>异方差最大似然估计的推导：
+<ol class="org-ol">
+<li>首先假定每个观测\(Y_i\)独立同分布，服从正态分布: \[f_{N}(y_i ;\mu_i ,\sigma_i^2 )\]</li>
+<li>样本数据的联合分布：\[P(y|\mu,\sigma_2 ) = \prod_{i=1}^{n}f_{N}(y_i ;\mu_i ,\sigma_i^2 ) \]</li>
+<li>根据正态分布密度函数：\[P(y|\mu,\sigma_2 ) = \prod_{i=1}^{n}(2\pi\sigma_i^2 )^(-1/2)exp[\frac{-(y_i - \mu_i )^2 }{2\sigma_i^2 }] \]</li>
+<li>对数似然函数：\[logL(\beta,\sigma^2 |y) \propto  -\frac{1}{2}\sum_{i=1}^{n}log\sigma_i^2 - \frac{1}{2}\sum_{i=1}^{n}\frac{(y_i-\mu_i)^2}{\sigma_i^2 } \]</li>
+<li>代入系统参数：\[logL(\beta,\gamma |y) \propto  -\frac{1}{2}\sum_{i=1}^{n}z_i \gamma - \frac{1}{2}\sum_{i=1}^{n}\frac{(y_i-\mu_i)^2}{exp(z_i \gamma }) \]</li>
+</ol></li>
+<li>假想样本量为2000的异方差数据来自真实模型：
+\[y_i \sim N (\mu_i , \sigma_i^2 )\]
+\[\mu_i = 5 + 10x_i \]
+\[\sigma_i^2 = exp(1+3x_i ) \]</li>
+<li><p>
+分别采用线性回归与异方差的最大似然估计去拟合
+</p>
+<div class="org-src-container">
+<pre class="src src-R">set.seed(1234)
+
+obs <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 2000
+x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> runif(obs)
+
+mu <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 5+10*x
+sigma2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(1+3*x)
+
+y <span style="color: #ce537a; font-weight: bold;">&lt;-</span> rnorm(obs, mu, sqrt(sigma2))
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#32447;&#24615;&#22238;&#24402;&#25311;&#21512;</span>
+lm.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> lm(y~x)
+summary(lm.fit)
+
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26368;&#22823;&#20284;&#28982;&#27861;&#25311;&#21512;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#24314;&#31435;&#20004;&#20010;&#31995;&#32479;&#37096;&#20998;&#30340;&#33258;&#21464;&#37327;</span>
+xcovariates <span style="color: #ce537a; font-weight: bold;">&lt;-</span> x
+zcovariates <span style="color: #ce537a; font-weight: bold;">&lt;-</span> x
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35774;&#32622;&#21442;&#25968;&#21021;&#22987;&#20540;beta0,beta1,gamma0,gamma1</span>
+stval <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(0,0,0,0)
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35774;&#23450;&#20284;&#28982;&#20989;&#25968;</span>
+<span style="color: #bc6ec5; font-weight: bold;">llk.hetnormlin</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(param,y,x,z) {
+  x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.matrix(x)
+  z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.matrix(z)
+  x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cbind(1,x)
+  z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cbind(1,z)
+  b <span style="color: #ce537a; font-weight: bold;">&lt;-</span> param[ 1 : ncol(x) ]
+  g <span style="color: #ce537a; font-weight: bold;">&lt;-</span> param[ (ncol(x)+1) : (ncol(x) + ncol(z)) ]
+  xb <span style="color: #ce537a; font-weight: bold;">&lt;-</span> x<span style="color: #7590db;">%*%</span>b
+  s2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(z<span style="color: #7590db;">%*%</span>g)
+  sum(0.5*(log(s2)+(y-xb)^2/s2))  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">optim&#26159;&#26368;&#23567;&#21270;&#20989;&#25968;&#65292;&#25152;&#20197;&#20844;&#24335;&#35201;&#20056;&#20197;-1</span>
+}
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36816;&#34892;&#20248;&#21270;&#20989;&#25968;&#24471;&#21040;&#25311;&#21512;&#32467;&#26524;</span>
+mle.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> optim(stval,llk.hetnormlin,method=<span style="color: #2d9574;">"BFGS"</span>,hessian=T,y=y,x=xcovariates,z=zcovariates)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25552;&#21462;&#20272;&#35745;&#20540;</span>
+pe <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mle.fit$par   <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21442;&#25968;&#30340;&#28857;&#20272;&#35745;</span>
+vc <span style="color: #ce537a; font-weight: bold;">&lt;-</span> solve(mle.fit$hessian)  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21327;&#26041;&#24046;&#30697;&#38453;</span>
+se <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sqrt(diag(vc))    <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26631;&#20934;&#35823;</span>
+z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mle.fit$par/se  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">z&#20540;</span>
+p.z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 2* (1 - pnorm(abs(z))) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">p&#20540;</span>
+out.table <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(Coefs=c(<span style="color: #2d9574;">"beta0"</span>,<span style="color: #2d9574;">"beta1"</span>,<span style="color: #2d9574;">"gamma0"</span>,<span style="color: #2d9574;">"gamma1"</span>), Est=mle.fit$par, SE=se, Z=z, pval=p.z)
+print(out.table, digits=2)
+
 </pre>
 </div>
 
 <pre class="example">
 
 Call:
-glm(formula = vote ~ income, family = binomial(link = "logit"))
+lm(formula = y ~ x)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-21.0880  -2.2792   0.0612   2.2686  19.9045 
+
+Coefficients:
+	    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   5.0546     0.1839   27.49   &lt;2e-16 ***
+x            10.0479     0.3206   31.34   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4.108 on 1998 degrees of freedom
+Multiple R-squared:  0.3296,	Adjusted R-squared:  0.3292 
+F-statistic: 982.2 on 1 and 1998 DF,  p-value: &lt; 2.2e-16
+
+   Coefs   Est    SE  Z pval
+1  beta0  5.05 0.102 50    0
+2  beta1 10.04 0.278 36    0
+3 gamma0  0.99 0.064 15    0
+4 gamma1  3.01 0.112 27    0
+</pre></li>
+
+<li><p>
+哪个模型更好？可以比较95%的预测区间
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">par</span>(mfrow=c(1,2))
+
+plot(x,y,pch=20)
+abline(a=coef(lm.fit)[1],b=coef(lm.fit)[2], col=<span style="color: #2d9574;">"red"</span>,lwd=3)
+text(0.2, 25, labels = <span style="color: #2d9574;">"Linear regression fit \n 95% prediction interval"</span>, col = <span style="color: #2d9574;">"red"</span>)
+
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#32472;&#21046;95%&#39044;&#27979;&#21306;&#38388;</span>
+xhyp <span style="color: #ce537a; font-weight: bold;">&lt;-</span> seq(0,1,length.out = 100)
+xnew <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(x=xhyp)
+ypred <span style="color: #ce537a; font-weight: bold;">&lt;-</span> predict(lm.fit, newdata=xnew, interval=<span style="color: #2d9574;">"prediction"</span>, level=0.95)
+xpoly <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(xhyp, rev(xhyp), xhyp[1])
+ypoly <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(ypred[,2], rev(ypred[,3]), ypred[1,2])
+polygon(x=xpoly, y=ypoly, density=20, col=<span style="color: #2d9574;">"red"</span>, border=<span style="color: #a45bad;">FALSE</span>)
+
+plot(x,y,pch=20)
+abline(a=pe[1],b=pe[2], col=<span style="color: #2d9574;">"blue"</span>,lwd=3)
+text(0.2, 25, labels = <span style="color: #2d9574;">"Heteroskedastic MLE fit \n 95% prediction interval"</span>, col = <span style="color: #2d9574;">"blue"</span>)
+
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#32472;&#21046;95%&#39044;&#27979;&#21306;&#38388;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20174;&#27169;&#22411;&#39044;&#27979;&#30340;&#20998;&#24067;&#20013;&#25277;&#21462;&#21442;&#25968;&#26469;&#27169;&#25311;&#32467;&#26524;</span>
+sims <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 10000
+simparam <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mvrnorm(sims,pe,vc) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25277;&#21462;&#21442;&#25968;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23558;&#25277;&#21462;&#30340;&#21442;&#25968;&#20998;&#37197;&#32473;betas&#21644;gammas</span>
+simbetas <span style="color: #ce537a; font-weight: bold;">&lt;-</span> simparam[,1:(ncol(as.matrix(xcovariates))+1)]
+simgammas <span style="color: #ce537a; font-weight: bold;">&lt;-</span> simparam[,(ncol(simbetas)+1):ncol(simparam)]
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#33258;&#21464;&#37327;&#30340;&#20551;&#24819;&#25968;&#25454;</span>
+xhyp <span style="color: #ce537a; font-weight: bold;">&lt;-</span> seq(0,1,length.out = 100)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#33719;&#21462;&#22240;&#21464;&#37327;&#30340;&#39044;&#27979;&#20540;&#30340;&#26399;&#26395;&#19982;95%&#30340;&#39044;&#27979;&#21306;&#38388; </span>
+ypred <span style="color: #ce537a; font-weight: bold;">&lt;-</span> matrix(<span style="color: #a45bad;">NA</span>,nrow=nrow(as.matrix(xhyp)),ncol = 3)
+<span style="color: #4f97d7; font-weight: bold;">for</span> (i <span style="color: #4f97d7; font-weight: bold;">in</span> 1:nrow(as.matrix(xhyp))) {
+  simmu <span style="color: #ce537a; font-weight: bold;">&lt;-</span> simbetas<span style="color: #7590db;">%*%</span>rbind(1,xhyp[i])  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27169;&#25311;&#31995;&#32479;&#22343;&#20540;</span>
+  simsigma2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(simgammas<span style="color: #7590db;">%*%</span>rbind(1,xhyp[i])) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27169;&#25311;&#31995;&#32479;&#26041;&#24046;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20381;&#25454;&#27169;&#25311;&#30340;&#22343;&#20540;&#19982;&#26041;&#24046;&#26500;&#24314;&#27491;&#24577;&#20998;&#24067;&#65292;&#24182;&#25277;&#21462;10000&#20010;&#39044;&#27979;&#20540;</span>
+  simy <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sqrt(simsigma2)*rnorm(sims)+simmu 
+  simy <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sort(simy) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25490;&#24207;</span>
+  ypred[i,1] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mean(simy) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#39044;&#27979;&#20540;&#30340;&#26399;&#26395;</span>
+  length.simy <span style="color: #ce537a; font-weight: bold;">&lt;-</span> length(simy) 
+  ci = 0.95
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26681;&#25454;&#25277;&#21462;&#30340;&#39044;&#27979;&#20540;&#35745;&#31639;&#39044;&#27979;&#20540;&#30340;&#32622;&#20449;&#21306;&#38388;</span>
+  ypred[i,2] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> simy[trunc((1-ci)/2*length.simy)] <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27010;&#29575;0.025&#23545;&#24212;&#20998;&#20301;&#25968;</span>
+  ypred[i,3] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> simy[trunc((1-(1-ci)/2)*length.simy)] <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27010;&#29575;0.975&#23545;&#24212;&#30340;&#20998;&#20301;&#25968;</span>
+}
+
+xpoly <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(xhyp, rev(xhyp), xhyp[1])
+ypoly <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(ypred[,2], rev(ypred[,3]), ypred[1,2])
+polygon(x=xpoly, y=ypoly, density=20, col=<span style="color: #2d9574;">"blue"</span>, border=<span style="color: #a45bad;">FALSE</span>)
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="mle4.png" alt="mle4.png" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5a146ef" class="outline-3">
+<h3 id="org5a146ef"><span class="section-number-3">1.4</span> 最大似然估计的理论与性质（略）</h3>
+</div>
+</div>
+
+<div id="outline-container-org778f378" class="outline-2">
+<h2 id="org778f378"><span class="section-number-2">2</span> 二值响应变量的logistic回归</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org804b506" class="outline-3">
+<h3 id="org804b506"><span class="section-number-3">2.1</span> 二值数据（binary data）</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li><p>
+1992年美国大选<a href="./nescleaned.RData">民调数据</a>，对于选民i，如果 \(y_i=1\) ，那么他会选布什，如果 \(y_i=0\) ，那么他会选克林顿，通过收入（5个收入等级）来预测选民的政治偏好。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">政治偏好</th>
+<th scope="col" class="org-right">收入等级1</th>
+<th scope="col" class="org-right">收入等级2</th>
+<th scope="col" class="org-right">收入等级3</th>
+<th scope="col" class="org-right">收入等级4</th>
+<th scope="col" class="org-right">收入等级5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">克林顿</td>
+<td class="org-right">98</td>
+<td class="org-right">138</td>
+<td class="org-right">222</td>
+<td class="org-right">208</td>
+<td class="org-right">36</td>
+</tr>
+
+<tr>
+<td class="org-left">布什</td>
+<td class="org-right">30</td>
+<td class="org-right">69</td>
+<td class="org-right">144</td>
+<td class="org-right">196</td>
+<td class="org-right">38</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">选布什的几率</td>
+<td class="org-right">0.31</td>
+<td class="org-right">0.50</td>
+<td class="org-right">0.65</td>
+<td class="org-right">0.94</td>
+<td class="org-right">1.06</td>
+</tr>
+
+<tr>
+<td class="org-left">相比收入等级1的风险</td>
+<td class="org-right">1.00</td>
+<td class="org-right">1.42</td>
+<td class="org-right">1.68</td>
+<td class="org-right">2.07</td>
+<td class="org-right">2.19</td>
+</tr>
+</tbody>
+</table></li>
+<li>几率（odds）、几率比（odds ratios）和相对风险（relative risk）
+<ul class="org-ul">
+<li>几率，也叫胜率、优势、比率，表示随机事件发生的概率与不发生的概率之比，其取值范围是零到正无穷。
+\[\omega_i \equiv Odds(y_i =1 ) = \frac{Pr(y_i =1 ) }{1-(y_i =1 ) } \]</li>
+<li>相对风险，也叫风险比，表示两个随机事件概率的比值，与几率不同，这两个随机事件不存在互补的关系。</li>
+<li>上表显示，收入等级1的选民选布什的几率为0.31；收入等级2的选民选布什的几率为0.51，与收入等级1的选民相对风险为1.42，即收入等级2的选民选择布什的概率比收入等级1的选民要高42%；并且随着收入等级上升，选择布什的几率上升，最终在收入等级5达到1.06，即选择布什概率反超选择克林顿的概率。</li>
+<li>几率比即几率的比值，也叫优势比、比数比等。例如，收入等级2与等级1的选民选择布什的几率比为0.50/0.31=1.61，即收入等级2的选民选择布什的几率是收入等级1的选民的1.61倍。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org31f3592" class="outline-3">
+<h3 id="org31f3592"><span class="section-number-3">2.2</span> 线性概率模型（LPM）</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>线性概率模型：\(P(y_i =1) = \beta_0 + \beta_1 income_i + \beta_2 age_i + \beta_3 age_i^2 + \beta_4 black_i + \epsilon_i \)</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">load</span>(<span style="color: #2d9574;">"nescleaned.RData"</span>)
+nes <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data[data$year==1992 &amp; data$presvote&lt;3,]
+nes$presvote <span style="color: #ce537a; font-weight: bold;">&lt;-</span> nes$presvote - 1
+
+lm.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> lm(presvote ~ income + age + I(age^2) + black, data = nes)
+summary(lm.fit)
+</pre>
+</div>
+
+<pre class="example">
+
+Call:
+lm(formula = presvote ~ income
+age
+I(age^2)
+black, data = nes)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.6236 -0.4477 -0.1185  0.5050  1.0105 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.496e-01  1.169e-01   3.845 0.000127 ***
+income       6.896e-02  1.348e-02   5.115 3.67e-07 ***
+age         -9.737e-03  5.053e-03  -1.927 0.054219 .  
+I(age^2)     1.004e-04  4.927e-05   2.038 0.041800 *  
+black       -3.778e-01  4.051e-02  -9.326  &lt; 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.4666 on 1174 degrees of freedom
+  (368 observations deleted due to missingness)
+Multiple R-squared:  0.1001,	Adjusted R-squared:  0.09707 
+F-statistic: 32.66 on 4 and 1174 DF,  p-value: &lt; 2.2e-16
+</pre>
+
+<ul class="org-ul">
+<li>线性概率模型诊断
+<ul class="org-ul">
+<li>概率预测值可能会超出[0, 1]的范围，做出无意义的预测。并且预测值中无意义的值越多，参数估计偏差越大。</li>
+<li>假定协变量与概率的关系是固定的，即回归系数是固定值。</li>
+<li>残差一定会存在异方差，导致参数估计的置信区间是有偏的。</li>
+</ul></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">par</span>(mfrow=c(1,3))
+plot(fitted(lm.fit), lm.fit$model$presvote, xlim = c(-0.2,1), xlab = <span style="color: #2d9574;">"predicted"</span>, ylab = <span style="color: #2d9574;">"actual"</span>)
+abline(v=c(0,1), col=<span style="color: #2d9574;">"red"</span>,lty=3,lwd=2)
+plot(fitted(lm.fit), resid(lm.fit), xlab = <span style="color: #2d9574;">"fitted values"</span>, ylab = <span style="color: #2d9574;">"residuals"</span>)
+<span style="color: #4f97d7;">library</span>(car)
+qqPlot(lm.fit)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="binary1.png" alt="binary1.png" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li><p>
+继续使用线性概率模型（特别是经济学）的理由：
+</p>
+<ul class="org-ul">
+<li>政策评价中，如果刺激是随机分配的并且只需要关注平均处理效应，刺激一般是二值变量，尽管OLS的回归系数代表刺激引起的概率变化，而logit模型的回归系数代表刺激起来的几率比的变化，但是OLS与logit模型给出的结果本质是一样的，函数形式对估计结果没有影响（Angrist and Pischke, 2009）。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">compare linear probability model with logit model</span>
+lm.fit.black <span style="color: #ce537a; font-weight: bold;">&lt;-</span> lm(presvote ~ black, data = nes)
+summary(lm.fit.black)
+glm.fit.black <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(presvote ~ black, family = binomial(link=<span style="color: #2d9574;">"logit"</span>),data = nes)
+summary(glm.fit.black)
+
+odds0 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(coef(glm.fit.black)[1])
+(p0 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> odds0/(1+odds0))
+odds1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(coef(glm.fit.black)[1]+coef(glm.fit.black)[2])
+(p1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> odds1/(1+odds1))
+(p1-p0)
+</pre>
+</div>
+
+<pre class="example">
+
+Call:
+lm(formula = presvote ~ black, data = nes)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.45890 -0.45890 -0.05096  0.54110  0.94904 
+
+Coefficients:
+	    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.45890    0.01474   31.13   &lt;2e-16 ***
+black       -0.40795    0.04039  -10.10   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.4712 on 1177 degrees of freedom
+  (368 observations deleted due to missingness)
+Multiple R-squared:  0.07975,	Adjusted R-squared:  0.07896 
+F-statistic:   102 on 1 and 1177 DF,  p-value: &lt; 2.2e-16
+
+Call:
+glm(formula = presvote ~ black, family = binomial(link = "logit"), 
+    data = nes)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.1083  -1.1083  -0.3234   1.2481   2.4400  
+
+Coefficients:
+	    Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -0.16476    0.06277  -2.625  0.00868 ** 
+black       -2.75975    0.36829  -7.493 6.71e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1591.2  on 1178  degrees of freedom
+Residual deviance: 1473.1  on 1177  degrees of freedom
+  (368 observations deleted due to missingness)
+AIC: 1477.1
+
+Number of Fisher Scoring iterations: 5
+
+(Intercept) 
+  0.4589041
+
+(Intercept) 
+ 0.05095541
+
+(Intercept) 
+ -0.4079487
+</pre>
+
+<ul class="org-ul">
+<li>近来社会科学强调因果推断，推动了短面板的固定效应模型、工具变量方法的应用，这些方法都更容易在OLS的框架下实施。</li>
+<li>Heckman等（1997）严格证明了线性概率模型代表某种特定类别的随机效用模型，对决策者的效用是非对称随机施加的，即线性概率模型是具有理论基础的。</li>
+<li>其他“理由”：观测量过大、相比logit易于解释、OLS对分布的假定更为宽松。</li>
+</ul></li>
+<li>但是因果推断只是拟合模型的目的之一，基于数据生成过程（data generation process, DGP）的模型比较和预测更倾向于使用logit或probit模型。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgabaef4c" class="outline-3">
+<h3 id="orgabaef4c"><span class="section-number-3">2.3</span> logit模型（logistic回归模型）的设定</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>logit转换：将取值为[0, 1]的概率转换为无边界的实数
+\[logit(p)=log(\frac{p}{1-p})\]</li>
+<li>logistic转换：logit的的反函数，将实数转换为取值范围为[0, 1]的概率
+\[logit^{-1}(x)=\frac{e^x}{1+e^x}=\frac{1}{1+e^{-x}}\]</li>
+<li>概率论中，二值结果的数据来自于伯努利试验（Bernoulli trials），随机变量\(Y_i\)服从参数为\(\theta_i\)的两点分布，模型分为系统与随机两部分：
+<ul class="org-ul">
+<li>随机部分：
+\[Y_i \sim f_B (y_i ; \theta_i ) \]
+或者，
+\[Pr(Y_i = y_i ) = \theta_i^{Y_i }(1-\theta_i )^{1-y_i } = \begin{cases}
+                                                                \theta_i & \text{for } y_i = 1 \\
+                                                                1- \theta_i & \text{for } y_i = 0
+                                                               \end{cases} \]</li>
+<li>系统部分：
+\[\theta_i \equiv logit_{-1}(x_i^T \beta)=\frac{1}{1+e^{-x_i^T \beta}}\]</li>
+<li>给定模型的系统与随机部分，可知数据的联合分布：
+\[Pr(y|\theta)= \prod_{i=1}^{n} \theta_i^{y_i}(1-\theta_i )^{1-y_i } \]</li>
+<li>带入系统部分整理后，可得对数似然函数：
+\[logL(\theta |y) = \sum_{i=1}^n log(\frac{e^{-x_i^T \beta (1-y_i )}}{1+e^{-x_i^T \beta}})\]</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org25d0b15" class="outline-3">
+<h3 id="org25d0b15"><span class="section-number-3">2.4</span> logit模型参数估计</h3>
+<div class="outline-text-3" id="text-2-4">
+<ul class="org-ul">
+<li><p>
+自编对数似然函数进行模型最大似然估计
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26368;&#22823;&#20284;&#28982;&#27861;&#25311;&#21512;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20934;&#22791;&#25968;&#25454;</span>
+mledata <span style="color: #ce537a; font-weight: bold;">&lt;-</span> nes[,c(<span style="color: #2d9574;">"presvote"</span>,<span style="color: #2d9574;">"income"</span>)]
+mledata <span style="color: #ce537a; font-weight: bold;">&lt;-</span> na.omit(mledata)
+xcovariates <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mledata$income
+response <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mledata$presvote
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35774;&#32622;&#21442;&#25968;&#21021;&#22987;&#20540;beta0,beta1</span>
+stval <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(0,0)
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35774;&#23450;&#20284;&#28982;&#20989;&#25968;</span>
+<span style="color: #bc6ec5; font-weight: bold;">llk.hettheta</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(param,y,x) {
+  x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> as.matrix(x)
+  x <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cbind(1,x)
+  b <span style="color: #ce537a; font-weight: bold;">&lt;-</span> param[ 1 : ncol(x) ]
+  xb <span style="color: #ce537a; font-weight: bold;">&lt;-</span> x<span style="color: #7590db;">%*%</span>b
+  sum(xb*(1-y)+log(1+exp(-xb)))  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">optim&#26159;&#26368;&#23567;&#21270;&#20989;&#25968;&#65292;&#25152;&#20197;&#20844;&#24335;&#35201;&#20056;&#20197;-1</span>
+}
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36816;&#34892;&#20248;&#21270;&#20989;&#25968;&#24471;&#21040;&#25311;&#21512;&#32467;&#26524;</span>
+mle.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> optim(stval,llk.hettheta,method=<span style="color: #2d9574;">"BFGS"</span>,hessian=T,y=response,x=xcovariates)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25552;&#21462;&#20272;&#35745;&#20540;</span>
+pe <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mle.fit$par   <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21442;&#25968;&#30340;&#28857;&#20272;&#35745;</span>
+vc <span style="color: #ce537a; font-weight: bold;">&lt;-</span> solve(mle.fit$hessian)  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21327;&#26041;&#24046;&#30697;&#38453;</span>
+se <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sqrt(diag(vc))    <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26631;&#20934;&#35823;</span>
+z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> mle.fit$par/se  <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">z&#20540;</span>
+p.z <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 2* (1 - pnorm(abs(z))) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">p&#20540;</span>
+AIC <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 2*mle.fit$value + 2*length(mle.fit$par)
+out.table <span style="color: #ce537a; font-weight: bold;">&lt;-</span> data.frame(Coefs=c(<span style="color: #2d9574;">"beta0"</span>,<span style="color: #2d9574;">"beta1"</span>), Est=mle.fit$par, SE=se, Z=z, pval=p.z)
+print(out.table, digits=2)
+print(paste(<span style="color: #2d9574;">"Deviance:"</span>, round(2*mle.fit$value, digits = 1), <span style="color: #2d9574;">"    AIC:"</span>, round(AIC, digits = 1)))
+</pre>
+</div>
+
+<pre class="example">
+
+  Coefs   Est    SE    Z    pval
+1 beta0 -1.40 0.189 -7.4 1.4e-13
+2 beta1  0.33 0.057  5.7 1.0e-08
+
+[1] "Deviance: 1556.9     AIC: 1560.9"
+
+</pre></li>
+
+<li><p>
+采用glm函数进行估计
+</p>
+<div class="org-src-container">
+<pre class="src src-R">glm.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(presvote ~ income, family = binomial(link=<span style="color: #2d9574;">"logit"</span>),data = nes)
+summary(glm.fit)
+</pre>
+</div>
+
+<pre class="example">
+
+Call:
+glm(formula = presvote ~ income, family = binomial(link = "logit"), 
+    data = nes)
 
 Deviance Residuals: 
     Min       1Q   Median       3Q      Max  
 -1.2756  -1.0034  -0.8796   1.2194   1.6550  
 
 Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
+	    Estimate Std. Error z value Pr(&gt;|z|)    
 (Intercept) -1.40213    0.18946  -7.401 1.35e-13 ***
 income       0.32599    0.05688   5.731 9.97e-09 ***
 ---
@@ -301,26 +1073,29 @@ Residual deviance: 1556.9  on 1177  degrees of freedom
 AIC: 1560.9
 
 Number of Fisher Scoring iterations: 4
+</pre></li>
+</ul>
+</div>
+</div>
 
-            Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)    -1.40       0.19   -7.40        0
-income          0.33       0.06    5.73        0
-</pre>
-
+<div id="outline-container-orgcdb8b09" class="outline-3">
+<h3 id="orgcdb8b09"><span class="section-number-3">2.5</span> logit模型结果的呈现</h3>
+<div class="outline-text-3" id="text-2-5">
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">invlogit</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(x){
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23450;&#20041;logit&#21453;&#20989;&#25968;</span>
+<span style="color: #bc6ec5; font-weight: bold;">invlogit</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(x){
   p <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(x)/(1+exp(x))
   <span style="color: #4f97d7; font-weight: bold;">return</span>(p)
 }
 <span style="color: #4f97d7;">par</span>(mfrow=c(1,2))
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), 1, 5, ylim=c(-.01,1.01),
-       xlim=c(-2,8), xaxt=<span style="color: #2d9574;">"n"</span>, xaxs=<span style="color: #2d9574;">"i"</span>, mgp=c(2,.5,0),
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), 1, 5, ylim=c(-.01,1.01),
+       xlim=c(-2, 8), xaxt=<span style="color: #2d9574;">"n"</span>, xaxs=<span style="color: #2d9574;">"i"</span>, mgp=c(2,.5,0),
        ylab=<span style="color: #2d9574;">"Pr (Republican vote)"</span>, xlab=<span style="color: #2d9574;">"Income"</span>, lwd=4)
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), -2, 8, lwd=.5, add=T)
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), -2, 8, lwd=.5, add=T)
 axis (1, 1:5, mgp=c(2,.5,0))
 mtext (<span style="color: #2d9574;">"(poor)"</span>, 1, 1.5, at=1, adj=.5)
 mtext (<span style="color: #2d9574;">"(rich)"</span>, 1, 1.5, at=5, adj=.5)
-points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+points (jitter(glm.fit$data$income, .5), jitter(glm.fit$data$presvote, .08), pch=20, cex=.1)
 
 <span style="color: #2aa1ae; background-color: #292e34;">##</span><span style="color: #2aa1ae; background-color: #292e34;">&#27169;&#25311;&#22238;&#24402;&#31995;&#25968;&#30340;&#20989;&#25968;</span>
 <span style="color: #bc6ec5; font-weight: bold;">sim</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(fit, n.sims=100)
@@ -336,6 +1111,7 @@ points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
   <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#33719;&#21462;&#22238;&#24402;&#31995;&#25968;&#30340;&#21327;&#26041;&#24046;&#30697;&#38453;</span>
   V.beta <span style="color: #ce537a; font-weight: bold;">&lt;-</span> corr.beta * array(sd.beta,c(k,k)) * t(array(sd.beta,c(k,k)))
   <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20197;&#20272;&#35745;&#30340;&#21442;&#25968;&#26500;&#24314;&#22810;&#20803;&#27491;&#24577;&#20998;&#24067;&#65292;&#24182;&#20174;&#20013;&#25277;&#21462;&#27169;&#25311;&#30340;&#21442;&#25968;</span>
+  <span style="color: #4f97d7;">library</span>(MASS)
   beta <span style="color: #ce537a; font-weight: bold;">&lt;-</span> MASS::mvrnorm (n.sims, beta.hat, V.beta)
   sigma <span style="color: #ce537a; font-weight: bold;">&lt;-</span> rep (sqrt(summ$dispersion), n.sims)
 
@@ -343,116 +1119,121 @@ points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
   <span style="color: #4f97d7; font-weight: bold;">return</span>(ans)
 }
 
-sim.1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sim(fit.1)
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), .5, 5.5, ylim=c(-.01,1.01),
-       xlim=c(.5,5.5), xaxt=<span style="color: #2d9574;">"n"</span>, xaxs=<span style="color: #2d9574;">"i"</span>, mgp=c(2,.5,0),
+sim.1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sim(glm.fit)
+curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), -2, 8, ylim=c(-.01,1.01),
+       xlim=c(-2,8), xaxt=<span style="color: #2d9574;">"n"</span>, xaxs=<span style="color: #2d9574;">"i"</span>, mgp=c(2,.5,0),
        ylab=<span style="color: #2d9574;">"Pr (Republican vote)"</span>, xlab=<span style="color: #2d9574;">"Income"</span>, lwd=1)
 <span style="color: #4f97d7; font-weight: bold;">for</span> (j <span style="color: #4f97d7; font-weight: bold;">in</span> 1:20){
-  curve (invlogit(sim.1$coef[j,1] + sim.1$coef[j,2]*x), col=<span style="color: #2d9574;">"gray"</span>, lwd=.5, add=T)
+  curve (invlogit(sim.1$coef[j,1] + sim.1$coef[j,2]*x), 1, 5, col=<span style="color: #2d9574;">"red"</span>, lwd=.5, add=T)
 }
-curve (invlogit(fit.1$coef[1] + fit.1$coef[2]*x), add=T)
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">curve (invlogit(glm.fit$coef[1] + glm.fit$coef[2]*x), add=T)</span>
 axis (1, 1:5, mgp=c(2,.5,0))
 mtext (<span style="color: #2d9574;">"(poor)"</span>, 1, 1.5, at=1, adj=.5)
 mtext (<span style="color: #2d9574;">"(rich)"</span>, 1, 1.5, at=5, adj=.5)
-points (jitter (income, .5), jitter (vote, .08), pch=20, cex=.1)
+points (jitter(glm.fit$data$income, .5), jitter(glm.fit$data$presvote, .08), pch=20, cex=.1)
 </pre>
 </div>
 
 
 <div class="figure">
-<p><img src="election1.png" alt="election1.png" />
+<p><img src="binary2.png" alt="binary2.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgbdb13f3" class="outline-3">
-<h3 id="orgbdb13f3"><span class="section-number-3">1.2</span> logistic回归模型</h3>
-<div class="outline-text-3" id="text-1-2">
-<p>
-\[Pr(y_i=1)=logit^{-1}(X_i\beta)\]
-函数 \(logit^{-1}(x)=\frac{e^x}{1+e^x}\) 将连续数值转化为0到1之间的数。  
-</p>
-
-<p>
-模型等同于 \(Pr(y_i=1)=p_i\) 和 \(logit(p_i)=X_i\beta\) ，其中 \(logit(x)=log(x/(1-x))\)  
-</p>
-
-<p>
-logit反函数是曲线形式的，因此对于x的变化，y的变化不会是常量。  
-</p>
-
+<div id="outline-container-org07624a1" class="outline-3">
+<h3 id="org07624a1"><span class="section-number-3">2.6</span> logistic回归系数的解释</h3>
+<div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
-<li>\(logit(0.5)=0\), \(logit(0.6)=0.4\) ，意味着logit值增加0.4，相应的概率从50%增加到60%</li>
-
-<li>\(logit(0.9)=2.2\) , \(logit(0.93)=2.6\) ，则意味着logit值增加0.4，相应的概率从90%增加到93%</li>
+<li>用glm拟合多个自变量的模型（包括收入、年龄、年龄二次项、是否为黑人）并与其他模型比较</li>
 </ul>
-</div>
-</div>
-
-<div id="outline-container-org9475e05" class="outline-3">
-<h3 id="org9475e05"><span class="section-number-3">1.3</span> logistic回归系数的解释</h3>
-<div class="outline-text-3" id="text-1-3">
-<ul class="org-ul">
-<li>由于非线性模型，系数解释比较复杂</li>
-</ul>
-<p>
-\[Pr(支持布什)=logit^{-1}(-1.4+0.33\cdot income)\]
-<b>针对数据均值进行评价:</b>
- 具有平均收入水平选民支持布什的概率: 40.5%
-</p>
 <div class="org-src-container">
-<pre class="src src-R">invlogit(-1.40 + 0.33*mean(income, na.rm=T))
+<pre class="src src-R">glm.fit1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(presvote ~ income+age+I(age^2)+black, family = binomial(link=<span style="color: #2d9574;">"logit"</span>),data = nes)
+<span style="color: #4f97d7;">library</span>(stargazer)
+stargazer(lm.fit.black, glm.fit.black, glm.fit, lm.fit, glm.fit1, type = <span style="color: #2d9574;">"text"</span>)
 </pre>
 </div>
 
 <pre class="example">
-[1] 0.4049001
 
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
+
+====================================================================================================
+                                                  Dependent variable:                               
+                    --------------------------------------------------------------------------------
+                                                        presvote                                    
+                               OLS                 logistic                 OLS            logistic 
+                               (1)               (2)       (3)              (4)               (5)   
+----------------------------------------------------------------------------------------------------
+black                       -0.408***         -2.760***                  -0.378***         -2.668***
+                             (0.040)           (0.368)                    (0.041)           (0.370) 
+                                                                                                    
+income                                                  0.326***          0.069***         0.326*** 
+                                                         (0.057)          (0.013)           (0.064) 
+                                                                                                    
+age                                                                       -0.010*          -0.047** 
+                                                                          (0.005)           (0.024) 
+                                                                                                    
+I(age2)                                                                   0.0001**         0.0005** 
+                                                                         (0.00005)         (0.0002) 
+                                                                                                    
+Constant                    0.459***          -0.165*** -1.402***         0.450***          -0.195  
+                             (0.015)           (0.063)   (0.189)          (0.117)           (0.542) 
+                                                                                                    
+----------------------------------------------------------------------------------------------------
+Observations                  1,179             1,179     1,179            1,179             1,179  
+R2                            0.080                                        0.100                    
+Adjusted R2                   0.079                                        0.097                    
+Log Likelihood                                -736.548  -778.458                           -723.028 
+Akaike Inf. Crit.                             1,477.095 1,560.916                          1,456.056
+Residual Std. Error     0.471 (df = 1177)                            0.467 (df = 1174)              
+F Statistic         101.994*** (df = 1; 1177)                     32.662*** (df = 4; 1174)          
+====================================================================================================
+Note:                                                                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </pre>
 
 <ul class="org-ul">
-<li>收入水平变化1个等级所产生的概率变化</li>
-</ul>
-<p>
-\[logit^{-1}(-1.4+0.33\cdot 3)-logit^{-1}(-1.4+0.33\cdot 2)=0.08\]
-也可以计算logit反函数曲线在中心值处的斜率
-\[logit^{-1}(\alpha +\beta x)的导数: \frac{\beta e^{\alpha +\beta x}}{(1+e^{\alpha +\beta x})^2}，带入\bar{x}=3.1，得到\frac{0.33e^{-0.39}}{(1+e^{-0.39})^2}=0.13\]
-</p>
-
+<li>logit与OLS估计量的符号与p值都是相似的，但是系数解释更为复杂。</li>
+<li>因为模型是非线性的，自变量对因变量的效应不再是恒定的。logit反函数是曲线形式的，因此对于x的变化，y的变化不会是常量。  
 <ul class="org-ul">
-<li>除4法则</li>
-</ul>
-<p>
-logit反函数曲线在中心位置斜率最大，此时 \(\alpha +\beta x=0\) ，因此 \(logit^{-1}(\alpha +\beta x)=0.5\) ，并且函数的导数也在此点最大，且为 \(\beta e^0 /(1+e^0)^2=\beta /4\) ，它是收入改变1个单位引起概率变化的最大值。  
-</p>
-
-<ul class="org-ul">
-<li>推断  
-<ul class="org-ul">
-<li>系数的估计量与标准差：采用最大似然法估计，统计显著性与线性回归相似</li>
-<li>预测：logit回归预测概率，对于还未观测的 \(\tilde y_i\) ，其概率为 \(\tilde p_i=Pr(\tilde y_i=1)=logit^{-1}(\tilde X_i\beta)\)</li>
+<li>\(logit^{-1}(0)=0.5\), \(logit^{-1}(0.4)=0.6\)，意味着logit值从0增加到0.4，相应的概率从50%增加到60%，增加了10%。</li>
+<li>\(logit^{-1}(2.2)=0.9\) , \(logit^{-1}(2.6)=0.93\) ，则意味着logit值从2.2增加2.6，同样增加0.4，而相应的概率从90%增加到93%，只增加了3%。</li>
 </ul></li>
-
-<li>模型拟合与展示</li>
-</ul>
+<li>logit模型的边际效应显示自变量\(x_k\)变化所引起的因变量变化不仅与其回归系数\(\beta_k\)相关，还取决于所有协变量的值。一般针对变量类型，根据数据均值、中位数、众数进行评价。
+\[\frac{\partial E[Y_i ]}{\partial x_{ki}} = \frac{\partial \theta_i }{\partial x_{ki}} = \beta_k \frac{exp(x_i^T \beta)}{(1+exp(x_i^T \beta))^2} \]
+<ul class="org-ul">
+<li><p>
+以第3个模型为例，解释回归系数。
+\[Pr(支持布什)=logit^{-1}(-1.4+0.33\cdot income)\]
+</p>
 <div class="org-src-container">
-<pre class="src src-R">plot (income, vote)
-curve(invlogit(coef(fit.1)[1] + coef(fit.1)[2]*x),add = <span style="color: #a45bad;">TRUE</span>)
+<pre class="src src-R">invlogit(-1.40 + 0.33*median(nes$income, na.rm=T))
 </pre>
 </div>
 
+<pre class="example">
+[1] 0.3989121
 
-<div class="figure">
-<p><img src="election2.png" alt="election2.png" />
-</p>
-</div>
+</pre></li>
+
+<li>具有中位数收入等级的选民支持布什的概率为39.9%</li>
+<li>收入等级从3变化到2所产生的概率变化  
+\[logit^{-1}(-1.4+0.33\cdot 3)-logit^{-1}(-1.4+0.33\cdot 2)=0.08\]</li>
+<li>还可以计算logit反函数曲线在中心值处的斜率，作为边际效应的代表。
+\[logit^{-1}(\alpha +\beta x)的导数: \frac{\beta e^{\alpha +\beta x}}{(1+e^{\alpha +\beta x})^2}，带入\bar{x}=3.1，得到\frac{0.33e^{-0.39}}{(1+e^{-0.39})^2}=0.13 \]</li>
+<li>除4法则：logit反函数曲线在中心位置斜率最大，此时 \(\alpha +\beta x=0\)，因此\(logit^{-1}(\alpha +\beta x)=0.5\) ，并且函数的导数也在此点最大，且为 \(\beta e^0 /(1+e^0)^2=\beta /4\) ，它是收入改变1个单位引起概率变化的最大值。</li>
+</ul></li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-orge73aaaa" class="outline-3">
-<h3 id="orge73aaaa"><span class="section-number-3">1.4</span> 展示多个logistic回归的结果</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-org9c3ee41" class="outline-3">
+<h3 id="org9c3ee41"><span class="section-number-3">2.7</span> 展示多个logistic回归的结果</h3>
+<div class="outline-text-3" id="text-2-7">
 <ul class="org-ul">
 <li>采用1952-2000年的13届选前民调回归，收入系数的估计值 \(\pm 1\) 标准差，显示高收入选民更支持共和党，但是这种关系随着时间的推移越来越强。</li>
 </ul>
@@ -483,15 +1264,15 @@ abline (0,0,lwd=.5, lty=2)
 
 
 <div class="figure">
-<p><img src="election3.png" alt="election3.png" />
+<p><img src="binary3.png" alt="binary3.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd6ca568" class="outline-3">
-<h3 id="orgd6ca568"><span class="section-number-3">1.5</span> 利用潜在变量构建回归模型</h3>
-<div class="outline-text-3" id="text-1-5">
+<div id="outline-container-orgde75649" class="outline-3">
+<h3 id="orgde75649"><span class="section-number-3">2.8</span> 利用潜在变量构建回归模型</h3>
+<div class="outline-text-3" id="text-2-8">
 <p>
 \[\begin{equation}
     y_i=
@@ -517,10 +1298,15 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org3c1d586" class="outline-3">
-<h3 id="org3c1d586"><span class="section-number-3">1.6</span> logistic回归模型示例：孟加拉居民水井砷污染 <a href="./wells.dat">数据</a></h3>
-<div class="outline-text-3" id="text-1-6">
+<div id="outline-container-orga8d458c" class="outline-2">
+<h2 id="orga8d458c"><span class="section-number-2">3</span> logistic回归示例</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgf6d13cc" class="outline-3">
+<h3 id="orgf6d13cc"><span class="section-number-3">3.1</span> 孟加拉居民水井砷污染 <a href="./wells.dat">数据</a></h3>
+<div class="outline-text-3" id="text-3-1">
 
 <div class="figure">
 <p><img src="./image1.jpg" alt="image1.jpg" width="800" />
@@ -529,8 +1315,8 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 
 <ol class="org-ol">
-<li><a id="org71cade6"></a>分析居民改换饮用水井的行为<br />
-<div class="outline-text-4" id="text-1-6-1">
+<li><a id="orgf3a8f41"></a>分析居民改换饮用水井的行为<br />
+<div class="outline-text-4" id="text-3-1-1">
 <p>
 \(y_i=1\) 居民改换新的饮用水井;  \(y_i=0\) 居民继续用自家的井.
  输入变量
@@ -545,8 +1331,8 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 </li>
 
-<li><a id="orgb09418c"></a>单预测变量logistic回归<br />
-<div class="outline-text-4" id="text-1-6-2">
+<li><a id="org6cf2048"></a>单预测变量logistic回归<br />
+<div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
 <pre class="src src-R">wells <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.table (<span style="color: #2d9574;">"wells.dat"</span>)
 <span style="color: #4f97d7;">attach</span>(wells)
@@ -619,7 +1405,12 @@ Number of Fisher Scoring iterations: 4
 <li>绘制拟合模型</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">jitter.binary</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(a, jitt=.05){
+<pre class="src src-R"><span style="color: #bc6ec5; font-weight: bold;">invlogit</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(x){
+  p <span style="color: #ce537a; font-weight: bold;">&lt;-</span> exp(x)/(1+exp(x))
+  <span style="color: #4f97d7; font-weight: bold;">return</span>(p)
+}
+
+<span style="color: #bc6ec5; font-weight: bold;">jitter.binary</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span>(a, jitt=.05){
   ifelse (a==0, runif (length(a), 0, jitt), runif (length(a), 1-jitt, 1))
 }
 
@@ -656,8 +1447,8 @@ points (dist, jitter.binary(switch), pch=20, cex=.1)
 </div>
 </li>
 
-<li><a id="orge601be0"></a>增加第二个变量（砷的浓度水平）<br />
-<div class="outline-text-4" id="text-1-6-3">
+<li><a id="orgd3c7d5a"></a>增加第二个变量（砷的浓度水平）<br />
+<div class="outline-text-4" id="text-3-1-3">
 <div class="org-src-container">
 <pre class="src src-R">fit.3 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ dist100 + arsenic, family=binomial(link=<span style="color: #2d9574;">"logit"</span>))
 summary(fit.3)
@@ -686,8 +1477,8 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="org14bfaa2"></a>如何解释和比较两个自变量的系数<br />
-<div class="outline-text-4" id="text-1-6-4">
+<li><a id="orgc21091f"></a>如何解释和比较两个自变量的系数<br />
+<div class="outline-text-4" id="text-3-1-4">
 <ul class="org-ul">
 <li>除4法则</li>
 
@@ -703,8 +1494,8 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="orgade8355"></a>含交互项的logistic回归<br />
-<div class="outline-text-4" id="text-1-6-5">
+<li><a id="orgeddf0d3"></a>含交互项的logistic回归<br />
+<div class="outline-text-4" id="text-3-1-5">
 <div class="org-src-container">
 <pre class="src src-R">fit.4 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ dist100 + 
                 arsenic + dist100:arsenic, family=binomial(link=<span style="color: #2d9574;">"logit"</span>))
@@ -758,8 +1549,8 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="org11afbff"></a>变量中心化后再拟合<br />
-<div class="outline-text-4" id="text-1-6-6">
+<li><a id="orgb93da71"></a>变量中心化后再拟合<br />
+<div class="outline-text-4" id="text-3-1-6">
 <div class="org-src-container">
 <pre class="src src-R">c.dist100 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> dist100 - mean (dist100)
 c.arsenic <span style="color: #ce537a; font-weight: bold;">&lt;-</span> arsenic - mean (arsenic)
@@ -809,8 +1600,8 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="org10753d0"></a>含有交互项模型示意图<br />
-<div class="outline-text-4" id="text-1-6-7">
+<li><a id="org575fa72"></a>含有交互项模型示意图<br />
+<div class="outline-text-4" id="text-3-1-7">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">par</span>(mfrow=c(1,2))
 plot(dist, switch.jitter, xlim=c(0,max(dist)), xlab=<span style="color: #2d9574;">"Distance (in meters) to nearest safe well"</span>, 
@@ -839,8 +1630,8 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="orga85b286"></a>增加社会性变量<br />
-<div class="outline-text-4" id="text-1-6-8">
+<li><a id="org8e847da"></a>增加社会性变量<br />
+<div class="outline-text-4" id="text-3-1-8">
 <p>
 社会联系更紧密或者教育程度更高的居民是否会更倾向于改换饮用水井？  
 </p>
@@ -896,8 +1687,8 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="org64405b5"></a>拟合新的模型<br />
-<div class="outline-text-4" id="text-1-6-9">
+<li><a id="org330f573"></a>拟合新的模型<br />
+<div class="outline-text-4" id="text-3-1-9">
 <div class="org-src-container">
 <pre class="src src-R">fit.7 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ c.dist100 + c.arsenic + c.dist100:c.arsenic +
                 educ4, family=binomial(link=<span style="color: #2d9574;">"logit"</span>))
@@ -994,9 +1785,9 @@ Number of Fisher Scoring iterations: 4
 </ol>
 </div>
 
-<div id="outline-container-org840b746" class="outline-3">
-<h3 id="org840b746"><span class="section-number-3">1.7</span> 检查与比较拟合的logistic回归</h3>
-<div class="outline-text-3" id="text-1-7">
+<div id="outline-container-org0ecd859" class="outline-3">
+<h3 id="org0ecd859"><span class="section-number-3">3.2</span> 检查与比较拟合的logistic回归</h3>
+<div class="outline-text-3" id="text-3-2">
 <ul class="org-ul">
 <li>残差与分箱残差</li>
 </ul>
@@ -1205,9 +1996,9 @@ points (br.fit.9[,1], br.fit.9[,2], pch=19, cex=.5)
 </div>
 </div>
 
-<div id="outline-container-org5e63fda" class="outline-3">
-<h3 id="org5e63fda"><span class="section-number-3">1.8</span> 评价logistic回归</h3>
-<div class="outline-text-3" id="text-1-8">
+<div id="outline-container-org3248f50" class="outline-3">
+<h3 id="org3248f50"><span class="section-number-3">3.3</span> 评价logistic回归</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 错误率（error rate）
 </p>
@@ -1243,9 +2034,9 @@ error.rate
 </div>
 </div>
 
-<div id="outline-container-org43996b8" class="outline-3">
-<h3 id="org43996b8"><span class="section-number-3">1.9</span> 比较多个自变量的平均效应</h3>
-<div class="outline-text-3" id="text-1-9">
+<div id="outline-container-org3d6bfbb" class="outline-3">
+<h3 id="org3d6bfbb"><span class="section-number-3">3.4</span> 比较多个自变量的平均效应</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 采用一个简单的模型来演示
 </p>
@@ -1351,9 +2142,9 @@ print (mean(delta))
 </div>
 </div>
 
-<div id="outline-container-org1de05b9" class="outline-3">
-<h3 id="org1de05b9"><span class="section-number-3">1.10</span> 识别与分离</h3>
-<div class="outline-text-3" id="text-1-10">
+<div id="outline-container-org556af30" class="outline-3">
+<h3 id="org556af30"><span class="section-number-3">3.5</span> 识别与分离</h3>
+<div class="outline-text-3" id="text-3-5">
 <ol class="org-ol">
 <li>共线性引起的识别问题，可以采取与线性回归相同的方法解决</li>
 
@@ -1389,7 +2180,7 @@ curve (invlogit (coef(fit.0)[1] + coef(fit.0)[2]*x), add=<span style="color: #a4
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-07-11 四 16:56</p>
+<p class="date">Created: 2019-11-25 一 03:24</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
