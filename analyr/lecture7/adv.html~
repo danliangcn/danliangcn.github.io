@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-11-26 二 15:12 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>定量研究方法R语言操作示例</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="厦门大学公共事务学院" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">定量研究方法R语言操作示例</h1>
+
+<div id="outline-container-orgbdea449" class="outline-2">
+<h2 id="orgbdea449"><span class="section-number-2">1</span> logistic回归</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org37615a0" class="outline-3">
+<h3 id="org37615a0"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。</li>
+<li><p>
+采用glm函数估计logit模型的参数
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(foreign)
+coburn <span style="color: #ce537a; font-weight: bold;">&lt;-</span>read.dta(<span style="color: #2d9574;">"coburn.dta"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21333;&#20010;&#35299;&#37322;&#21464;&#37327;&#65306;&#20826;&#27966;</span>
+single.glmfit<span style="color: #ce537a; font-weight: bold;">&lt;-</span>glm(formula = voteno ~ democrat, family=<span style="color: #2d9574;">"binomial"</span>, data=coburn)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#22810;&#20010;&#35299;&#37322;&#21464;&#37327;&#65306;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20010;&#20154;&#29305;&#24449;&#21464;&#37327;&#65306;&#20826;&#27966;&#12289;&#24615;&#21035;&#12289;&#22823;&#23398;&#26159;&#21542;&#25919;&#27835;&#23398;&#19987;&#19994;&#65307;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36873;&#21306;&#29305;&#24449;&#21464;&#37327;&#65306;&#25919;&#27835;&#31185;&#23398;&#25490;&#21517;&#21069;20&#30340;&#22823;&#23398;&#25968;&#37327;&#12289;&#25490;&#21517;&#21069;50&#30340;&#22823;&#23398;&#25968;&#37327;&#12289;&#20855;&#26377;&#39640;&#31561;&#25945;&#32946;&#23398;&#21382;&#20154;&#21475;&#27604;&#20363;&#12289;&#35831;&#24895;&#27425;&#25968;&#12289;&#22522;&#37329;&#36164;&#21161;&#25968;&#37327;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21046;&#24230;&#29305;&#24449;&#21464;&#37327;&#65306;&#20826;&#27966;&#12289;&#19979;&#27425;&#31454;&#36873;&#36830;&#20219;&#30340;&#26102;&#38388;&#65288;&#24180;&#65289;&#12289;&#30456;&#20851;&#22996;&#21592;&#20250;&#25104;&#21592;&#12289;&#21442;&#35758;&#21592;&#36164;&#21382;</span>
+multiple.glmfit<span style="color: #ce537a; font-weight: bold;">&lt;-</span>glm(voteno ~ democrat + female + poliscimajor + <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20010;&#20154;&#29305;&#24449;</span>
+              top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants + <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36873;&#21306;&#29305;&#24449; </span>
+              yearstoelection +hhsera + seniority, family=<span style="color: #2d9574;">"binomial"</span>, data=coburn) <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21046;&#24230;&#29305;&#24449;</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#65288;&#21487;&#36873;&#65289;&#33719;&#21462;&#19982;&#25991;&#31456;&#30456;&#21516;&#30340;&#30001;&#24030;&#32676;&#21464;&#37327;&#35843;&#25972;&#21518;&#30340;&#26631;&#20934;&#35823;</span>
+<span style="color: #4f97d7;">library</span>(miceadds)
+cluster.glmfit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm.cluster(voteno ~ democrat+ female + poliscimajor + 
+        top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants+ 
+        yearstoelection +hhsera + seniority, cluster = coburn$statename, family=<span style="color: #2d9574;">"binomial"</span>, data=coburn)
+res <span style="color: #ce537a; font-weight: bold;">&lt;-</span> summary(cluster.glmfit)
+
+<span style="color: #4f97d7;">library</span>(stargazer)
+stargazer(single.glmfit, multiple.glmfit, multiple.glmfit, 
+          title = <span style="color: #2d9574;">"Replication of Table 1 in Uscinski and Klofstand (2010)"</span>, 
+          covariate.labels=c(
+            <span style="color: #2d9574;">"Gender (Female)"</span>,<span style="color: #2d9574;">"Political Science Major in College"</span>,
+            <span style="color: #2d9574;">"Number of Top 20 Political Science Programs"</span>,
+            <span style="color: #2d9574;">"Number of Top 50 Political Science Programs"</span>,
+            <span style="color: #2d9574;">"Total Number of Political Science Programs"</span>,
+            <span style="color: #2d9574;">"Percentage with Advanced Degrees"</span>,
+            <span style="color: #2d9574;">"Number of Amendment Petitioners"</span>,
+            <span style="color: #2d9574;">"Number of NSF Grants 2008"</span>,
+            <span style="color: #2d9574;">"Party Identification (Democrat)"</span>,
+            <span style="color: #2d9574;">"Years to Next Election"</span>,
+            <span style="color: #2d9574;">"Member of Labor HHS Subcommittee"</span>,
+            <span style="color: #2d9574;">"Seniority"</span>),
+          column.labels=c(<span style="color: #2d9574;">"single IV"</span>,<span style="color: #2d9574;">"mutiple IVs"</span>,<span style="color: #2d9574;">"clustered se"</span>),
+          order = c(<span style="color: #2d9574;">"female"</span>,<span style="color: #2d9574;">"poliscimajor"</span>,<span style="color: #2d9574;">"top20phd"</span>,<span style="color: #2d9574;">"top50phd"</span>,<span style="color: #2d9574;">"phdprograms"</span>,
+                    <span style="color: #2d9574;">"advancedpercent"</span>,<span style="color: #2d9574;">"petitioners"</span>,<span style="color: #2d9574;">"nsfgrants"</span>,<span style="color: #2d9574;">"democrat"</span>,
+                    <span style="color: #2d9574;">"yearstoelection"</span>,<span style="color: #2d9574;">"hhsera"</span>,<span style="color: #2d9574;">"seniority"</span>),
+          star.cutoffs=<span style="color: #a45bad;">NA</span>, 
+          digits=2,
+          dep.var.labels   = <span style="color: #2d9574;">"Vote Nay on Coburn Amendment"</span>,
+          se=list(<span style="color: #a45bad;">NULL</span>,<span style="color: #a45bad;">NULL</span>,res[,2]),
+          type = <span style="color: #2d9574;">"text"</span>)
+</pre>
+</div>
+
+<pre class="example">
+
+		     Estimate Std. Error      z value    Pr(&gt;|z|)
+(Intercept)     -3.7812381216  1.7925365 -2.109434365 0.034907106
+democrat         3.2957356132  1.0690272  3.082929474 0.002049737
+female          -0.4082100527  1.2788667 -0.319196713 0.749577350
+poliscimajor     1.1641776454  0.6283475  1.852760729 0.063916661
+top20phd         2.0802374417  0.7745464  2.685749379 0.007236735
+top50phd         1.0225832453  0.6068247  1.685137810 0.091961986
+phdprograms     -0.1829973583  0.3594246 -0.509139754 0.610654268
+advancedpercent  2.3540232786  1.1921320  1.974633135 0.048309796
+petitioners     -0.0114212731  0.0143187 -0.797647326 0.425075179
+nsfgrants        0.1570781015  0.2546681  0.616795398 0.537369688
+yearstoelection  0.4857686583  0.2651756  1.831875131 0.066970026
+hhsera           1.3861200138  0.8623678  1.607342071 0.107979350
+seniority       -0.0002187281  0.0532744 -0.004105689 0.996724143
+
+
+Replication of Table 1 in Uscinski and Klofstand (2010)
+==============================================================================
+						   Dependent variable:        
+					    ----------------------------------
+					       Vote Nay on Coburn Amendment   
+					    single IV mutiple IVs clustered se
+					       (1)        (2)         (3)     
+------------------------------------------------------------------------------
+Gender (Female)                                          -0.41       -0.41    
+							(0.98)       (1.28)   
+
+Political Science Major in College                       1.16         1.16    
+							(0.91)       (0.63)   
+
+Number of Top 20 Political Science Programs              2.08         2.08    
+							(1.00)       (0.77)   
+
+Number of Top 50 Political Science Programs              1.02         1.02    
+							(0.77)       (0.61)   
+
+Total Number of Political Science Programs               -0.18       -0.18    
+							(0.43)       (0.36)   
+
+Percentage with Advanced Degrees                         2.35         2.35    
+							(1.25)       (1.19)   
+
+Number of Amendment Petitioners                          -0.01       -0.01    
+							(0.02)       (0.01)   
+
+Number of NSF Grants 2008                                0.16         0.16    
+							(0.35)       (0.25)   
+
+Party Identification (Democrat)               3.12       3.30         3.30    
+					     (0.58)     (0.85)       (1.07)   
+
+Years to Next Election                                   0.49         0.49    
+							(0.23)       (0.27)   
+
+Member of Labor HHS Subcommittee                         1.39         1.39    
+							(0.97)       (0.86)   
+
+Seniority                                               -0.0002     -0.0002   
+							(0.04)       (0.05)   
+
+Constant                                      -0.80      -3.78       -3.78    
+					     (0.33)     (1.60)       (1.79)   
+
+------------------------------------------------------------------------------
+Observations                                   98         98           98     
+Log Likelihood                               -42.84     -30.63       -30.63   
+Akaike Inf. Crit.                             89.67      87.26       87.26    
+==============================================================================
+Note:                                                                       NA
+</pre></li>
+
+<li>系数解释：尽量不要直接采用odds ratio来解释，而是要采用假定的情形直接比较概率</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20551;&#24819;&#24773;&#24418;1&#65306;&#22823;&#23398;&#26159;&#25919;&#27835;&#31185;&#23398;&#19987;&#19994;&#30340;&#21442;&#35758;&#21592;&#65292;&#20854;&#20182;&#21464;&#37327;&#37117;&#21462;&#24179;&#22343;&#20540;</span>
+simdata.max  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=max(poliscimajor), <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27714;&#36793;&#38469;&#25928;&#24212;&#30340;&#21464;&#37327;</span>
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat),   
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20551;&#24819;&#24773;&#24418;2&#65306;&#22823;&#23398;&#19981;&#26159;&#25919;&#27835;&#31185;&#23398;&#19987;&#19994;&#30340;&#21442;&#35758;&#21592;&#65292;&#20854;&#20182;&#21464;&#37327;&#37117;&#21462;&#24179;&#22343;&#20540;</span>
+simdata.min  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=min(poliscimajor),   <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#27714;&#36793;&#38469;&#25928;&#24212;&#30340;&#21464;&#37327;</span>
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat), 
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#22823;&#23398;&#26159;&#25919;&#27835;&#31185;&#23398;&#19987;&#19994;&#30340;&#21442;&#35758;&#21592;&#25237;&#21453;&#23545;&#31080;&#30340;&#27010;&#29575;&#65306;</span>
+predict(multiple.glmfit, newdata = simdata.max, type=<span style="color: #2d9574;">"response"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">&#22823;&#23398;&#19981;&#26159;&#25919;&#27835;&#31185;&#23398;&#19987;&#19994;&#30340;&#21442;&#35758;&#21592;&#25237;&#21453;&#23545;&#31080;&#30340;&#27010;&#29575;&#65306;</span>
+predict(multiple.glmfit, newdata = simdata.min, type=<span style="color: #2d9574;">"response"</span>)
+</pre>
+</div>
+
+<pre class="example">
+
+        1 
+0.9243175
+
+        1 
+0.7922154
+
+</pre>
+
+<ul class="org-ul">
+<li>模型评价：可以采用正确率和ROC图</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#39044;&#27979;&#20540;</span>
+predicted<span style="color: #ce537a; font-weight: bold;">&lt;-</span>fitted(multiple.glmfit)
+pred <span style="color: #ce537a; font-weight: bold;">&lt;-</span> ifelse(predicted&gt;=0.5, 1, 0)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35266;&#23519;&#20540;</span>
+actual<span style="color: #ce537a; font-weight: bold;">&lt;-</span>as.numeric(multiple.glmfit$model$voteno)
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#39057;&#25968;&#20132;&#21449;&#34920;</span>
+table(pred,actual)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35745;&#31639;&#27491;&#30830;&#29575;</span>
+sum(pred==0 &amp; actual==0, pred==1 &amp; actual==1) /length(actual)
+</pre>
+</div>
+
+<pre class="example">
+
+    actual
+pred  0  1
+   0 27  8
+   1  7 56
+
+[1] 0.8469388
+
+</pre>
+
+<ul class="org-ul">
+<li>比较单变量模型与多变量模型的预测效果，与对角线围成面积越大效果越好</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(ROCR)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20934;&#22791;&#39044;&#27979;&#35780;&#20215;&#25968;&#25454;&#65288;&#22810;&#21464;&#37327;&#27169;&#22411;&#65289;</span>
+pred<span style="color: #ce537a; font-weight: bold;">&lt;-</span>prediction(predicted,actual)
+perf<span style="color: #ce537a; font-weight: bold;">&lt;-</span>performance(pred,<span style="color: #2d9574;">"tpr"</span>,<span style="color: #2d9574;">"fpr"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20934;&#22791;&#39044;&#27979;&#35780;&#20215;&#25968;&#25454;&#65288;&#21333;&#21464;&#37327;&#27169;&#22411;&#65289;</span>
+predsimp<span style="color: #ce537a; font-weight: bold;">&lt;-</span>prediction(fitted(single.glmfit),actual)
+perf.simp<span style="color: #ce537a; font-weight: bold;">&lt;-</span>performance(predsimp,<span style="color: #2d9574;">"tpr"</span>,<span style="color: #2d9574;">"fpr"</span>)
+
+plot(perf,main=<span style="color: #2d9574;">"ROC plots for competing models"</span>, bty=<span style="color: #2d9574;">"n"</span>,lwd=2)
+plot(perf.simp, lwd=2, col=grey(0.7), add=T)
+lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="logitreg1.png" alt="logitreg1.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9421845" class="outline-2">
+<h2 id="org9421845"><span class="section-number-2">2</span> 有序logistic回归</h2>
+</div>
+
+
+<div id="outline-container-org459b9f6" class="outline-2">
+<h2 id="org459b9f6"><span class="section-number-2">3</span> 探索因子分析</h2>
+</div>
+
+<div id="outline-container-org712a5ca" class="outline-2">
+<h2 id="org712a5ca"><span class="section-number-2">4</span> 调节效应、中介效应与结构方程</h2>
+</div>
+
+<div id="outline-container-org5b7c001" class="outline-2">
+<h2 id="org5b7c001"><span class="section-number-2">5</span> 多层次模型</h2>
+</div>
+
+
+<div id="outline-container-org799f53e" class="outline-2">
+<h2 id="org799f53e"><span class="section-number-2">6</span> 因果推断</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 厦门大学公共事务学院</p>
+<p class="date">Created: 2019-11-26 二 15:12</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+#+TITLE: 定量研究方法R语言操作示例
+#+AUTHOR: 厦门大学公共事务学院
+#+EMAIL: 
+#+OPTIONS: H:2 toc:nil num:t tex:t ^:nil
+#+LATEX_CLASS: beamer
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+#+BEAMER_THEME: default
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_HEADER:
+#+LATEX_HEADER: \usepackage{ctex}  \usepackage{dcolumn}
+#+LATEX_COMPILER: xelatex
+#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
+
+* logistic回归
+:PROPERTIES:
+:header-args: :results output :exports both :session logitreg
+:END:
+** 美国参议院投票（Who Likes Political Science? [[./wholikepolitical.pdf][Uscinski and Klofstad, 2010]]）
++ 2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。
++ 采用glm函数估计logit模型的参数
+  #+BEGIN_SRC R
+library(foreign)
+coburn <-read.dta("coburn.dta")
+# 单个解释变量：党派
+single.glmfit<-glm(formula = voteno ~ democrat, family="binomial", data=coburn)
+# 多个解释变量：
+# 个人特征变量：党派、性别、大学是否政治学专业；
+# 选区特征变量：政治科学排名前20的大学数量、排名前50的大学数量、具有高等教育学历人口比例、请愿次数、基金资助数量
+# 制度特征变量：党派、下次竞选连任的时间（年）、相关委员会成员、参议员资历
+multiple.glmfit<-glm(voteno ~ democrat + female + poliscimajor + # 个人特征
+              top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants + # 选区特征 
+              yearstoelection +hhsera + seniority, family="binomial", data=coburn) # 制度特征
+# （可选）获取与文章相同的由州群变量调整后的标准误
+library(miceadds)
+cluster.glmfit <- glm.cluster(voteno ~ democrat+ female + poliscimajor + 
+        top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants+ 
+        yearstoelection +hhsera + seniority, cluster = coburn$statename, family="binomial", data=coburn)
+res <- summary(cluster.glmfit)
+
+library(stargazer)
+stargazer(single.glmfit, multiple.glmfit, multiple.glmfit, 
+          title = "Replication of Table 1 in Uscinski and Klofstand (2010)", 
+          covariate.labels=c(
+            "Gender (Female)","Political Science Major in College",
+            "Number of Top 20 Political Science Programs",
+            "Number of Top 50 Political Science Programs",
+            "Total Number of Political Science Programs",
+            "Percentage with Advanced Degrees",
+            "Number of Amendment Petitioners",
+            "Number of NSF Grants 2008",
+            "Party Identification (Democrat)",
+            "Years to Next Election",
+            "Member of Labor HHS Subcommittee",
+            "Seniority"),
+          column.labels=c("single IV","mutiple IVs","clustered se"),
+          order = c("female","poliscimajor","top20phd","top50phd","phdprograms",
+                    "advancedpercent","petitioners","nsfgrants","democrat",
+                    "yearstoelection","hhsera","seniority"),
+          star.cutoffs=NA, 
+          digits=2,
+          dep.var.labels   = "Vote Nay on Coburn Amendment",
+          se=list(NULL,NULL,res[,2]),
+          type = "text")
+  #+END_SRC
++ 系数解释：尽量不要直接采用odds ratio来解释，而是要采用假定的情形直接比较概率
+#+BEGIN_SRC R
+# 假想情形1：大学是政治科学专业的参议员，其他变量都取平均值
+simdata.max  <- with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=max(poliscimajor), # 求边际效应的变量
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat),   
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+# 假想情形2：大学不是政治科学专业的参议员，其他变量都取平均值
+simdata.min  <- with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=min(poliscimajor),   # 求边际效应的变量
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat), 
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+#大学是政治科学专业的参议员投反对票的概率：
+predict(multiple.glmfit, newdata = simdata.max, type="response")
+#大学不是政治科学专业的参议员投反对票的概率：
+predict(multiple.glmfit, newdata = simdata.min, type="response")
+#+END_SRC
++ 模型评价：可以采用正确率和ROC图
+#+BEGIN_SRC R
+# 预测值
+predicted<-fitted(multiple.glmfit)
+pred <- ifelse(predicted>=0.5, 1, 0)
+# 观察值
+actual<-as.numeric(multiple.glmfit$model$voteno)
+
+# 频数交叉表
+table(pred,actual)
+# 计算正确率
+sum(pred==0 & actual==0, pred==1 & actual==1) /length(actual)
+#+END_SRC
++ 比较单变量模型与多变量模型的预测效果，与对角线围成面积越大效果越好
+#+BEGIN_SRC R :results output graphics :file logitreg1.png :width 600 :height 600
+library(ROCR)
+# 准备预测评价数据（多变量模型）
+pred<-prediction(predicted,actual)
+perf<-performance(pred,"tpr","fpr")
+# 准备预测评价数据（单变量模型）
+predsimp<-prediction(fitted(single.glmfit),actual)
+perf.simp<-performance(predsimp,"tpr","fpr")
+
+plot(perf,main="ROC plots for competing models", bty="n",lwd=2)
+plot(perf.simp, lwd=2, col=grey(0.7), add=T)
+lines(actual,actual, lty="dashed")
+#+END_SRC
+
+* 有序logistic回归
+** 国际干预与种族清洗（[[./genocide.pdf][Krain, 2005]]）
++ 检验国际军事干预对种族清洗的影响，结果显示只有挑战作恶者和帮助受害族群两种军事干预方式是有效的。
++ 因变量种族清洗的严重程度（magnitud）是11级的有序类别变量。
++ 解释变量包括干预（intrvlag）、支持作恶者的干预（iperplag）、反对作恶者的干预（itarglag）、中立性干预（ineutlag）、干预的平衡性（iballag）
++ 控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）
++ 有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。
++ 似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。
+#+BEGIN_SRC R
+
+#+END_SRC
+* 探索因子分析
+
+* 调节效应、中介效应与结构方程
+
+* 多层次模型
+
+
+* 因果推断

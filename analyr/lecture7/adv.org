@@ -1,0 +1,370 @@
+#+TITLE: 定量研究方法R语言操作示例
+#+AUTHOR: 厦门大学公共事务学院
+#+EMAIL: 
+#+OPTIONS: H:2 toc:nil num:t tex:t ^:nil
+#+LATEX_CLASS: beamer
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+#+BEAMER_THEME: default
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_HEADER:
+#+LATEX_HEADER: \usepackage{ctex}  \usepackage{dcolumn}
+#+LATEX_COMPILER: xelatex
+#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
+
+* logistic回归
+:PROPERTIES:
+:header-args: :results output :exports both :session logitreg
+:END:
+** 美国参议院投票（Who Likes Political Science? [[./wholikepolitical.pdf][Uscinski and Klofstad, 2010]]）
++ 2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。
++ 采用glm函数估计logit模型的参数
+  #+BEGIN_SRC R
+library(foreign)
+coburn <-read.dta("coburn.dta")
+# 单个解释变量：党派
+single.glmfit<-glm(formula = voteno ~ democrat, family="binomial", data=coburn)
+# 多个解释变量：
+# 个人特征变量：党派、性别、大学是否政治学专业；
+# 选区特征变量：政治科学排名前20的大学数量、排名前50的大学数量、具有高等教育学历人口比例、请愿次数、基金资助数量
+# 制度特征变量：党派、下次竞选连任的时间（年）、相关委员会成员、参议员资历
+multiple.glmfit<-glm(voteno ~ democrat + female + poliscimajor + # 个人特征
+              top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants + # 选区特征 
+              yearstoelection +hhsera + seniority, family="binomial", data=coburn) # 制度特征
+# （可选）获取与文章相同的由州群变量调整后的标准误
+library(miceadds)
+cluster.glmfit <- glm.cluster(voteno ~ democrat+ female + poliscimajor + 
+        top20phd+top50phd+phdprograms+ advancedpercent + petitioners + nsfgrants+ 
+        yearstoelection +hhsera + seniority, cluster = coburn$statename, family="binomial", data=coburn)
+res <- summary(cluster.glmfit)
+
+library(stargazer)
+stargazer(single.glmfit, multiple.glmfit, multiple.glmfit, 
+          title = "Replication of Table 1 in Uscinski and Klofstand (2010)", 
+          covariate.labels=c(
+            "Gender (Female)","Political Science Major in College",
+            "Number of Top 20 Political Science Programs",
+            "Number of Top 50 Political Science Programs",
+            "Total Number of Political Science Programs",
+            "Percentage with Advanced Degrees",
+            "Number of Amendment Petitioners",
+            "Number of NSF Grants 2008",
+            "Party Identification (Democrat)",
+            "Years to Next Election",
+            "Member of Labor HHS Subcommittee",
+            "Seniority"),
+          column.labels=c("single IV","mutiple IVs","clustered se"),
+          order = c("female","poliscimajor","top20phd","top50phd","phdprograms",
+                    "advancedpercent","petitioners","nsfgrants","democrat",
+                    "yearstoelection","hhsera","seniority"),
+          star.cutoffs=NA, 
+          digits=2,
+          dep.var.labels   = "Vote Nay on Coburn Amendment",
+          se=list(NULL,NULL,res[,2]),
+          type = "text")
+  #+END_SRC
++ 系数解释：尽量不要直接采用odds ratio来解释，而是要采用假定的情形直接比较概率
+#+BEGIN_SRC R
+# 假想情形1：大学是政治科学专业的参议员，其他变量都取平均值
+simdata.max  <- with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=max(poliscimajor), # 求边际效应的变量
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat),   
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+# 假想情形2：大学不是政治科学专业的参议员，其他变量都取平均值
+simdata.min  <- with(coburn,
+                     data.frame(
+                       female=mean(female),
+                       poliscimajor=min(poliscimajor),   # 求边际效应的变量
+                       top20phd=mean(top20phd),
+                       top50phd=mean(top50phd),
+                       phdprograms=mean(phdprograms),
+                       advancedpercent=mean(advancedpercent),
+                       petitioners=mean(petitioners),
+                       nsfgrants=mean(nsfgrants),
+                       democrat=mean(democrat), 
+                       yearstoelection=mean(yearstoelection),
+                       hhsera=mean(hhsera),
+                       seniority=mean(hhsera)
+                     ))
+#大学是政治科学专业的参议员投反对票的概率：
+predict(multiple.glmfit, newdata = simdata.max, type="response")
+#大学不是政治科学专业的参议员投反对票的概率：
+predict(multiple.glmfit, newdata = simdata.min, type="response")
+#+END_SRC
++ 模型评价：可以采用正确率和ROC图
+#+BEGIN_SRC R
+# 预测值
+predicted<-fitted(multiple.glmfit)
+pred <- ifelse(predicted>=0.5, 1, 0)
+# 观察值
+actual<-as.numeric(multiple.glmfit$model$voteno)
+
+# 频数交叉表
+table(pred,actual)
+# 计算正确率
+sum(pred==0 & actual==0, pred==1 & actual==1) /length(actual)
+#+END_SRC
++ 比较单变量模型与多变量模型的预测效果，与对角线围成面积越大效果越好
+#+BEGIN_SRC R :results output graphics :file logitreg1.png :width 600 :height 600
+library(ROCR)
+# 准备预测评价数据（多变量模型）
+pred<-prediction(predicted,actual)
+perf<-performance(pred,"tpr","fpr")
+# 准备预测评价数据（单变量模型）
+predsimp<-prediction(fitted(single.glmfit),actual)
+perf.simp<-performance(predsimp,"tpr","fpr")
+
+plot(perf,main="ROC plots for competing models", bty="n",lwd=2)
+plot(perf.simp, lwd=2, col=grey(0.7), add=T)
+lines(actual,actual, lty="dashed")
+#+END_SRC
+
+* 有序logistic回归
+:PROPERTIES:
+:header-args: :results output :exports both :session ordinalreg
+:END:
+** 国际干预与种族清洗（[[./genocide.pdf][Krain, 2005]]）
++ 检验国际军事干预对种族清洗的影响，结果显示只有挑战作恶者和帮助受害族群两种军事干预方式是有效的。
++ 因变量种族清洗的严重程度（magnitud）是11级的有序类别变量。
++ 解释变量包括干预（intrvlag）、支持作恶者的干预（iperplag）、反对作恶者的干预（itarglag）、中立性干预（ineutlag）、干预的平衡性（iballag）
++ 控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）[[./isq05.dta][数据]]
++ 模型估计，第一个模型为线性模型（虽然采取glm估计），第2-4个模型分别对不同类型的军事干预进行检验
++ 有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。
++ 似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。
+#+BEGIN_SRC R
+library(foreign)
+krain<-read.dta("isq05.dta",convert.dates = TRUE, 
+                convert.factors = TRUE, missing.type = FALSE,
+                convert.underscore=TRUE, warn.missing.labels=TRUE)
+
+# 有序logit回归，采用MASS包中的polr函数进行
+ols.fit <- glm(magnitud ~ intrvlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,data=krain)
+library(MASS)
+polr.fit1<-polr(as.ordered(magnitud) ~ intrvlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+               data=krain, method="logistic", Hess=T)
+
+polr.fit2<-polr(as.ordered(magnitud) ~ iperplag+itarglag+ineutlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+                data=krain, method="logistic", Hess=T)
+
+polr.fit3<-polr(as.ordered(magnitud) ~ iballag+ineutlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+                data=krain, method="logistic", Hess=T)
+
+library(stargazer)
+stargazer(ols.fit, polr.fit1, polr.fit2, polr.fit3,
+          covariate.labels=c("干预", "支持作恶者的干预", "反对作恶者的干预", "中立性干预", "干预的平衡性","干预的连续性", 
+                             "种族清洗严重性", "种族清洗持续时间", "国家失败", "政权类型", "种族分散程度",
+                             "经济边缘程度", "冷战"),
+          order = c("intrvlag","iperplag","itarglag","ineutlag","iballag","ineutlag","icntglag","maglag",
+                                     "genyr","stfl","regtype","ethkrain","marg","coldwar"),
+          digits = 2, keep.stat = c("n"), 
+          add.lines=list(c("Log Likelihood", round(logLik(ols.fit),1), round(logLik(polr.fit1),1), round(logLik(polr.fit2),1),round(logLik(polr.fit3),1)),
+          c("Akaike Inf. Crit.", round(AIC(ols.fit),1), round(AIC(polr.fit1),1), round(AIC(polr.fit2),1),round(AIC(polr.fit3),1))),
+          ord.intercepts=T, type = "text")
+#+END_SRC
++ 平行性检验
+#+BEGIN_SRC R :results output graphics :file ordinalreg1.png :width 1500 :height 800
+library(rms)
+krain$magnitud<-as.numeric(krain$magnitud) 
+par(mfrow=c(3,3),mar=c(4,4.2,1,1),las=1)
+plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
+                      genyr + stfl + regtype + ethkrain + marg + coldwar, 
+                    data=krain,pch=19)
+#+END_SRC
+
+
+* 调节效应、中介效应和条件过程模型
+:PROPERTIES:
+:header-args: :results output :exports both :session medmod
+:END:
+** 示例：气候变化与灾害[[./chapman2015.pdf][Chapman and Lickel 2015]]
++ 研究者向211名实验参与者讲述非洲发生干旱造成人道主义危机，告诉其中一半的参与者气候变化是造成干旱的原因，另一半参与者未被告知任何关于干旱的原因。接着通过一系列问题让实验参与者评价拒绝援助的正当性，以及了解他们对气候变化的怀疑程度。最后了解参与者捐款的意愿。
++ 实验的目的是了解框架（frame），即是否告知干旱是由于气候变化产生的，对捐助意愿(donate)的影响（[[./disaster.csv][数据]]）
+** 调节效应
++ 假定对气候变化怀疑程度较高的人框架对捐助意愿的效应也比较小，会存在调节效应。
+#+BEGIN_SRC R
+# 加载程序包lavaan
+library(lavaan)
+disaster <- read.csv("disaster.csv", header = T)
+# 调节效应
+moderafit <- lm(donate ~ frame + skeptic + frame:skeptic, data = disaster)
+summary(moderafit)
+#+END_SRC
+** 中介效应
++ 另一方面，框架可能是通过影响正当性，然后正当性再影响捐助意愿的，即中介效应。
+#+BEGIN_SRC R
+# 中介效应
+mediamodel <- ' # 直接效应
+donate ~ c*frame
+# 中介效应
+justify ~ a*frame
+donate ~ b*justify
+# 间接效应 (a*b)
+ab := a*b
+# 总效应
+total := c + (a*b)
+'
+mediafit <- sem(mediamodel, data = disaster)
+summary(mediafit)
+#+END_SRC
++ 绘制图形
+#+BEGIN_SRC R :results output graphics :file medmod1.png :width 800 :height 800
+library("semPlot")
+semPaths(mediafit,whatLabels = 'est',residuals = F, nCharNodes=0, sizeMan = 12,edge.label.cex = 1.5)
+#+END_SRC
+** 条件过程模型
++ 综合调节与中介效应，框架对捐助意愿的直接和间接效应是受到怀疑程度的调节的，即被调节的中介效应。
+#+BEGIN_SRC R
+# 具有调节中介效应的条件过程模型
+cpmodel <- ' # 直接效应
+donate ~ c1*frame + c2*skeptic + c3*skeptic:frame 
+# 中介效应
+justify ~ a1*frame + a2*skeptic + a3*skeptic:frame
+donate ~ b*justify
+
+# 间接效应取决于skeptic的值，需要用平均值（或其他代表值）带入计算间接效应
+# 间接效应 (a*b) skeptic取平均值3.38
+a1b := (a1+a3*3.38)*b
+# 总效应
+total := c1 + (a1+a3*3.38)*b
+'
+cpfit <- sem(cpmodel, data = disaster)
+summary(cpfit)
+#+END_SRC
++ 图形
+#+BEGIN_SRC R :results output graphics :file medmod2.png :width 800 :height 800
+semPaths(cpfit,whatLabels = 'est', layout = "spring",,residuals = F, nCharNodes=0, sizeMan = 8,edge.label.cex = 1)
+#+END_SRC
+* 结构方程
+:PROPERTIES:
+:header-args: :results output :exports both :session sem
+:END:
+** 示例：思维方式与工作满意度[[./houghton2007.pdf][Houghton and Jinkerson, 2007]]
++ 考察大学职员的思维方式对工作满意度的影响。
+#+BEGIN_SRC R
+library(lavaan)
+# 整理数据，直接获取协方差矩阵和样本量作为输入数据，也可采取原始数据方式
+## 相关系数矩阵
+houghtonLower.cor <- '
+1.000
+.668 1.000
+.635  .599 1.000
+.263  .261   .164 1.000
+.290  .315   .247  .486 1.000
+.207  .245   .231  .251  .449 1.000
+-.206 -.182  -.195 -.309 -.266 -.142 1.000 
+-.280 -.241  -.238 -.344 -.305 -.230  .753 1.000
+-.258 -.244 -.185  -.255 -.255 -.215  .554  .587 1.000 
+.080  .096  .094  -.017  .151  .141 -.074 -.111  .016 1.000
+.061  .028 -.035  -.058 -.051 -.003 -.040 -.040 -.018 .284 1.000
+.113  .174  .059   .063  .138  .044 -.119 -.073 -.084 .563  .379 1.000 '
+# 命名变量并转化为完整的相关系数矩阵
+houghtonFull.cor <- getCov(houghtonLower.cor, names = c("wk1","wk2","wk3","hap","md1","md2","pr1","pr2","app","bel","st","ima"))
+# 添加标准差并转化为协方差矩阵
+houghtonFull.cov <- cor2cov(houghtonFull.cor, sds = c(.939,1.017,.937,.562,.760,.524,.585,.609,.731,.711,1.124,1.001))
+#+END_SRC
+** 测量模型（验证性因子分析）
+#+BEGIN_SRC R
+# 1. 测量模型
+houghtonCFA.model <- '
+# measurement part
+Constru =~ bel + st + ima
+Dysfunc =~ pr1 + pr2 + app
+WellBe =~ hap + md1 + md2
+JobSat =~ wk1 + wk2 + wk3
+'
+
+cfamodel <- cfa(houghtonCFA.model, sample.cov = houghtonFull.cov,sample.nobs = 263)
+cfares <- fitmeasures(cfamodel, c("chisq","df","gfi","nnfi","ifi","cfi"))
+#+END_SRC
+** 结构方程（模型比较）
+#+BEGIN_SRC R
+# 2. 理论假定的模型设定
+houghtonSR.model <- '
+# measurement part
+Construc =~ bel + st + ima
+Dysfunc =~ pr1 + pr2 + app
+WellBe =~ hap + md1 + md2
+JobSat =~ wk1 + wk2 + wk3
+
+# structural part
+Dysfunc ~ Construc
+WellBe ~ Dysfunc
+JobSat ~ Dysfunc + WellBe 
+'
+
+srmodel1 <- sem(houghtonSR.model, sample.cov=houghtonFull.cov, sample.nobs=263)
+summary(srmodel1, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
+semfit1 <- fitmeasures(srmodel1, c("chisq","df","gfi","nnfi","ifi","cfi"))
+
+# 3. 限制路径模型：对障碍性思维与工作满意度之间的路径施加限制，假定完全中介效应
+houghtonSR.model2 <- '
+# measurement part
+Construc =~ bel + st + ima
+Dysfunc =~ pr1 + pr2 + app
+WellBe =~ hap + md1 + md2
+JobSat =~ wk1 + wk2 + wk3
+
+# structural part
+Dysfunc ~ Construc
+WellBe ~ Dysfunc
+## 施加限制
+JobSat ~ WellBe 
+'
+
+srmodel2 <- sem(houghtonSR.model2, sample.cov=houghtonFull.cov, sample.nobs=263)
+semfit2 <- fitmeasures(srmodel2, c("chisq","df","gfi","nnfi","ifi","cfi"))
+
+# 4. 添加路径模型：增加建设性思维与工作满意度之间的路径
+houghtonSR.model3 <- '
+# measurement part
+Construc =~ bel + st + ima
+Dysfunc =~ pr1 + pr2 + app
+WellBe =~ hap + md1 + md2
+JobSat =~ wk1 + wk2 + wk3
+
+# structural part
+Dysfunc ~ Construc
+WellBe ~ Dysfunc
+## 添加路径
+JobSat ~ Construc + Dysfunc + WellBe 
+'
+
+srmodel3 <- sem(houghtonSR.model3, sample.cov=houghtonFull.cov, sample.nobs=263)
+semfit3 <- fitmeasures(srmodel3, c("chisq","df","gfi","nnfi","ifi","cfi"))
+
+# 总结结果
+res <- matrix(NA, nrow=5,ncol=6,dimnames =list(c("1. Measurement","2. Null","3. Hypothesized","4. Restric path", "5. Add path"),
+                                               c("Chisq", "Df","GFI","NNFI","IFI","CFI")) )
+res[1,] <- cfares
+res[2,] <- c(as.numeric(fitmeasures(srmodel1, c("baseline.chisq","baseline.df"))),NA,NA,NA,NA)
+res[3,] <- semfit1
+res[4,] <- semfit2
+res[5,] <- semfit3
+round(res, digits = 2)
+#+END_SRC
++ 绘图
+#+BEGIN_SRC R :results output graphics :file sem1.png :width 800 :height 800
+library("semPlot")
+# 绘制结构方程图
+semPaths(srmodel1, whatLabels = 'std',layout = "tree2",residuals = F,rotation=2, nCharNodes=0, sizeLat = 9)
+#+END_SRC
+
+* 探索因子分析 :noexport:
+
+* 多层次模型 :noexport:
+
+
+* 因果推断 :noexport:
