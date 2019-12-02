@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-26 二 15:12 -->
+<!-- 2019-12-02 一 10:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>定量研究方法R语言操作示例</title>
@@ -232,12 +232,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">定量研究方法R语言操作示例</h1>
 
-<div id="outline-container-orgbdea449" class="outline-2">
-<h2 id="orgbdea449"><span class="section-number-2">1</span> logistic回归</h2>
+<div id="outline-container-org463050a" class="outline-2">
+<h2 id="org463050a"><span class="section-number-2">1</span> logistic回归</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org37615a0" class="outline-3">
-<h3 id="org37615a0"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
+<div id="outline-container-org05bf5d6" class="outline-3">
+<h3 id="org05bf5d6"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。</li>
@@ -292,6 +292,21 @@ stargazer(single.glmfit, multiple.glmfit, multiple.glmfit,
 
 <pre class="example">
 
+载入需要的程辑包：mice
+载入需要的程辑包：lattice
+
+载入程辑包：‘mice’
+
+The following objects are masked from ‘package:base’:
+
+    cbind, rbind
+
+* miceadds 3.6-21 (2019-11-04 14:57:31)
+Warning message:
+程辑包‘miceadds’是用R版本3.5.2 来建造的
+
+Loading required namespace: sandwich
+
 		     Estimate Std. Error      z value    Pr(&gt;|z|)
 (Intercept)     -3.7812381216  1.7925365 -2.109434365 0.034907106
 democrat         3.2957356132  1.0690272  3.082929474 0.002049737
@@ -306,6 +321,11 @@ nsfgrants        0.1570781015  0.2546681  0.616795398 0.537369688
 yearstoelection  0.4857686583  0.2651756  1.831875131 0.066970026
 hhsera           1.3861200138  0.8623678  1.607342071 0.107979350
 seniority       -0.0002187281  0.0532744 -0.004105689 0.996724143
+
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
 
 
 Replication of Table 1 in Uscinski and Klofstand (2010)
@@ -470,31 +490,676 @@ lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
 </div>
 </div>
 
-<div id="outline-container-org9421845" class="outline-2">
-<h2 id="org9421845"><span class="section-number-2">2</span> 有序logistic回归</h2>
+<div id="outline-container-org69da8f0" class="outline-2">
+<h2 id="org69da8f0"><span class="section-number-2">2</span> 有序logistic回归</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgece1bb6" class="outline-3">
+<h3 id="orgece1bb6"><span class="section-number-3">2.1</span> 国际干预与种族清洗（<a href="./genocide.pdf">Krain, 2005</a>）</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>检验国际军事干预对种族清洗的影响，结果显示只有挑战作恶者和帮助受害族群两种军事干预方式是有效的。</li>
+<li>因变量种族清洗的严重程度（magnitud）是11级的有序类别变量。</li>
+<li>解释变量包括干预（intrvlag）、支持作恶者的干预（iperplag）、反对作恶者的干预（itarglag）、中立性干预（ineutlag）、干预的平衡性（iballag）</li>
+<li>控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）<a href="./isq05.dta">数据</a></li>
+<li>模型估计，第一个模型为线性模型（虽然采取glm估计），第2-4个模型分别对不同类型的军事干预进行检验</li>
+<li>有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。</li>
+<li>似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(foreign)
+krain<span style="color: #ce537a; font-weight: bold;">&lt;-</span>read.dta(<span style="color: #2d9574;">"isq05.dta"</span>,convert.dates = <span style="color: #a45bad;">TRUE</span>, 
+                convert.factors = <span style="color: #a45bad;">TRUE</span>, missing.type = <span style="color: #a45bad;">FALSE</span>,
+                convert.underscore=<span style="color: #a45bad;">TRUE</span>, warn.missing.labels=<span style="color: #a45bad;">TRUE</span>)
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26377;&#24207;logit&#22238;&#24402;&#65292;&#37319;&#29992;MASS&#21253;&#20013;&#30340;polr&#20989;&#25968;&#36827;&#34892;</span>
+ols.fit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm(magnitud ~ intrvlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,data=krain)
+<span style="color: #4f97d7;">library</span>(MASS)
+polr.fit1<span style="color: #ce537a; font-weight: bold;">&lt;-</span>polr(as.ordered(magnitud) ~ intrvlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+               data=krain, method=<span style="color: #2d9574;">"logistic"</span>, Hess=T)
+
+polr.fit2<span style="color: #ce537a; font-weight: bold;">&lt;-</span>polr(as.ordered(magnitud) ~ iperplag+itarglag+ineutlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+                data=krain, method=<span style="color: #2d9574;">"logistic"</span>, Hess=T)
+
+polr.fit3<span style="color: #ce537a; font-weight: bold;">&lt;-</span>polr(as.ordered(magnitud) ~ iballag+ineutlag+icntglag+maglag+genyr+stfl+regtype+ethkrain+marg+coldwar,
+                data=krain, method=<span style="color: #2d9574;">"logistic"</span>, Hess=T)
+
+<span style="color: #4f97d7;">library</span>(stargazer)
+stargazer(ols.fit, polr.fit1, polr.fit2, polr.fit3,
+          covariate.labels=c(<span style="color: #2d9574;">"&#24178;&#39044;"</span>, <span style="color: #2d9574;">"&#25903;&#25345;&#20316;&#24694;&#32773;&#30340;&#24178;&#39044;"</span>, <span style="color: #2d9574;">"&#21453;&#23545;&#20316;&#24694;&#32773;&#30340;&#24178;&#39044;"</span>, <span style="color: #2d9574;">"&#20013;&#31435;&#24615;&#24178;&#39044;"</span>, <span style="color: #2d9574;">"&#24178;&#39044;&#30340;&#24179;&#34913;&#24615;"</span>,<span style="color: #2d9574;">"&#24178;&#39044;&#30340;&#36830;&#32493;&#24615;"</span>, 
+                             <span style="color: #2d9574;">"&#31181;&#26063;&#28165;&#27927;&#20005;&#37325;&#24615;"</span>, <span style="color: #2d9574;">"&#31181;&#26063;&#28165;&#27927;&#25345;&#32493;&#26102;&#38388;"</span>, <span style="color: #2d9574;">"&#22269;&#23478;&#22833;&#36133;"</span>, <span style="color: #2d9574;">"&#25919;&#26435;&#31867;&#22411;"</span>, <span style="color: #2d9574;">"&#31181;&#26063;&#20998;&#25955;&#31243;&#24230;"</span>,
+                             <span style="color: #2d9574;">"&#32463;&#27982;&#36793;&#32536;&#31243;&#24230;"</span>, <span style="color: #2d9574;">"&#20919;&#25112;"</span>),
+          order = c(<span style="color: #2d9574;">"intrvlag"</span>,<span style="color: #2d9574;">"iperplag"</span>,<span style="color: #2d9574;">"itarglag"</span>,<span style="color: #2d9574;">"ineutlag"</span>,<span style="color: #2d9574;">"iballag"</span>,<span style="color: #2d9574;">"ineutlag"</span>,<span style="color: #2d9574;">"icntglag"</span>,<span style="color: #2d9574;">"maglag"</span>,
+                                     <span style="color: #2d9574;">"genyr"</span>,<span style="color: #2d9574;">"stfl"</span>,<span style="color: #2d9574;">"regtype"</span>,<span style="color: #2d9574;">"ethkrain"</span>,<span style="color: #2d9574;">"marg"</span>,<span style="color: #2d9574;">"coldwar"</span>),
+          digits = 2, keep.stat = c(<span style="color: #2d9574;">"n"</span>), 
+          add.lines=list(c(<span style="color: #2d9574;">"Log Likelihood"</span>, round(logLik(ols.fit),1), round(logLik(polr.fit1),1), round(logLik(polr.fit2),1),round(logLik(polr.fit3),1)),
+          c(<span style="color: #2d9574;">"Akaike Inf. Crit."</span>, round(AIC(ols.fit),1), round(AIC(polr.fit1),1), round(AIC(polr.fit2),1),round(AIC(polr.fit3),1))),
+          ord.intercepts=T, type = <span style="color: #2d9574;">"text"</span>)
+</pre>
+</div>
+
+<pre class="example">
+
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
+
+
+=====================================================
+                          Dependent variable:        
+                  -----------------------------------
+                  magnitud          magnitud         
+                   normal           ordered          
+                                    logistic         
+                    (1)      (2)      (3)      (4)   
+-----------------------------------------------------
+干预                  0.23     0.13                    
+                   (0.22)   (0.30)                   
+                                                     
+支持作恶者的干预                             -0.06           
+                                     (0.10)          
+                                                     
+反对作恶者的干预                            -0.38***         
+                                     (0.14)          
+                                                     
+中立性干预                               -0.71**   -0.58* 
+                                     (0.34)   (0.33) 
+                                                     
+干预的平衡性                                         0.05  
+                                              (0.09) 
+                                                     
+干预的连续性             0.39*    0.57*   1.14***  0.73*** 
+                   (0.22)   (0.30)   (0.30)   (0.24) 
+                                                     
+种族清洗严重性           0.42***  0.72***  0.73***  0.71*** 
+                   (0.06)   (0.10)   (0.10)   (0.10) 
+                                                     
+种族清洗持续时间          -0.05*** -0.07*** -0.09*** -0.08***
+                   (0.02)   (0.03)   (0.03)   (0.03) 
+                                                     
+国家失败               0.44**   0.54**   0.47*    0.54** 
+                   (0.19)   (0.27)   (0.27)   (0.27) 
+                                                     
+政权类型               -0.01    -0.01    -0.01    -0.01  
+                   (0.02)   (0.02)   (0.02)   (0.02) 
+                                                     
+种族分散程度             0.78**    0.49     0.39     0.49  
+                   (0.38)   (0.51)   (0.51)   (0.51) 
+                                                     
+经济边缘程度             0.0004  -0.0004   -0.001   -0.001 
+                  (0.001)  (0.002)  (0.002)  (0.002) 
+                                                     
+冷战                  0.03    -0.27    -0.63    -0.56  
+                   (0.24)   (0.36)   (0.39)   (0.39) 
+                                                     
+0| 0.5                      -0.33    -0.95    -0.75  
+                            (0.57)   (0.60)   (0.59) 
+                                                     
+0.5| 1                       0.34    -0.27    -0.07  
+                            (0.56)   (0.60)   (0.59) 
+                                                     
+1| 1.5                       0.80     0.19     0.38  
+                            (0.56)   (0.60)   (0.59) 
+                                                     
+1.5| 2                      1.25**    0.64     0.83  
+                            (0.57)   (0.60)   (0.60) 
+                                                     
+2| 2.5                     1.60***    0.98    1.18*  
+                            (0.58)   (0.61)   (0.60) 
+                                                     
+2.5| 3                     2.12***   1.51**  1.70*** 
+                            (0.59)   (0.62)   (0.61) 
+                                                     
+3| 3.5                     2.84***  2.24***  2.43*** 
+                            (0.60)   (0.62)   (0.62) 
+                                                     
+3.5| 4                     4.35***  3.80***  3.95*** 
+                            (0.62)   (0.64)   (0.63) 
+                                                     
+4| 4.5                     5.45***  4.94***  5.06*** 
+                            (0.65)   (0.68)   (0.67) 
+                                                     
+4.5| 5                     6.29***  5.79***  5.90*** 
+                            (0.72)   (0.74)   (0.74) 
+                                                     
+Constant            0.50                             
+                   (0.41)                            
+                                                     
+-----------------------------------------------------
+Log Likelihood      -449    -564.5   -560.2   -562.9 
+Akaike Inf. Crit.   920      1167    1162.4   1165.8 
+Observations        273      273      273      273   
+=====================================================
+Note:                     *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+</pre>
+
+<ul class="org-ul">
+<li>平行性检验</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(rms)
+krain$magnitud<span style="color: #ce537a; font-weight: bold;">&lt;-</span>as.numeric(krain$magnitud) 
+<span style="color: #4f97d7;">par</span>(mfrow=c(3,3),mar=c(4,4.2,1,1),las=1)
+plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
+                      genyr + stfl + regtype + ethkrain + marg + coldwar, 
+                    data=krain,pch=19)
+</pre>
 </div>
 
 
-<div id="outline-container-org459b9f6" class="outline-2">
-<h2 id="org459b9f6"><span class="section-number-2">3</span> 探索因子分析</h2>
+<div class="figure">
+<p><img src="ordinalreg1.png" alt="ordinalreg1.png" />
+</p>
 </div>
-
-<div id="outline-container-org712a5ca" class="outline-2">
-<h2 id="org712a5ca"><span class="section-number-2">4</span> 调节效应、中介效应与结构方程</h2>
 </div>
-
-<div id="outline-container-org5b7c001" class="outline-2">
-<h2 id="org5b7c001"><span class="section-number-2">5</span> 多层次模型</h2>
+</div>
 </div>
 
 
-<div id="outline-container-org799f53e" class="outline-2">
-<h2 id="org799f53e"><span class="section-number-2">6</span> 因果推断</h2>
+<div id="outline-container-orgfb9f3e2" class="outline-2">
+<h2 id="orgfb9f3e2"><span class="section-number-2">3</span> 调节效应、中介效应和条件过程模型</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgb5a3280" class="outline-3">
+<h3 id="orgb5a3280"><span class="section-number-3">3.1</span> 示例：气候变化与灾害<a href="./chapman2015.pdf">Chapman and Lickel 2015</a></h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>研究者向211名实验参与者讲述非洲发生干旱造成人道主义危机，告诉其中一半的参与者气候变化是造成干旱的原因，另一半参与者未被告知任何关于干旱的原因。接着通过一系列问题让实验参与者评价拒绝援助的正当性，以及了解他们对气候变化的怀疑程度。最后了解参与者捐款的意愿。</li>
+<li>实验的目的是了解框架（frame），即是否告知干旱是由于气候变化产生的，对捐助意愿(donate)的影响（<a href="./disaster.csv">数据</a>）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2fba8cf" class="outline-3">
+<h3 id="org2fba8cf"><span class="section-number-3">3.2</span> 调节效应</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>假定对气候变化怀疑程度较高的人框架对捐助意愿的效应也比较小，会存在调节效应。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21152;&#36733;&#31243;&#24207;&#21253;lavaan</span>
+<span style="color: #4f97d7;">library</span>(lavaan)
+disaster <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.csv(<span style="color: #2d9574;">"disaster.csv"</span>, header = T)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#35843;&#33410;&#25928;&#24212;</span>
+moderafit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> lm(donate ~ frame + skeptic + frame:skeptic, data = disaster)
+summary(moderafit)
+</pre>
+</div>
+
+<pre class="example">
+
+This is lavaan 0.6-3
+lavaan is BETA software! Please report any bugs.
+
+Call:
+lm(formula = donate ~ frame
+skeptic
+frame:skeptic, data = disaster)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.8341 -0.7077  0.1659  0.9101  2.6682 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    5.02947    0.22632  22.223   &lt;2e-16 ***
+frame          0.67930    0.33091   2.053   0.0413 *  
+skeptic       -0.13953    0.05790  -2.410   0.0168 *  
+frame:skeptic -0.17071    0.08393  -2.034   0.0432 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.234 on 207 degrees of freedom
+Multiple R-squared:  0.1343,	Adjusted R-squared:  0.1218 
+F-statistic: 10.71 on 3 and 207 DF,  p-value: 1.424e-06
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org827f388" class="outline-3">
+<h3 id="org827f388"><span class="section-number-3">3.3</span> 中介效应</h3>
+<div class="outline-text-3" id="text-3-3">
+<ul class="org-ul">
+<li>另一方面，框架可能是通过影响正当性，然后正当性再影响捐助意愿的，即中介效应。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20013;&#20171;&#25928;&#24212;</span>
+mediamodel <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">' # &#30452;&#25509;&#25928;&#24212;</span>
+<span style="color: #2d9574;">donate ~ c*frame</span>
+<span style="color: #2d9574;"># &#20013;&#20171;&#25928;&#24212;</span>
+<span style="color: #2d9574;">justify ~ a*frame</span>
+<span style="color: #2d9574;">donate ~ b*justify</span>
+<span style="color: #2d9574;"># &#38388;&#25509;&#25928;&#24212; (a*b)</span>
+<span style="color: #2d9574;">ab := a*b</span>
+<span style="color: #2d9574;"># &#24635;&#25928;&#24212;</span>
+<span style="color: #2d9574;">total := c + (a*b)</span>
+<span style="color: #2d9574;">'</span>
+mediafit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sem(mediamodel, data = disaster)
+summary(mediafit)
+</pre>
+</div>
+
+<pre class="example">
+
+lavaan 0.6-3 ended normally after 17 iterations
+
+  Optimization method                           NLMINB
+  Number of free parameters                          5
+
+  Number of observations                           211
+
+  Estimator                                         ML
+  Model Fit Test Statistic                       0.000
+  Degrees of freedom                                 0
+  Minimum Function Value               0.0000000000000
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+  Standard Errors                             Standard
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  donate ~                                            
+    frame      (c)    0.212    0.135    1.576    0.115
+  justify ~                                           
+    frame      (a)    0.134    0.127    1.054    0.292
+  donate ~                                            
+    justify    (b)   -0.953    0.072  -13.159    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .donate            0.948    0.092   10.271    0.000
+   .justify           0.856    0.083   10.271    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    ab               -0.128    0.122   -1.051    0.293
+    total             0.084    0.181    0.463    0.643
+</pre>
+
+<ul class="org-ul">
+<li>绘制图形</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(<span style="color: #2d9574;">"semPlot"</span>)
+semPaths(mediafit,whatLabels = <span style="color: #2d9574;">'est'</span>,residuals = F, nCharNodes=0, sizeMan = 12,edge.label.cex = 1.5)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="medmod1.png" alt="medmod1.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf789abc" class="outline-3">
+<h3 id="orgf789abc"><span class="section-number-3">3.4</span> 条件过程模型</h3>
+<div class="outline-text-3" id="text-3-4">
+<ul class="org-ul">
+<li>综合调节与中介效应，框架对捐助意愿的直接和间接效应是受到怀疑程度的调节的，即被调节的中介效应。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#20855;&#26377;&#35843;&#33410;&#20013;&#20171;&#25928;&#24212;&#30340;&#26465;&#20214;&#36807;&#31243;&#27169;&#22411;</span>
+cpmodel <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">' # &#30452;&#25509;&#25928;&#24212;</span>
+<span style="color: #2d9574;">donate ~ c1*frame + c2*skeptic + c3*skeptic:frame </span>
+<span style="color: #2d9574;"># &#20013;&#20171;&#25928;&#24212;</span>
+<span style="color: #2d9574;">justify ~ a1*frame + a2*skeptic + a3*skeptic:frame</span>
+<span style="color: #2d9574;">donate ~ b*justify</span>
+
+<span style="color: #2d9574;"># &#38388;&#25509;&#25928;&#24212;&#21462;&#20915;&#20110;skeptic&#30340;&#20540;&#65292;&#38656;&#35201;&#29992;&#24179;&#22343;&#20540;&#65288;&#25110;&#20854;&#20182;&#20195;&#34920;&#20540;&#65289;&#24102;&#20837;&#35745;&#31639;&#38388;&#25509;&#25928;&#24212;</span>
+<span style="color: #2d9574;"># &#38388;&#25509;&#25928;&#24212; (a*b) skeptic&#21462;&#24179;&#22343;&#20540;3.38</span>
+<span style="color: #2d9574;">a1b := (a1+a3*3.38)*b</span>
+<span style="color: #2d9574;"># &#24635;&#25928;&#24212;</span>
+<span style="color: #2d9574;">total := c1 + (a1+a3*3.38)*b</span>
+<span style="color: #2d9574;">'</span>
+cpfit <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sem(cpmodel, data = disaster)
+summary(cpfit)
+</pre>
+</div>
+
+<pre class="example">
+
+lavaan 0.6-3 ended normally after 23 iterations
+
+  Optimization method                           NLMINB
+  Number of free parameters                          9
+
+  Number of observations                           211
+
+  Estimator                                         ML
+  Model Fit Test Statistic                       0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+  Standard Errors                             Standard
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  donate ~                                            
+    frame     (c1)    0.160    0.264    0.606    0.544
+    skeptic   (c2)   -0.043    0.046   -0.918    0.359
+    skptc:frm (c3)    0.015    0.068    0.219    0.827
+  justify ~                                           
+    frame     (a1)   -0.562    0.216   -2.606    0.009
+    skeptic   (a2)    0.105    0.038    2.782    0.005
+    skptc:frm (a3)    0.201    0.055    3.675    0.000
+  donate ~                                            
+    justify    (b)   -0.923    0.083  -11.113    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .donate            0.943    0.092   10.271    0.000
+   .justify           0.648    0.063   10.271    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    a1b              -0.108    0.103   -1.054    0.292
+    total             0.052    0.285    0.182    0.856
+</pre>
+
+<ul class="org-ul">
+<li>图形</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">semPaths(cpfit,whatLabels = <span style="color: #2d9574;">'est'</span>, layout = <span style="color: #2d9574;">"spring"</span>,,residuals = F, nCharNodes=0, sizeMan = 8,edge.label.cex = 1)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="medmod2.png" alt="medmod2.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3e35ac0" class="outline-2">
+<h2 id="org3e35ac0"><span class="section-number-2">4</span> 结构方程</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org4cbc14a" class="outline-3">
+<h3 id="org4cbc14a"><span class="section-number-3">4.1</span> 示例：思维方式与工作满意度<a href="./houghton2007.pdf">Houghton and Jinkerson, 2007</a></h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>考察大学职员的思维方式对工作满意度的影响。</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(lavaan)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#25972;&#29702;&#25968;&#25454;&#65292;&#30452;&#25509;&#33719;&#21462;&#21327;&#26041;&#24046;&#30697;&#38453;&#21644;&#26679;&#26412;&#37327;&#20316;&#20026;&#36755;&#20837;&#25968;&#25454;&#65292;&#20063;&#21487;&#37319;&#21462;&#21407;&#22987;&#25968;&#25454;&#26041;&#24335;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">## </span><span style="color: #2aa1ae; background-color: #292e34;">&#30456;&#20851;&#31995;&#25968;&#30697;&#38453;</span>
+houghtonLower.cor <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;">1.000</span>
+<span style="color: #2d9574;">.668 1.000</span>
+<span style="color: #2d9574;">.635  .599 1.000</span>
+<span style="color: #2d9574;">.263  .261   .164 1.000</span>
+<span style="color: #2d9574;">.290  .315   .247  .486 1.000</span>
+<span style="color: #2d9574;">.207  .245   .231  .251  .449 1.000</span>
+<span style="color: #2d9574;">-.206 -.182  -.195 -.309 -.266 -.142 1.000 </span>
+<span style="color: #2d9574;">-.280 -.241  -.238 -.344 -.305 -.230  .753 1.000</span>
+<span style="color: #2d9574;">-.258 -.244 -.185  -.255 -.255 -.215  .554  .587 1.000 </span>
+<span style="color: #2d9574;">.080  .096  .094  -.017  .151  .141 -.074 -.111  .016 1.000</span>
+<span style="color: #2d9574;">.061  .028 -.035  -.058 -.051 -.003 -.040 -.040 -.018 .284 1.000</span>
+<span style="color: #2d9574;">.113  .174  .059   .063  .138  .044 -.119 -.073 -.084 .563  .379 1.000 '</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#21629;&#21517;&#21464;&#37327;&#24182;&#36716;&#21270;&#20026;&#23436;&#25972;&#30340;&#30456;&#20851;&#31995;&#25968;&#30697;&#38453;</span>
+houghtonFull.cor <span style="color: #ce537a; font-weight: bold;">&lt;-</span> getCov(houghtonLower.cor, names = c(<span style="color: #2d9574;">"wk1"</span>,<span style="color: #2d9574;">"wk2"</span>,<span style="color: #2d9574;">"wk3"</span>,<span style="color: #2d9574;">"hap"</span>,<span style="color: #2d9574;">"md1"</span>,<span style="color: #2d9574;">"md2"</span>,<span style="color: #2d9574;">"pr1"</span>,<span style="color: #2d9574;">"pr2"</span>,<span style="color: #2d9574;">"app"</span>,<span style="color: #2d9574;">"bel"</span>,<span style="color: #2d9574;">"st"</span>,<span style="color: #2d9574;">"ima"</span>))
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#28155;&#21152;&#26631;&#20934;&#24046;&#24182;&#36716;&#21270;&#20026;&#21327;&#26041;&#24046;&#30697;&#38453;</span>
+houghtonFull.cov <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cor2cov(houghtonFull.cor, sds = c(.939,1.017,.937,.562,.760,.524,.585,.609,.731,.711,1.124,1.001))
+</pre>
+</div>
+
+<pre class="example">
+This is lavaan 0.6-3
+lavaan is BETA software! Please report any bugs.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org13de043" class="outline-3">
+<h3 id="org13de043"><span class="section-number-3">4.2</span> 测量模型（验证性因子分析）</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#27979;&#37327;&#27169;&#22411;</span>
+houghtonCFA.model <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;"># measurement part</span>
+<span style="color: #2d9574;">Constru =~ bel + st + ima</span>
+<span style="color: #2d9574;">Dysfunc =~ pr1 + pr2 + app</span>
+<span style="color: #2d9574;">WellBe =~ hap + md1 + md2</span>
+<span style="color: #2d9574;">JobSat =~ wk1 + wk2 + wk3</span>
+<span style="color: #2d9574;">'</span>
+
+cfamodel <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cfa(houghtonCFA.model, sample.cov = houghtonFull.cov,sample.nobs = 263)
+cfares <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures(cfamodel, c(<span style="color: #2d9574;">"chisq"</span>,<span style="color: #2d9574;">"df"</span>,<span style="color: #2d9574;">"gfi"</span>,<span style="color: #2d9574;">"nnfi"</span>,<span style="color: #2d9574;">"ifi"</span>,<span style="color: #2d9574;">"cfi"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4085abf" class="outline-3">
+<h3 id="org4085abf"><span class="section-number-3">4.3</span> 结构方程（模型比较）</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#29702;&#35770;&#20551;&#23450;&#30340;&#27169;&#22411;&#35774;&#23450;</span>
+houghtonSR.model <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;"># measurement part</span>
+<span style="color: #2d9574;">Construc =~ bel + st + ima</span>
+<span style="color: #2d9574;">Dysfunc =~ pr1 + pr2 + app</span>
+<span style="color: #2d9574;">WellBe =~ hap + md1 + md2</span>
+<span style="color: #2d9574;">JobSat =~ wk1 + wk2 + wk3</span>
+
+<span style="color: #2d9574;"># structural part</span>
+<span style="color: #2d9574;">Dysfunc ~ Construc</span>
+<span style="color: #2d9574;">WellBe ~ Dysfunc</span>
+<span style="color: #2d9574;">JobSat ~ Dysfunc + WellBe </span>
+<span style="color: #2d9574;">'</span>
+
+srmodel1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sem(houghtonSR.model, sample.cov=houghtonFull.cov, sample.nobs=263)
+summary(srmodel1, fit.measures = <span style="color: #a45bad;">TRUE</span>, standardized = <span style="color: #a45bad;">TRUE</span>, rsquare = <span style="color: #a45bad;">TRUE</span>)
+semfit1 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures(srmodel1, c(<span style="color: #2d9574;">"chisq"</span>,<span style="color: #2d9574;">"df"</span>,<span style="color: #2d9574;">"gfi"</span>,<span style="color: #2d9574;">"nnfi"</span>,<span style="color: #2d9574;">"ifi"</span>,<span style="color: #2d9574;">"cfi"</span>))
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">3. &#38480;&#21046;&#36335;&#24452;&#27169;&#22411;&#65306;&#23545;&#38556;&#30861;&#24615;&#24605;&#32500;&#19982;&#24037;&#20316;&#28385;&#24847;&#24230;&#20043;&#38388;&#30340;&#36335;&#24452;&#26045;&#21152;&#38480;&#21046;&#65292;&#20551;&#23450;&#23436;&#20840;&#20013;&#20171;&#25928;&#24212;</span>
+houghtonSR.model2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;"># measurement part</span>
+<span style="color: #2d9574;">Construc =~ bel + st + ima</span>
+<span style="color: #2d9574;">Dysfunc =~ pr1 + pr2 + app</span>
+<span style="color: #2d9574;">WellBe =~ hap + md1 + md2</span>
+<span style="color: #2d9574;">JobSat =~ wk1 + wk2 + wk3</span>
+
+<span style="color: #2d9574;"># structural part</span>
+<span style="color: #2d9574;">Dysfunc ~ Construc</span>
+<span style="color: #2d9574;">WellBe ~ Dysfunc</span>
+<span style="color: #2d9574;">## &#26045;&#21152;&#38480;&#21046;</span>
+<span style="color: #2d9574;">JobSat ~ WellBe </span>
+<span style="color: #2d9574;">'</span>
+
+srmodel2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sem(houghtonSR.model2, sample.cov=houghtonFull.cov, sample.nobs=263)
+semfit2 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures(srmodel2, c(<span style="color: #2d9574;">"chisq"</span>,<span style="color: #2d9574;">"df"</span>,<span style="color: #2d9574;">"gfi"</span>,<span style="color: #2d9574;">"nnfi"</span>,<span style="color: #2d9574;">"ifi"</span>,<span style="color: #2d9574;">"cfi"</span>))
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">4. &#28155;&#21152;&#36335;&#24452;&#27169;&#22411;&#65306;&#22686;&#21152;&#24314;&#35774;&#24615;&#24605;&#32500;&#19982;&#24037;&#20316;&#28385;&#24847;&#24230;&#20043;&#38388;&#30340;&#36335;&#24452;</span>
+houghtonSR.model3 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #2d9574;">'</span>
+<span style="color: #2d9574;"># measurement part</span>
+<span style="color: #2d9574;">Construc =~ bel + st + ima</span>
+<span style="color: #2d9574;">Dysfunc =~ pr1 + pr2 + app</span>
+<span style="color: #2d9574;">WellBe =~ hap + md1 + md2</span>
+<span style="color: #2d9574;">JobSat =~ wk1 + wk2 + wk3</span>
+
+<span style="color: #2d9574;"># structural part</span>
+<span style="color: #2d9574;">Dysfunc ~ Construc</span>
+<span style="color: #2d9574;">WellBe ~ Dysfunc</span>
+<span style="color: #2d9574;">## &#28155;&#21152;&#36335;&#24452;</span>
+<span style="color: #2d9574;">JobSat ~ Construc + Dysfunc + WellBe </span>
+<span style="color: #2d9574;">'</span>
+
+srmodel3 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> sem(houghtonSR.model3, sample.cov=houghtonFull.cov, sample.nobs=263)
+semfit3 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures(srmodel3, c(<span style="color: #2d9574;">"chisq"</span>,<span style="color: #2d9574;">"df"</span>,<span style="color: #2d9574;">"gfi"</span>,<span style="color: #2d9574;">"nnfi"</span>,<span style="color: #2d9574;">"ifi"</span>,<span style="color: #2d9574;">"cfi"</span>))
+
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#24635;&#32467;&#32467;&#26524;</span>
+res <span style="color: #ce537a; font-weight: bold;">&lt;-</span> matrix(<span style="color: #a45bad;">NA</span>, nrow=5,ncol=6,dimnames =list(c(<span style="color: #2d9574;">"1. Measurement"</span>,<span style="color: #2d9574;">"2. Null"</span>,<span style="color: #2d9574;">"3. Hypothesized"</span>,<span style="color: #2d9574;">"4. Restric path"</span>, <span style="color: #2d9574;">"5. Add path"</span>),
+                                               c(<span style="color: #2d9574;">"Chisq"</span>, <span style="color: #2d9574;">"Df"</span>,<span style="color: #2d9574;">"GFI"</span>,<span style="color: #2d9574;">"NNFI"</span>,<span style="color: #2d9574;">"IFI"</span>,<span style="color: #2d9574;">"CFI"</span>)) )
+res[1,] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cfares
+res[2,] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c(as.numeric(fitmeasures(srmodel1, c(<span style="color: #2d9574;">"baseline.chisq"</span>,<span style="color: #2d9574;">"baseline.df"</span>))),<span style="color: #a45bad;">NA</span>,<span style="color: #a45bad;">NA</span>,<span style="color: #a45bad;">NA</span>,<span style="color: #a45bad;">NA</span>)
+res[3,] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> semfit1
+res[4,] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> semfit2
+res[5,] <span style="color: #ce537a; font-weight: bold;">&lt;-</span> semfit3
+round(res, digits = 2)
+</pre>
+</div>
+
+<pre class="example">
+
+lavaan 0.6-3 ended normally after 43 iterations
+
+  Optimization method                           NLMINB
+  Number of free parameters                         28
+
+  Number of observations                           263
+
+  Estimator                                         ML
+  Model Fit Test Statistic                      66.313
+  Degrees of freedom                                50
+  P-value (Chi-square)                           0.061
+
+Model test baseline model:
+
+  Minimum Function Test Statistic             1087.490
+  Degrees of freedom                                66
+  P-value                                        0.000
+
+User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    0.984
+  Tucker-Lewis Index (TLI)                       0.979
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -3126.092
+  Loglikelihood unrestricted model (H1)      -3092.936
+
+  Number of free parameters                         28
+  Akaike (AIC)                                6308.185
+  Bayesian (BIC)                              6408.205
+  Sample-size adjusted Bayesian (BIC)         6319.432
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.035
+  90 Percent Confidence Interval          0.000  0.056
+  P-value RMSEA &lt;= 0.05                          0.866
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.045
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Construc =~                                                           
+    bel               1.000                               0.463    0.653
+    st                1.060    0.178    5.941    0.000    0.491    0.438
+    ima               1.861    0.331    5.627    0.000    0.862    0.863
+  Dysfunc =~                                                            
+    pr1               1.000                               0.486    0.833
+    pr2               1.126    0.080   14.108    0.000    0.548    0.901
+    app               0.991    0.089   11.184    0.000    0.482    0.661
+  WellBe =~                                                             
+    hap               1.000                               0.341    0.608
+    md1               1.768    0.242    7.305    0.000    0.603    0.795
+    md2               0.812    0.125    6.484    0.000    0.277    0.530
+  JobSat =~                                                             
+    wk1               1.000                               0.787    0.840
+    wk2               1.031    0.081   12.729    0.000    0.811    0.799
+    wk3               0.892    0.073   12.160    0.000    0.702    0.751
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Dysfunc ~                                                             
+    Construc         -0.140    0.078   -1.804    0.071   -0.134   -0.134
+  WellBe ~                                                              
+    Dysfunc          -0.332    0.062   -5.382    0.000   -0.473   -0.473
+  JobSat ~                                                              
+    Dysfunc          -0.259    0.131   -1.983    0.047   -0.160   -0.160
+    WellBe            0.907    0.220    4.124    0.000    0.393    0.393
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .bel               0.289    0.043    6.669    0.000    0.289    0.574
+   .st                1.017    0.097   10.441    0.000    1.017    0.808
+   .ima               0.255    0.124    2.061    0.039    0.255    0.256
+   .pr1               0.105    0.016    6.702    0.000    0.105    0.307
+   .pr2               0.070    0.017    4.092    0.000    0.070    0.189
+   .app               0.300    0.029   10.176    0.000    0.300    0.564
+   .hap               0.198    0.022    8.912    0.000    0.198    0.630
+   .md1               0.212    0.044    4.764    0.000    0.212    0.368
+   .md2               0.197    0.020    9.871    0.000    0.197    0.720
+   .wk1               0.259    0.042    6.180    0.000    0.259    0.295
+   .wk2               0.372    0.050    7.454    0.000    0.372    0.361
+   .wk3               0.382    0.044    8.647    0.000    0.382    0.437
+    Construc          0.215    0.050    4.263    0.000    1.000    1.000
+   .Dysfunc           0.232    0.031    7.600    0.000    0.982    0.982
+   .WellBe            0.090    0.020    4.459    0.000    0.776    0.776
+   .JobSat            0.471    0.067    7.036    0.000    0.760    0.760
+
+R-Square:
+                   Estimate
+    bel               0.426
+    st                0.192
+    ima               0.744
+    pr1               0.693
+    pr2               0.811
+    app               0.436
+    hap               0.370
+    md1               0.632
+    md2               0.280
+    wk1               0.705
+    wk2               0.639
+    wk3               0.563
+    Dysfunc           0.018
+    WellBe            0.224
+    JobSat            0.240
+
+                  Chisq Df  GFI NNFI  IFI  CFI
+1. Measurement    62.47 48 0.96 0.98 0.99 0.99
+2. Null         1087.49 66   NA   NA   NA   NA
+3. Hypothesized   66.31 50 0.96 0.98 0.98 0.98
+4. Restric path   69.96 51 0.96 0.98 0.98 0.98
+5. Add path       64.41 49 0.96 0.98 0.99 0.98
+</pre>
+
+<ul class="org-ul">
+<li>绘图</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #4f97d7;">library</span>(<span style="color: #2d9574;">"semPlot"</span>)
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#32472;&#21046;&#32467;&#26500;&#26041;&#31243;&#22270;</span>
+semPaths(srmodel1, whatLabels = <span style="color: #2d9574;">'std'</span>,layout = <span style="color: #2d9574;">"tree2"</span>,residuals = F,rotation=2, nCharNodes=0, sizeLat = 9)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="sem1.png" alt="sem1.png" />
+</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-11-26 二 15:12</p>
+<p class="date">Created: 2019-12-02 一 10:02</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

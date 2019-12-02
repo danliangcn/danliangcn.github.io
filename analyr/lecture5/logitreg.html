@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-25 一 03:24 -->
+<!-- 2019-12-02 一 15:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Logistic回归</title>
@@ -180,7 +180,6 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -254,12 +253,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">Logistic回归</h1>
 
-<div id="outline-container-org08a9a91" class="outline-2">
-<h2 id="org08a9a91"><span class="section-number-2">1</span> 最大似然估计</h2>
+<div id="outline-container-orgb1cc13d" class="outline-2">
+<h2 id="orgb1cc13d"><span class="section-number-2">1</span> 最大似然估计</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgcdb9f62" class="outline-3">
-<h3 id="orgcdb9f62"><span class="section-number-3">1.1</span> 引例</h3>
+<div id="outline-container-orgfbad8d1" class="outline-3">
+<h3 id="orgfbad8d1"><span class="section-number-3">1.1</span> 引例</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 投三次硬币决定来上课还是在宿舍睡觉，每出现一次正面代表上课多一票，每出现一次反面代表睡觉多一票。结果是前两次为正面、最后一次为反面。你可能会怀疑硬币是不是有问题，正面出现的概率真是1/2吗？可以计算正面的概率不同取值时，该事件的概率。
@@ -400,8 +399,8 @@ segments(.62, .149, x1 = .72, y1 = .149,
 </div>
 </div>
 
-<div id="outline-container-org13b9f8d" class="outline-3">
-<h3 id="org13b9f8d"><span class="section-number-3">1.2</span> 最大似然推断</h3>
+<div id="outline-container-orgf28e6a9" class="outline-3">
+<h3 id="orgf28e6a9"><span class="section-number-3">1.2</span> 最大似然推断</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 最大似然推断并不是将数据视为随机的、参数视为固定的，而是将数据视为固定的，寻找什么样的参数最有可能生成这个数据，即将数据的联合分布视作某个分布密度或概率分布函数的参数的函数。
@@ -530,8 +529,8 @@ converged
 </div>
 </div>
 
-<div id="outline-container-org076014f" class="outline-3">
-<h3 id="org076014f"><span class="section-number-3">1.3</span> 异方差数据的最大似然估计</h3>
+<div id="outline-container-orgdab560c" class="outline-3">
+<h3 id="orgdab560c"><span class="section-number-3">1.3</span> 异方差数据的最大似然估计</h3>
 <div class="outline-text-3" id="text-1-3">
 <ul class="org-ul">
 <li>线性回归模型假定同方差，即对于所有的观测都有 \(y_i \sim N(\mu_i , \sigma^2 ) \)，但是如果误差项是异方差的，即 \(y_i \sim N(\mu_i , \sigma_i^2 ) \)，则会导致\(se(\hat{\beta})\)是有偏的，\(\hat{\beta}\)的估计是无效的。</li>
@@ -713,17 +712,17 @@ polygon(x=xpoly, y=ypoly, density=20, col=<span style="color: #2d9574;">"blue"</
 </div>
 </div>
 
-<div id="outline-container-org5a146ef" class="outline-3">
-<h3 id="org5a146ef"><span class="section-number-3">1.4</span> 最大似然估计的理论与性质（略）</h3>
+<div id="outline-container-org2a8299f" class="outline-3">
+<h3 id="org2a8299f"><span class="section-number-3">1.4</span> 最大似然估计的理论与性质（略）</h3>
 </div>
 </div>
 
-<div id="outline-container-org778f378" class="outline-2">
-<h2 id="org778f378"><span class="section-number-2">2</span> 二值响应变量的logistic回归</h2>
+<div id="outline-container-org38bf304" class="outline-2">
+<h2 id="org38bf304"><span class="section-number-2">2</span> 二值响应变量的logistic回归</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org804b506" class="outline-3">
-<h3 id="org804b506"><span class="section-number-3">2.1</span> 二值数据（binary data）</h3>
+<div id="outline-container-orgf086f8d" class="outline-3">
+<h3 id="orgf086f8d"><span class="section-number-3">2.1</span> 二值数据（binary data）</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li><p>
@@ -806,8 +805,8 @@ polygon(x=xpoly, y=ypoly, density=20, col=<span style="color: #2d9574;">"blue"</
 </ul>
 </div>
 </div>
-<div id="outline-container-org31f3592" class="outline-3">
-<h3 id="org31f3592"><span class="section-number-3">2.2</span> 线性概率模型（LPM）</h3>
+<div id="outline-container-orgebb40c4" class="outline-3">
+<h3 id="orgebb40c4"><span class="section-number-3">2.2</span> 线性概率模型（LPM）</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>线性概率模型：\(P(y_i =1) = \beta_0 + \beta_1 income_i + \beta_2 age_i + \beta_3 age_i^2 + \beta_4 black_i + \epsilon_i \)</li>
@@ -960,8 +959,8 @@ Number of Fisher Scoring iterations: 5
 </ul>
 </div>
 </div>
-<div id="outline-container-orgabaef4c" class="outline-3">
-<h3 id="orgabaef4c"><span class="section-number-3">2.3</span> logit模型（logistic回归模型）的设定</h3>
+<div id="outline-container-org7f9acbd" class="outline-3">
+<h3 id="org7f9acbd"><span class="section-number-3">2.3</span> logit模型（logistic回归模型）的设定</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li>logit转换：将取值为[0, 1]的概率转换为无边界的实数
@@ -987,8 +986,8 @@ Number of Fisher Scoring iterations: 5
 </ul>
 </div>
 </div>
-<div id="outline-container-org25d0b15" class="outline-3">
-<h3 id="org25d0b15"><span class="section-number-3">2.4</span> logit模型参数估计</h3>
+<div id="outline-container-org1ab6515" class="outline-3">
+<h3 id="org1ab6515"><span class="section-number-3">2.4</span> logit模型参数估计</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li><p>
@@ -1078,8 +1077,8 @@ Number of Fisher Scoring iterations: 4
 </div>
 </div>
 
-<div id="outline-container-orgcdb8b09" class="outline-3">
-<h3 id="orgcdb8b09"><span class="section-number-3">2.5</span> logit模型结果的呈现</h3>
+<div id="outline-container-orgd5e428f" class="outline-3">
+<h3 id="orgd5e428f"><span class="section-number-3">2.5</span> logit模型结果的呈现</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#23450;&#20041;logit&#21453;&#20989;&#25968;</span>
@@ -1142,8 +1141,8 @@ points (jitter(glm.fit$data$income, .5), jitter(glm.fit$data$presvote, .08), pch
 </div>
 </div>
 
-<div id="outline-container-org07624a1" class="outline-3">
-<h3 id="org07624a1"><span class="section-number-3">2.6</span> logistic回归系数的解释</h3>
+<div id="outline-container-org48ca607" class="outline-3">
+<h3 id="org48ca607"><span class="section-number-3">2.6</span> logistic回归系数的解释</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
 <li>用glm拟合多个自变量的模型（包括收入、年龄、年龄二次项、是否为黑人）并与其他模型比较</li>
@@ -1231,8 +1230,8 @@ Note:                                                                    *p&lt;0
 </div>
 </div>
 
-<div id="outline-container-org9c3ee41" class="outline-3">
-<h3 id="org9c3ee41"><span class="section-number-3">2.7</span> 展示多个logistic回归的结果</h3>
+<div id="outline-container-org16863a2" class="outline-3">
+<h3 id="org16863a2"><span class="section-number-3">2.7</span> 展示多个logistic回归的结果</h3>
 <div class="outline-text-3" id="text-2-7">
 <ul class="org-ul">
 <li>采用1952-2000年的13届选前民调回归，收入系数的估计值 \(\pm 1\) 标准差，显示高收入选民更支持共和党，但是这种关系随着时间的推移越来越强。</li>
@@ -1270,8 +1269,8 @@ abline (0,0,lwd=.5, lty=2)
 </div>
 </div>
 
-<div id="outline-container-orgde75649" class="outline-3">
-<h3 id="orgde75649"><span class="section-number-3">2.8</span> 利用潜在变量构建回归模型</h3>
+<div id="outline-container-org9bd1617" class="outline-3">
+<h3 id="org9bd1617"><span class="section-number-3">2.8</span> 利用潜在变量构建回归模型</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 \[\begin{equation}
@@ -1300,12 +1299,12 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 </div>
 
-<div id="outline-container-orga8d458c" class="outline-2">
-<h2 id="orga8d458c"><span class="section-number-2">3</span> logistic回归示例</h2>
+<div id="outline-container-orgb93d66a" class="outline-2">
+<h2 id="orgb93d66a"><span class="section-number-2">3</span> logistic回归示例</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf6d13cc" class="outline-3">
-<h3 id="orgf6d13cc"><span class="section-number-3">3.1</span> 孟加拉居民水井砷污染 <a href="./wells.dat">数据</a></h3>
+<div id="outline-container-orga5a31bf" class="outline-3">
+<h3 id="orga5a31bf"><span class="section-number-3">3.1</span> 孟加拉居民水井砷污染 <a href="./wells.dat">数据</a></h3>
 <div class="outline-text-3" id="text-3-1">
 
 <div class="figure">
@@ -1315,7 +1314,7 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 
 <ol class="org-ol">
-<li><a id="orgf3a8f41"></a>分析居民改换饮用水井的行为<br />
+<li><a id="org671ab7a"></a>分析居民改换饮用水井的行为<br />
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 \(y_i=1\) 居民改换新的饮用水井;  \(y_i=0\) 居民继续用自家的井.
@@ -1331,7 +1330,7 @@ polygon(x=c(0,seq(0,7,0.01),7),y=c(0,dlogis(seq(0,7,0.01),location = -1.07),0),c
 </div>
 </li>
 
-<li><a id="org6cf2048"></a>单预测变量logistic回归<br />
+<li><a id="org5e093a1"></a>单预测变量logistic回归<br />
 <div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
 <pre class="src src-R">wells <span style="color: #ce537a; font-weight: bold;">&lt;-</span> read.table (<span style="color: #2d9574;">"wells.dat"</span>)
@@ -1447,7 +1446,7 @@ points (dist, jitter.binary(switch), pch=20, cex=.1)
 </div>
 </li>
 
-<li><a id="orgd3c7d5a"></a>增加第二个变量（砷的浓度水平）<br />
+<li><a id="org4caf519"></a>增加第二个变量（砷的浓度水平）<br />
 <div class="outline-text-4" id="text-3-1-3">
 <div class="org-src-container">
 <pre class="src src-R">fit.3 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ dist100 + arsenic, family=binomial(link=<span style="color: #2d9574;">"logit"</span>))
@@ -1477,7 +1476,7 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="orgc21091f"></a>如何解释和比较两个自变量的系数<br />
+<li><a id="orgce70271"></a>如何解释和比较两个自变量的系数<br />
 <div class="outline-text-4" id="text-3-1-4">
 <ul class="org-ul">
 <li>除4法则</li>
@@ -1494,7 +1493,7 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="orgeddf0d3"></a>含交互项的logistic回归<br />
+<li><a id="orgd35f8d3"></a>含交互项的logistic回归<br />
 <div class="outline-text-4" id="text-3-1-5">
 <div class="org-src-container">
 <pre class="src src-R">fit.4 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ dist100 + 
@@ -1549,7 +1548,7 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="orgb93da71"></a>变量中心化后再拟合<br />
+<li><a id="org31d36b3"></a>变量中心化后再拟合<br />
 <div class="outline-text-4" id="text-3-1-6">
 <div class="org-src-container">
 <pre class="src src-R">c.dist100 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> dist100 - mean (dist100)
@@ -1600,7 +1599,7 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="org575fa72"></a>含有交互项模型示意图<br />
+<li><a id="org87388db"></a>含有交互项模型示意图<br />
 <div class="outline-text-4" id="text-3-1-7">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">par</span>(mfrow=c(1,2))
@@ -1630,7 +1629,7 @@ text (2.2, .6, <span style="color: #2d9574;">"if dist = 50"</span>, adj=0, cex=.
 </div>
 </li>
 
-<li><a id="org8e847da"></a>增加社会性变量<br />
+<li><a id="orgea3b4d0"></a>增加社会性变量<br />
 <div class="outline-text-4" id="text-3-1-8">
 <p>
 社会联系更紧密或者教育程度更高的居民是否会更倾向于改换饮用水井？  
@@ -1687,7 +1686,7 @@ Number of Fisher Scoring iterations: 4
 </div>
 </li>
 
-<li><a id="org330f573"></a>拟合新的模型<br />
+<li><a id="org654f27b"></a>拟合新的模型<br />
 <div class="outline-text-4" id="text-3-1-9">
 <div class="org-src-container">
 <pre class="src src-R">fit.7 <span style="color: #ce537a; font-weight: bold;">&lt;-</span> glm (switch ~ c.dist100 + c.arsenic + c.dist100:c.arsenic +
@@ -1785,8 +1784,8 @@ Number of Fisher Scoring iterations: 4
 </ol>
 </div>
 
-<div id="outline-container-org0ecd859" class="outline-3">
-<h3 id="org0ecd859"><span class="section-number-3">3.2</span> 检查与比较拟合的logistic回归</h3>
+<div id="outline-container-org9f64ddd" class="outline-3">
+<h3 id="org9f64ddd"><span class="section-number-3">3.2</span> 检查与比较拟合的logistic回归</h3>
 <div class="outline-text-3" id="text-3-2">
 <ul class="org-ul">
 <li>残差与分箱残差</li>
@@ -1996,8 +1995,8 @@ points (br.fit.9[,1], br.fit.9[,2], pch=19, cex=.5)
 </div>
 </div>
 
-<div id="outline-container-org3248f50" class="outline-3">
-<h3 id="org3248f50"><span class="section-number-3">3.3</span> 评价logistic回归</h3>
+<div id="outline-container-org2b793f9" class="outline-3">
+<h3 id="org2b793f9"><span class="section-number-3">3.3</span> 评价logistic回归</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 错误率（error rate）
@@ -2034,8 +2033,8 @@ error.rate
 </div>
 </div>
 
-<div id="outline-container-org3d6bfbb" class="outline-3">
-<h3 id="org3d6bfbb"><span class="section-number-3">3.4</span> 比较多个自变量的平均效应</h3>
+<div id="outline-container-org914c78e" class="outline-3">
+<h3 id="org914c78e"><span class="section-number-3">3.4</span> 比较多个自变量的平均效应</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 采用一个简单的模型来演示
@@ -2142,8 +2141,8 @@ print (mean(delta))
 </div>
 </div>
 
-<div id="outline-container-org556af30" class="outline-3">
-<h3 id="org556af30"><span class="section-number-3">3.5</span> 识别与分离</h3>
+<div id="outline-container-orgd3ac206" class="outline-3">
+<h3 id="orgd3ac206"><span class="section-number-3">3.5</span> 识别与分离</h3>
 <div class="outline-text-3" id="text-3-5">
 <ol class="org-ol">
 <li>共线性引起的识别问题，可以采取与线性回归相同的方法解决</li>
@@ -2180,7 +2179,7 @@ curve (invlogit (coef(fit.0)[1] + coef(fit.0)[2]*x), add=<span style="color: #a4
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-11-25 一 03:24</p>
+<p class="date">Created: 2019-12-02 一 15:42</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

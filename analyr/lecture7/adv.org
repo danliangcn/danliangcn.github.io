@@ -12,7 +12,6 @@
 #+BEAMER_HEADER:
 #+LATEX_HEADER: \usepackage{ctex}  \usepackage{dcolumn}
 #+LATEX_COMPILER: xelatex
-#+HTML_HEAD: <style>pre.src {background-color: #303030; color: #e5e5e5;}</style>
 
 * logistic回归
 :PROPERTIES:
