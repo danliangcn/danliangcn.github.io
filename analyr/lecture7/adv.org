@@ -285,8 +285,20 @@ semPaths(cpfit,whatLabels = 'est', layout = "spring",,residuals = F, nCharNodes=
 :PROPERTIES:
 :header-args: :results output :exports both :session sem
 :END:
-** 示例：思维方式与工作满意度[[./houghton2007.pdf][Houghton and Jinkerson, 2007]]
-+ 考察大学职员的思维方式对工作满意度的影响。
+** 示例：思维方式与工作满意度[[./Houghton2007.pdf][Houghton and Jinkerson, 2007]]
++ Houghton and Jinkerson (2007) 设定了4个因子，12个指标的结构回归模型。考察大学职员的思维方式对工作满意度的影响。
++ 理论假设：
+  - 主观幸福感与工作满意度正相关；
+  - 障碍性思维过程与主观幸福感负相关；
+  - 建设性思维与障碍性思维负相关；
+  - 障碍性思维与工作满意度负相关；
+  - 主观幸福感在障碍性思维和工作满意度之间发挥部分中介效应；
+  - 障碍性思维和主观幸福感在建设性思维和工作满意度之间发挥完全中介效应。
++ 模型的建构与修正
+  - 依据理论或有关假设，提出一个或数个合理的先验模型；
+  - 检查潜变量（因子）与指标（题目）间的关系，建立测量模型，有时可能增删或重组题目；
+  - 对每一个模型，检查标准误、t值、标准化残差、修正指数、及各种拟合指数，据此修改模型并重复这一步；
+  - 最好用另外一个样本进行检验。
 #+BEGIN_SRC R
 library(lavaan)
 # 整理数据，直接获取协方差矩阵和样本量作为输入数据，也可采取原始数据方式
@@ -322,7 +334,9 @@ JobSat =~ wk1 + wk2 + wk3
 
 cfamodel <- cfa(houghtonCFA.model, sample.cov = houghtonFull.cov,sample.nobs = 263)
 cfares <- fitmeasures(cfamodel, c("chisq","df","gfi","nnfi","ifi","cfi"))
+summary(cfamodel)
 #+END_SRC
+
 ** 结构方程（模型比较）
 #+BEGIN_SRC R
 # 2. 理论假定的模型设定
@@ -395,7 +409,17 @@ library("semPlot")
 # 绘制结构方程图
 semPaths(srmodel1, whatLabels = 'std',layout = "tree2",residuals = F,rotation=2, nCharNodes=0, sizeLat = 9)
 #+END_SRC
++ 系数解释
+  - 模式系数按照回归系数解释。
+  - 标准化解中，所有变量的方差归一化为1，标准化模式系数（std.all）即为相关系数，其平方即为因子对指标方差解释的贡献率（R square）。
+  - 同时依赖于两个因子的复杂指标，标准化系数按标准化的回归系数解释
+  - 非标准化的误差方差与指标的可观测方差之比即为未解释方差的比例。
 
+** 模型评价（model assessment）
++ 模型的卡方统计量、自由度和p值，卡方值越小越好，p值大于0.05。但是样本量越大，p值会减少。如果模型正确，卡方统计量会等于其自由度，但增加估计参数的数量会减小卡方值。 
++ 近似均方根残差Root Mean Square Error of Approximation (RMSEA; Steiger, 1990) 和90%的置信区间，越小越好，小于0.08比较理想。
++ 比较拟合指数Comparative Fit Index (CFI; Bentler, 1990)，越大越好，应大于0.9。
++ 标准化均方根残差Standardized Root Mean Square Residual (SRMR)，越小越好，大于0.1说明拟合不好。
 * 探索因子分析 :noexport:
 
 * 多层次模型 :noexport:

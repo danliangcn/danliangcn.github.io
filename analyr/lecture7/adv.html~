@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-02 一 15:41 -->
+<!-- 2019-12-08 日 23:31 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>定量研究方法R语言操作示例</title>
@@ -231,12 +231,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">定量研究方法R语言操作示例</h1>
 
-<div id="outline-container-orgca96d4c" class="outline-2">
-<h2 id="orgca96d4c"><span class="section-number-2">1</span> logistic回归</h2>
+<div id="outline-container-org742c7cf" class="outline-2">
+<h2 id="org742c7cf"><span class="section-number-2">1</span> logistic回归</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org83cb0c7" class="outline-3">
-<h3 id="org83cb0c7"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
+<div id="outline-container-orgd4d4abb" class="outline-3">
+<h3 id="orgd4d4abb"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。</li>
@@ -469,12 +469,12 @@ lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
 </div>
 </div>
 
-<div id="outline-container-org0a88a8a" class="outline-2">
-<h2 id="org0a88a8a"><span class="section-number-2">2</span> 有序logistic回归</h2>
+<div id="outline-container-org68d0add" class="outline-2">
+<h2 id="org68d0add"><span class="section-number-2">2</span> 有序logistic回归</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org323c4e2" class="outline-3">
-<h3 id="org323c4e2"><span class="section-number-3">2.1</span> 国际干预与种族清洗（<a href="./genocide.pdf">Krain, 2005</a>）</h3>
+<div id="outline-container-org3f7987f" class="outline-3">
+<h3 id="org3f7987f"><span class="section-number-3">2.1</span> 国际干预与种族清洗（<a href="./genocide.pdf">Krain, 2005</a>）</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>检验国际军事干预对种族清洗的影响，结果显示只有挑战作恶者和帮助受害族群两种军事干预方式是有效的。</li>
@@ -483,7 +483,7 @@ lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
 <li>控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）<a href="./isq05.dta">数据</a></li>
 <li>模型估计，第一个模型为线性模型（虽然采取glm估计），第2-4个模型分别对不同类型的军事干预进行检验</li>
 <li>有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。</li>
-<li>似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。</li>
+<li>似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，说明相邻类别之间很难区分，可以将因变量看做连续变量。</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(foreign)
@@ -607,9 +607,14 @@ Observations        273      273      273      273
 =====================================================
 Note:                     *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </pre>
+</div>
+</div>
 
+<div id="outline-container-org0576702" class="outline-3">
+<h3 id="org0576702"><span class="section-number-3">2.2</span> 平行性检验</h3>
+<div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
-<li>平行性检验</li>
+<li>如果不能通过平行性检验，一般可以采用多项logistic回归，忽略因变量类别间的有序关系，但是估计的系数会成倍增多。</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(rms)
@@ -628,15 +633,70 @@ plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
 </div>
 </div>
 </div>
+
+<div id="outline-container-org6bcf739" class="outline-3">
+<h3 id="org6bcf739"><span class="section-number-3">2.3</span> 系数解释</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>尽量采用假想情形去解释系数的效应</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">simdata.max  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 1,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
+simdata.min  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 0,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
+
+predict(polr.fit2, newdata= simdata.max, type = <span style="color: #2d9574;">"probs"</span>)
+predict(polr.fit2, newdata= simdata.min, type = <span style="color: #2d9574;">"probs"</span>)
+</pre>
 </div>
 
+<pre class="example">
 
-<div id="outline-container-orgdcfe8ee" class="outline-2">
-<h2 id="orgdcfe8ee"><span class="section-number-2">3</span> 调节效应、中介效应和条件过程模型</h2>
+          0         0.5           1         1.5           2         2.5 
+0.125708406 0.095519875 0.088290407 0.104399207 0.084740959 0.129117226 
+          3         3.5           4         4.5           5 
+0.150568754 0.165258216 0.037623548 0.010645023 0.008128379
+
+         0        0.5          1        1.5          2        2.5          3 
+0.08956553 0.07316841 0.07198168 0.09107305 0.07916490 0.13078177 0.17037027 
+       3.5          4        4.5          5 
+0.21355820 0.05313349 0.01536700 0.01183569
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org169a53c" class="outline-2">
+<h2 id="org169a53c"><span class="section-number-2">3</span> 调节效应、中介效应和条件过程模型</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org543d294" class="outline-3">
-<h3 id="org543d294"><span class="section-number-3">3.1</span> 示例：气候变化与灾害<a href="./chapman2015.pdf">Chapman and Lickel 2015</a></h3>
+<div id="outline-container-org8612284" class="outline-3">
+<h3 id="org8612284"><span class="section-number-3">3.1</span> 示例：气候变化与灾害<a href="./chapman2015.pdf">Chapman and Lickel 2015</a></h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>研究者向211名实验参与者讲述非洲发生干旱造成人道主义危机，告诉其中一半的参与者气候变化是造成干旱的原因，另一半参与者未被告知任何关于干旱的原因。接着通过一系列问题让实验参与者评价拒绝援助的正当性，以及了解他们对气候变化的怀疑程度。最后了解参与者捐款的意愿。</li>
@@ -644,8 +704,8 @@ plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf5f289a" class="outline-3">
-<h3 id="orgf5f289a"><span class="section-number-3">3.2</span> 调节效应</h3>
+<div id="outline-container-orgfd6445d" class="outline-3">
+<h3 id="orgfd6445d"><span class="section-number-3">3.2</span> 调节效应</h3>
 <div class="outline-text-3" id="text-3-2">
 <ul class="org-ul">
 <li>假定对气候变化怀疑程度较高的人框架对捐助意愿的效应也比较小，会存在调节效应。</li>
@@ -687,8 +747,8 @@ F-statistic: 10.71 on 3 and 207 DF,  p-value: 1.424e-06
 </div>
 </div>
 
-<div id="outline-container-orgf593e75" class="outline-3">
-<h3 id="orgf593e75"><span class="section-number-3">3.3</span> 中介效应</h3>
+<div id="outline-container-orge0c95c2" class="outline-3">
+<h3 id="orge0c95c2"><span class="section-number-3">3.3</span> 中介效应</h3>
 <div class="outline-text-3" id="text-3-3">
 <ul class="org-ul">
 <li>另一方面，框架可能是通过影响正当性，然后正当性再影响捐助意愿的，即中介效应。</li>
@@ -767,8 +827,8 @@ semPaths(mediafit,whatLabels = <span style="color: #2d9574;">'est'</span>,residu
 </div>
 </div>
 
-<div id="outline-container-orgeda991e" class="outline-3">
-<h3 id="orgeda991e"><span class="section-number-3">3.4</span> 条件过程模型</h3>
+<div id="outline-container-orgc70d842" class="outline-3">
+<h3 id="orgc70d842"><span class="section-number-3">3.4</span> 条件过程模型</h3>
 <div class="outline-text-3" id="text-3-4">
 <ul class="org-ul">
 <li>综合调节与中介效应，框架对捐助意愿的直接和间接效应是受到怀疑程度的调节的，即被调节的中介效应。</li>
@@ -852,15 +912,31 @@ Defined Parameters:
 </div>
 </div>
 
-<div id="outline-container-orgbd69930" class="outline-2">
-<h2 id="orgbd69930"><span class="section-number-2">4</span> 结构方程</h2>
+<div id="outline-container-org077f40e" class="outline-2">
+<h2 id="org077f40e"><span class="section-number-2">4</span> 结构方程</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgb6ddea3" class="outline-3">
-<h3 id="orgb6ddea3"><span class="section-number-3">4.1</span> 示例：思维方式与工作满意度<a href="./houghton2007.pdf">Houghton and Jinkerson, 2007</a></h3>
+<div id="outline-container-orgb85022b" class="outline-3">
+<h3 id="orgb85022b"><span class="section-number-3">4.1</span> 示例：思维方式与工作满意度<a href="./Houghton2007.pdf">Houghton and Jinkerson, 2007</a></h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
-<li>考察大学职员的思维方式对工作满意度的影响。</li>
+<li>Houghton and Jinkerson (2007) 设定了4个因子，12个指标的结构回归模型。考察大学职员的思维方式对工作满意度的影响。</li>
+<li>理论假设：
+<ul class="org-ul">
+<li>主观幸福感与工作满意度正相关；</li>
+<li>障碍性思维过程与主观幸福感负相关；</li>
+<li>建设性思维与障碍性思维负相关；</li>
+<li>障碍性思维与工作满意度负相关；</li>
+<li>主观幸福感在障碍性思维和工作满意度之间发挥部分中介效应；</li>
+<li>障碍性思维和主观幸福感在建设性思维和工作满意度之间发挥完全中介效应。</li>
+</ul></li>
+<li>模型的建构与修正
+<ul class="org-ul">
+<li>依据理论或有关假设，提出一个或数个合理的先验模型；</li>
+<li>检查潜变量（因子）与指标（题目）间的关系，建立测量模型，有时可能增删或重组题目；</li>
+<li>对每一个模型，检查标准误、t值、标准化残差、修正指数、及各种拟合指数，据此修改模型并重复这一步；</li>
+<li>最好用另外一个样本进行检验。</li>
+</ul></li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(lavaan)
@@ -888,8 +964,8 @@ houghtonFull.cov <span style="color: #ce537a; font-weight: bold;">&lt;-</span> c
 </div>
 </div>
 
-<div id="outline-container-orgbf71dff" class="outline-3">
-<h3 id="orgbf71dff"><span class="section-number-3">4.2</span> 测量模型（验证性因子分析）</h3>
+<div id="outline-container-org1247ebc" class="outline-3">
+<h3 id="org1247ebc"><span class="section-number-3">4.2</span> 测量模型（验证性因子分析）</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#27979;&#37327;&#27169;&#22411;</span>
@@ -903,13 +979,95 @@ houghtonCFA.model <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 
 
 cfamodel <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cfa(houghtonCFA.model, sample.cov = houghtonFull.cov,sample.nobs = 263)
 cfares <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures(cfamodel, c(<span style="color: #2d9574;">"chisq"</span>,<span style="color: #2d9574;">"df"</span>,<span style="color: #2d9574;">"gfi"</span>,<span style="color: #2d9574;">"nnfi"</span>,<span style="color: #2d9574;">"ifi"</span>,<span style="color: #2d9574;">"cfi"</span>))
+summary(cfamodel)
 </pre>
 </div>
+
+<pre class="example">
+
+lavaan 0.6-3 ended normally after 49 iterations
+
+  Optimization method                           NLMINB
+  Number of free parameters                         30
+
+  Number of observations                           263
+
+  Estimator                                         ML
+  Model Fit Test Statistic                      62.468
+  Degrees of freedom                                48
+  P-value (Chi-square)                           0.078
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  Constru =~                                          
+    bel               1.000                           
+    st                1.053    0.178    5.914    0.000
+    ima               1.889    0.329    5.739    0.000
+  Dysfunc =~                                          
+    pr1               1.000                           
+    pr2               1.129    0.080   14.062    0.000
+    app               0.992    0.089   11.177    0.000
+  WellBe =~                                           
+    hap               1.000                           
+    md1               1.792    0.246    7.297    0.000
+    md2               0.817    0.126    6.482    0.000
+  JobSat =~                                           
+    wk1               1.000                           
+    wk2               1.035    0.081   12.763    0.000
+    wk3               0.891    0.073   12.147    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  Constru ~~                                          
+    Dysfunc          -0.028    0.017   -1.640    0.101
+    WellBe            0.025    0.013    1.896    0.058
+    JobSat            0.060    0.029    2.090    0.037
+  Dysfunc ~~                                          
+    WellBe           -0.077    0.016   -4.817    0.000
+    JobSat           -0.131    0.030   -4.447    0.000
+  WellBe ~~                                           
+    JobSat            0.124    0.026    4.786    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .bel               0.292    0.042    6.871    0.000
+   .st                1.023    0.097   10.507    0.000
+   .ima               0.242    0.123    1.972    0.049
+   .pr1               0.105    0.016    6.706    0.000
+   .pr2               0.069    0.017    4.013    0.000
+   .app               0.300    0.030   10.178    0.000
+   .hap               0.200    0.022    8.993    0.000
+   .md1               0.207    0.045    4.635    0.000
+   .md2               0.197    0.020    9.889    0.000
+   .wk1               0.261    0.042    6.229    0.000
+   .wk2               0.368    0.050    7.399    0.000
+   .wk3               0.384    0.044    8.684    0.000
+    Constru           0.212    0.049    4.295    0.000
+    Dysfunc           0.236    0.031    7.608    0.000
+    WellBe            0.115    0.025    4.537    0.000
+    JobSat            0.618    0.081    7.615    0.000
+</pre>
+
+<ul class="org-ul">
+<li>系数解释
+<ul class="org-ul">
+<li>模式系数按照回归系数解释。</li>
+<li>标准化解中，所有变量的方差归一化为1，标准化模式系数即为相关系数，其平方即为因子对指标方差解释的贡献率。</li>
+<li>依赖于两个因子的复杂指标，标准化系数按标准化的回归系数解释</li>
+<li>非标准化的误差方差与指标的可观测方差之比即为未解释方差的比例。</li>
+</ul></li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-org91223c8" class="outline-3">
-<h3 id="org91223c8"><span class="section-number-3">4.3</span> 结构方程（模型比较）</h3>
+<div id="outline-container-org6e594e5" class="outline-3">
+<h3 id="org6e594e5"><span class="section-number-3">4.3</span> 结构方程（模型比较）</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#29702;&#35770;&#20551;&#23450;&#30340;&#27169;&#22411;&#35774;&#23450;</span>
@@ -1120,11 +1278,23 @@ semPaths(srmodel1, whatLabels = <span style="color: #2d9574;">'std'</span>,layou
 </div>
 </div>
 </div>
+
+<div id="outline-container-org3f7d1bc" class="outline-3">
+<h3 id="org3f7d1bc"><span class="section-number-3">4.4</span> 模型评价（model assessment）</h3>
+<div class="outline-text-3" id="text-4-4">
+<ul class="org-ul">
+<li>模型的卡方统计量、自由度和p值，卡方值越小越好，p值大于0.05。但是样本量越大，p值会减少。如果模型正确，卡方统计量会等于其自由度，但增加估计参数的数量会减小卡方值。</li>
+<li>近似均方根残差Root Mean Square Error of Approximation (RMSEA; Steiger, 1990) 和90%的置信区间，越小越好，小于0.08比较理想。</li>
+<li>比较拟合指数Comparative Fit Index (CFI; Bentler, 1990)，越大越好，应大于0.9。</li>
+<li>标准化均方根残差Standardized Root Mean Square Residual (SRMR)，越小越好，大于0.1说明拟合不好。</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-12-02 一 15:41</p>
+<p class="date">Created: 2019-12-08 日 23:31</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
