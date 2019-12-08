@@ -142,7 +142,7 @@ lines(actual,actual, lty="dashed")
 + 控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）[[./isq05.dta][数据]]
 + 模型估计，第一个模型为线性模型（虽然采取glm估计），第2-4个模型分别对不同类型的军事干预进行检验
 + 有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。
-+ 似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。
++ 似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，说明相邻类别之间很难区分，可以将因变量看做连续变量。
 #+BEGIN_SRC R
 library(foreign)
 krain<-read.dta("isq05.dta",convert.dates = TRUE, 
@@ -173,7 +173,8 @@ stargazer(ols.fit, polr.fit1, polr.fit2, polr.fit3,
           c("Akaike Inf. Crit.", round(AIC(ols.fit),1), round(AIC(polr.fit1),1), round(AIC(polr.fit2),1),round(AIC(polr.fit3),1))),
           ord.intercepts=T, type = "text")
 #+END_SRC
-+ 平行性检验
+** 平行性检验
++ 如果不能通过平行性检验，一般可以采用多项logistic回归，忽略因变量类别间的有序关系，但是估计的系数会成倍增多。
 #+BEGIN_SRC R :results output graphics :file ordinalreg1.png :width 1500 :height 800
 library(rms)
 krain$magnitud<-as.numeric(krain$magnitud) 
@@ -182,7 +183,41 @@ plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
                       genyr + stfl + regtype + ethkrain + marg + coldwar, 
                     data=krain,pch=19)
 #+END_SRC
+** 系数解释 
++ 尽量采用假想情形去解释系数的效应
+#+BEGIN_SRC R
+simdata.max  <- with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 1,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
+simdata.min  <- with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 0,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
 
+predict(polr.fit2, newdata= simdata.max, type = "probs")
+predict(polr.fit2, newdata= simdata.min, type = "probs")
+#+END_SRC
 
 * 调节效应、中介效应和条件过程模型
 :PROPERTIES:

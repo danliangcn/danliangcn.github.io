@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-02 一 15:41 -->
+<!-- 2019-12-08 日 22:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>定量研究方法R语言操作示例</title>
@@ -231,12 +231,12 @@ for the JavaScript code in this tag.
 <div id="content">
 <h1 class="title">定量研究方法R语言操作示例</h1>
 
-<div id="outline-container-orgca96d4c" class="outline-2">
-<h2 id="orgca96d4c"><span class="section-number-2">1</span> logistic回归</h2>
+<div id="outline-container-org7ca29b5" class="outline-2">
+<h2 id="org7ca29b5"><span class="section-number-2">1</span> logistic回归</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org83cb0c7" class="outline-3">
-<h3 id="org83cb0c7"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
+<div id="outline-container-org999646a" class="outline-3">
+<h3 id="org999646a"><span class="section-number-3">1.1</span> 美国参议院投票（Who Likes Political Science? <a href="./wholikepolitical.pdf">Uscinski and Klofstad, 2010</a>）</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>2009年10月共和党参议员Tom Coburn提交修正案建议美国国家科学基金停止资助政治科学研究。该修正案在11月被投票否决。Uscinski和Klofstad采用这次投票的数据分析参议员的个人特质、选区特征和制度特征对他们投票的影响。</li>
@@ -291,6 +291,21 @@ stargazer(single.glmfit, multiple.glmfit, multiple.glmfit,
 
 <pre class="example">
 
+载入需要的程辑包：mice
+载入需要的程辑包：lattice
+
+载入程辑包：‘mice’
+
+The following objects are masked from ‘package:base’:
+
+    cbind, rbind
+
+* miceadds 3.6-21 (2019-11-04 14:57:31)
+Warning message:
+程辑包‘miceadds’是用R版本3.5.2 来建造的
+
+Loading required namespace: sandwich
+
 		     Estimate Std. Error      z value    Pr(&gt;|z|)
 (Intercept)     -3.7812381216  1.7925365 -2.109434365 0.034907106
 democrat         3.2957356132  1.0690272  3.082929474 0.002049737
@@ -305,6 +320,11 @@ nsfgrants        0.1570781015  0.2546681  0.616795398 0.537369688
 yearstoelection  0.4857686583  0.2651756  1.831875131 0.066970026
 hhsera           1.3861200138  0.8623678  1.607342071 0.107979350
 seniority       -0.0002187281  0.0532744 -0.004105689 0.996724143
+
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
 
 
 Replication of Table 1 in Uscinski and Klofstand (2010)
@@ -469,12 +489,12 @@ lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
 </div>
 </div>
 
-<div id="outline-container-org0a88a8a" class="outline-2">
-<h2 id="org0a88a8a"><span class="section-number-2">2</span> 有序logistic回归</h2>
+<div id="outline-container-orgc640c37" class="outline-2">
+<h2 id="orgc640c37"><span class="section-number-2">2</span> 有序logistic回归</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org323c4e2" class="outline-3">
-<h3 id="org323c4e2"><span class="section-number-3">2.1</span> 国际干预与种族清洗（<a href="./genocide.pdf">Krain, 2005</a>）</h3>
+<div id="outline-container-org210f31b" class="outline-3">
+<h3 id="org210f31b"><span class="section-number-3">2.1</span> 国际干预与种族清洗（<a href="./genocide.pdf">Krain, 2005</a>）</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>检验国际军事干预对种族清洗的影响，结果显示只有挑战作恶者和帮助受害族群两种军事干预方式是有效的。</li>
@@ -483,7 +503,7 @@ lines(actual,actual, lty=<span style="color: #2d9574;">"dashed"</span>)
 <li>控制变量包括干预的连续性（icntglag）、种族清洗的严重性（maglag）、种族清洗持续时间（genyr）、是否国家失败（stfl）、政权类型（regtype）、种族分散程度（ethkrain）、经济边缘化程度（marg）、是否冷战时期（coldwar）<a href="./isq05.dta">数据</a></li>
 <li>模型估计，第一个模型为线性模型（虽然采取glm估计），第2-4个模型分别对不同类型的军事干预进行检验</li>
 <li>有序类别变量能否作为尺度变量进行线性回归？类别的数量足够大，每个类别中的观测数量大致相当。</li>
-<li>似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，，说明相邻类别之间很难区分，可以将因变量看做连续变量。</li>
+<li>似然比、AIC、BIC都显示OLS的样本内拟合效果比有序logit回归更好。而估计的分割点与其标准误相比，距离都很近，说明相邻类别之间很难区分，可以将因变量看做连续变量。</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(foreign)
@@ -518,6 +538,11 @@ stargazer(ols.fit, polr.fit1, polr.fit2, polr.fit3,
 </div>
 
 <pre class="example">
+
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
 
 
 =====================================================
@@ -607,9 +632,14 @@ Observations        273      273      273      273
 =====================================================
 Note:                     *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </pre>
+</div>
+</div>
 
+<div id="outline-container-org01293f8" class="outline-3">
+<h3 id="org01293f8"><span class="section-number-3">2.2</span> 平行性检验</h3>
+<div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
-<li>平行性检验</li>
+<li>如果不能通过平行性检验，一般可以采用多项logistic回归，忽略因变量类别间的有序关系，但是估计的系数会成倍增多。</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #4f97d7;">library</span>(rms)
@@ -628,15 +658,70 @@ plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
 </div>
 </div>
 </div>
+
+<div id="outline-container-org2b4a8ce" class="outline-3">
+<h3 id="org2b4a8ce"><span class="section-number-3">2.3</span> 系数解释</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>尽量采用假想情形去解释系数的效应</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-R">simdata.max  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 1,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
+simdata.min  <span style="color: #ce537a; font-weight: bold;">&lt;-</span> with(krain,
+                     data.frame(
+                       iperplag= mean(iperplag),
+                       itarglag= 0,
+                       ineutlag= mean(ineutlag),
+                       icntglag=mean(icntglag),
+                       maglag=mean(maglag),
+                       genyr=mean(genyr),
+                       stfl=mean(stfl),
+                       regtype=mean(regtype),
+                       ethkrain=mean(ethkrain),
+                       marg=mean(marg),
+                       coldwar=mean(coldwar)
+                     ))
+
+predict(polr.fit2, newdata= simdata.max, type = <span style="color: #2d9574;">"probs"</span>)
+predict(polr.fit2, newdata= simdata.min, type = <span style="color: #2d9574;">"probs"</span>)
+</pre>
 </div>
 
+<pre class="example">
 
-<div id="outline-container-orgdcfe8ee" class="outline-2">
-<h2 id="orgdcfe8ee"><span class="section-number-2">3</span> 调节效应、中介效应和条件过程模型</h2>
+          0         0.5           1         1.5           2         2.5 
+0.125708406 0.095519875 0.088290407 0.104399207 0.084740959 0.129117226 
+          3         3.5           4         4.5           5 
+0.150568754 0.165258216 0.037623548 0.010645023 0.008128379
+
+         0        0.5          1        1.5          2        2.5          3 
+0.08956553 0.07316841 0.07198168 0.09107305 0.07916490 0.13078177 0.17037027 
+       3.5          4        4.5          5 
+0.21355820 0.05313349 0.01536700 0.01183569
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbf25c1c" class="outline-2">
+<h2 id="orgbf25c1c"><span class="section-number-2">3</span> 调节效应、中介效应和条件过程模型</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org543d294" class="outline-3">
-<h3 id="org543d294"><span class="section-number-3">3.1</span> 示例：气候变化与灾害<a href="./chapman2015.pdf">Chapman and Lickel 2015</a></h3>
+<div id="outline-container-org07fe8f5" class="outline-3">
+<h3 id="org07fe8f5"><span class="section-number-3">3.1</span> 示例：气候变化与灾害<a href="./chapman2015.pdf">Chapman and Lickel 2015</a></h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>研究者向211名实验参与者讲述非洲发生干旱造成人道主义危机，告诉其中一半的参与者气候变化是造成干旱的原因，另一半参与者未被告知任何关于干旱的原因。接着通过一系列问题让实验参与者评价拒绝援助的正当性，以及了解他们对气候变化的怀疑程度。最后了解参与者捐款的意愿。</li>
@@ -644,8 +729,8 @@ plot.xmean.ordinaly(magnitud ~ intrvlag + icntglag + maglag +
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf5f289a" class="outline-3">
-<h3 id="orgf5f289a"><span class="section-number-3">3.2</span> 调节效应</h3>
+<div id="outline-container-org405a6a4" class="outline-3">
+<h3 id="org405a6a4"><span class="section-number-3">3.2</span> 调节效应</h3>
 <div class="outline-text-3" id="text-3-2">
 <ul class="org-ul">
 <li>假定对气候变化怀疑程度较高的人框架对捐助意愿的效应也比较小，会存在调节效应。</li>
@@ -661,6 +746,9 @@ summary(moderafit)
 </div>
 
 <pre class="example">
+
+This is lavaan 0.6-3
+lavaan is BETA software! Please report any bugs.
 
 Call:
 lm(formula = donate ~ frame
@@ -687,8 +775,8 @@ F-statistic: 10.71 on 3 and 207 DF,  p-value: 1.424e-06
 </div>
 </div>
 
-<div id="outline-container-orgf593e75" class="outline-3">
-<h3 id="orgf593e75"><span class="section-number-3">3.3</span> 中介效应</h3>
+<div id="outline-container-orgd4a5fc9" class="outline-3">
+<h3 id="orgd4a5fc9"><span class="section-number-3">3.3</span> 中介效应</h3>
 <div class="outline-text-3" id="text-3-3">
 <ul class="org-ul">
 <li>另一方面，框架可能是通过影响正当性，然后正当性再影响捐助意愿的，即中介效应。</li>
@@ -767,8 +855,8 @@ semPaths(mediafit,whatLabels = <span style="color: #2d9574;">'est'</span>,residu
 </div>
 </div>
 
-<div id="outline-container-orgeda991e" class="outline-3">
-<h3 id="orgeda991e"><span class="section-number-3">3.4</span> 条件过程模型</h3>
+<div id="outline-container-org024f6a8" class="outline-3">
+<h3 id="org024f6a8"><span class="section-number-3">3.4</span> 条件过程模型</h3>
 <div class="outline-text-3" id="text-3-4">
 <ul class="org-ul">
 <li>综合调节与中介效应，框架对捐助意愿的直接和间接效应是受到怀疑程度的调节的，即被调节的中介效应。</li>
@@ -852,12 +940,12 @@ Defined Parameters:
 </div>
 </div>
 
-<div id="outline-container-orgbd69930" class="outline-2">
-<h2 id="orgbd69930"><span class="section-number-2">4</span> 结构方程</h2>
+<div id="outline-container-org97447d6" class="outline-2">
+<h2 id="org97447d6"><span class="section-number-2">4</span> 结构方程</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgb6ddea3" class="outline-3">
-<h3 id="orgb6ddea3"><span class="section-number-3">4.1</span> 示例：思维方式与工作满意度<a href="./houghton2007.pdf">Houghton and Jinkerson, 2007</a></h3>
+<div id="outline-container-orga4583f9" class="outline-3">
+<h3 id="orga4583f9"><span class="section-number-3">4.1</span> 示例：思维方式与工作满意度<a href="./houghton2007.pdf">Houghton and Jinkerson, 2007</a></h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>考察大学职员的思维方式对工作满意度的影响。</li>
@@ -885,11 +973,17 @@ houghtonFull.cor <span style="color: #ce537a; font-weight: bold;">&lt;-</span> g
 houghtonFull.cov <span style="color: #ce537a; font-weight: bold;">&lt;-</span> cor2cov(houghtonFull.cor, sds = c(.939,1.017,.937,.562,.760,.524,.585,.609,.731,.711,1.124,1.001))
 </pre>
 </div>
+
+<pre class="example">
+This is lavaan 0.6-3
+lavaan is BETA software! Please report any bugs.
+
+</pre>
 </div>
 </div>
 
-<div id="outline-container-orgbf71dff" class="outline-3">
-<h3 id="orgbf71dff"><span class="section-number-3">4.2</span> 测量模型（验证性因子分析）</h3>
+<div id="outline-container-org1d777df" class="outline-3">
+<h3 id="org1d777df"><span class="section-number-3">4.2</span> 测量模型（验证性因子分析）</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#27979;&#37327;&#27169;&#22411;</span>
@@ -908,8 +1002,8 @@ cfares <span style="color: #ce537a; font-weight: bold;">&lt;-</span> fitmeasures
 </div>
 </div>
 
-<div id="outline-container-org91223c8" class="outline-3">
-<h3 id="org91223c8"><span class="section-number-3">4.3</span> 结构方程（模型比较）</h3>
+<div id="outline-container-org44cf211" class="outline-3">
+<h3 id="org44cf211"><span class="section-number-3">4.3</span> 结构方程（模型比较）</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#29702;&#35770;&#20551;&#23450;&#30340;&#27169;&#22411;&#35774;&#23450;</span>
@@ -1124,7 +1218,7 @@ semPaths(srmodel1, whatLabels = <span style="color: #2d9574;">'std'</span>,layou
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: 厦门大学公共事务学院</p>
-<p class="date">Created: 2019-12-02 一 15:41</p>
+<p class="date">Created: 2019-12-08 日 22:50</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
