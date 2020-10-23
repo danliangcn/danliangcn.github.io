@@ -46,7 +46,7 @@
 6. 在回归模型中添加性别与工作年限的交互项，解释交互项的系数。通过模型比较，有必要增加该交互项吗？（可选做）将省份变量（province）转化为若干个虚拟变量，将虚拟变量引入回归模型，解释省份虚拟变量的回归系数。
 
 * 数据
-[[./cgssincome.RData][cgssincome数据]]
-* R代码
+[[./cgssincome2017proc.RData][cgssincome2017数据（已预处理）]]
+* R代码 :noexport:
 + [[./homework2-part1.R][第一部分代码]]
-+ [[./homework-regress.R][第二部分回归分析代码]]
++ [[./homework-regress2017.R][第二部分回归分析代码]]
