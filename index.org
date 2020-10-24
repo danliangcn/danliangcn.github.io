@@ -12,7 +12,8 @@
 *** [[./analyr/lecture4/lregress.html][线性回归分析]]
 *** [[./analyr/lecture5/logitreg.html][logstic回归]]
 *** [[./analyr/lecture6/glm.html][广义线性模型]]
-*** [[./analyr/lecture7/adv.html][R语言操作]]
-+ [[./analyr/assignment/assignment1.html][作业1]]
-+ [[./analyr/assignment/assignment2.html][作业2]]
+*** [[./analyr/lecture7/adv.html][R语言操作]] :noexport:
+* 作业
+** [[./analyr/assignment/assignment1.html][作业1：R语言基本设置与一般统计方法]]
+** [[./analyr/assignment/assignment2.html][作业2：线性回归分析]]
 
