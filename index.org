@@ -11,10 +11,10 @@
 *** [[./analyr/lecture4/lregress.html][线性回归分析]]
 *** [[./analyr/lecture5/logitreg.html][logstic回归]]
 *** [[./analyr/lecture6/glm.html][广义线性模型]]
+*** [[./analyr/lecture7/adv.html][R语言操作]] 
 *** 调节效应、中介效应与结构方程
 *** 多层次模型
 *** 机器学习
-*** [[./analyr/lecture7/adv.html][R语言操作]] :noexport:
 * 作业
 *** [[./analyr/assignment/assignment1.html][R语言基本设置与一般统计方法作业]]
 *** [[./analyr/assignment/assignment2.html][线性回归分析作业]]
